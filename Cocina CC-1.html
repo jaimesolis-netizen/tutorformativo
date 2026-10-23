@@ -1,0 +1,573 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Cocina CC-1</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: ficha de laboratorio escolar. Columna única de 68ch, cabecera fija con las 5 fases,
+   bloques de datos en mono sobre tarjeta blanca, prosa en serif. */
+:root{
+  --paper:#E9EDEF; --card:#FFFFFF; --card-2:#F2F5F6;
+  --ink:#111820; --ink-2:#4C5A64; --ink-3:#77858E; --line:#CBD4D9;
+  --fis:#1C6A9E; --fis-bg:#E2EEF6; --qui:#A94E27; --qui-bg:#F7E9E1;
+  --ok:#2A714B; --ok-bg:#E2EFE8; --err:#A93434; --err-bg:#F6E3E3;
+  --accent:#1C6A9E;
+  --display:"Archivo",system-ui,sans-serif;
+  --body:"Source Serif 4",Georgia,serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --paper:#0E1419; --card:#18212A; --card-2:#131C24;
+  --ink:#E6ECF0; --ink-2:#A3B1BB; --ink-3:#7D8C97; --line:#2B3741;
+  --fis:#78B9E6; --fis-bg:#15303F; --qui:#E0905F; --qui-bg:#3A2317;
+  --ok:#64C093; --ok-bg:#15301F; --err:#E58080; --err-bg:#3A1C1C;
+  --accent:#78B9E6; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0E1419; --card:#18212A; --card-2:#131C24;
+  --ink:#E6ECF0; --ink-2:#A3B1BB; --ink-3:#7D8C97; --line:#2B3741;
+  --fis:#78B9E6; --fis-bg:#15303F; --qui:#E0905F; --qui-bg:#3A2317;
+  --ok:#64C093; --ok-bg:#15301F; --err:#E58080; --err-bg:#3A1C1C;
+  --accent:#78B9E6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;margin:0}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
+h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15;letter-spacing:-.015em}
+p{margin:0}
+button{font:inherit;cursor:pointer}
+.wrap{max-width:70ch;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* cabecera */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--line)}
+.hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-block:10px 6px}
+.hd h1{font-size:19px;font-weight:900}
+.chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--line);border-radius:2px;padding:2px 6px}
+nav{display:flex;gap:4px;overflow-x:auto;padding-block:0 8px;scrollbar-width:thin}
+nav button{flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;color:var(--ink-3);font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;padding:5px 7px;white-space:nowrap}
+nav button[aria-current="true"]{color:var(--ink);border-color:var(--accent)}
+nav button .mn{color:var(--ink-3);margin-right:5px}
+nav button:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+main{padding-block:22px 10px}
+.lede{font-size:17px;color:var(--ink-2);margin-top:8px}
+h2.step{font-size:26px;font-weight:900}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:14px 15px;margin-top:14px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:8px}
+.sub{font-size:13.5px;color:var(--ink-2)}
+.mono{font-family:var(--mono)}
+.rule{height:1px;background:var(--line);border:0;margin:22px 0}
+
+/* casos */
+.case{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:11px 0;border-top:1px solid var(--line)}
+.case:first-of-type{border-top:0}
+.case .txt{min-width:0;font-size:15px}
+.pick{display:flex;gap:6px}
+.pick button{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;border:1px solid var(--line);background:var(--card-2);color:var(--ink-2);border-radius:2px;padding:5px 9px}
+.pick button[aria-pressed="true"].f{background:var(--fis-bg);border-color:var(--fis);color:var(--fis);font-weight:600}
+.pick button[aria-pressed="true"].q{background:var(--qui-bg);border-color:var(--qui);color:var(--qui);font-weight:600}
+.tag{font-family:var(--mono);font-size:11px;letter-spacing:.05em;border-radius:2px;padding:2px 6px;white-space:nowrap}
+.tag.f{background:var(--fis-bg);color:var(--fis)}
+.tag.q{background:var(--qui-bg);color:var(--qui)}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.err{background:var(--err-bg);color:var(--err)}
+.tag.na{background:var(--card-2);color:var(--ink-2)}
+
+/* ficha técnica */
+.ficha{background:var(--card-2);border:1px solid var(--line);border-radius:3px;padding:12px;margin-top:10px;font-family:var(--mono);font-size:12.5px}
+.ficha .row{display:grid;grid-template-columns:1fr auto 72px;gap:8px;align-items:center;padding:3px 0}
+.bar{height:7px;border-radius:1px;background:var(--line);position:relative;overflow:hidden}
+.bar i{position:absolute;top:0;bottom:0;left:50%;display:block}
+.bar i.q{background:var(--qui)}
+.bar i.f{background:var(--fis)}
+.tot{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);margin-top:8px;padding-top:8px;font-weight:600}
+.unk{color:var(--ink-3);margin-top:8px;font-size:11.5px;word-break:break-word}
+
+input[type=text],textarea{width:100%;background:var(--card-2);border:1px solid var(--line);border-radius:2px;color:var(--ink);font-family:var(--body);font-size:15px;padding:9px 10px}
+textarea{resize:vertical;min-height:72px}
+.btn{background:var(--accent);color:var(--card);border:1px solid var(--accent);border-radius:2px;font-family:var(--mono);font-size:12px;letter-spacing:.05em;padding:8px 13px;font-weight:600}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn[disabled]{opacity:.45;cursor:not-allowed}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+
+.qbtn{display:block;width:100%;text-align:left;background:var(--card-2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:2px;color:var(--ink);font-family:var(--body);font-size:14.5px;padding:9px 11px;margin-top:7px}
+.qbtn[aria-expanded="true"]{background:var(--card)}
+.ans{font-size:14.5px;color:var(--ink-2);border-left:3px solid var(--line);margin:0 0 4px 0;padding:9px 11px}
+.ans b{color:var(--ink)}
+
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
+th,td{border:1px solid var(--line);padding:7px 8px;text-align:center;font-variant-numeric:tabular-nums}
+th{background:var(--card-2);color:var(--ink-2);font-weight:600;font-size:11px;letter-spacing:.04em}
+td.lbl,th.lbl{text-align:left;background:var(--card-2);color:var(--ink-2)}
+.scroll{overflow-x:auto}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
+.metric{background:var(--card-2);border:1px solid var(--line);border-radius:3px;padding:10px}
+.metric .n{font-family:var(--display);font-size:27px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
+.metric .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-top:4px}
+.metric.bad .n{color:var(--err)}
+.limits li{margin-bottom:7px}
+.limits{padding-left:19px;font-size:14.5px;color:var(--ink-2)}
+.check{display:flex;gap:9px;align-items:flex-start;padding:7px 0;font-size:14.5px;cursor:pointer}
+.check input{margin-top:4px;accent-color:var(--accent);flex:0 0 auto}
+.foot{display:flex;justify-content:space-between;gap:10px;margin:26px 0 8px}
+.note{font-size:13px;color:var(--ink-3);margin-top:10px}
+.flash{background:var(--ok-bg);color:var(--ok);border-radius:2px;padding:2px 7px;font-family:var(--mono);font-size:11px}
+details{border-top:1px solid var(--line);padding:10px 0}
+summary{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-2);cursor:pointer}
+details p,details li{font-size:14px;color:var(--ink-2);margin-top:8px}
+.todo{background:var(--ok-bg);border:1px solid var(--line);border-left:3px solid var(--ok);border-radius:2px;padding:10px 12px;margin-top:14px;font-size:14.5px}
+.todo b.k{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ok);display:block;margin-bottom:3px}
+ol.guide{counter-reset:g;list-style:none;padding:0;margin:0}
+ol.guide li{counter-increment:g;display:grid;grid-template-columns:28px 1fr;gap:11px;padding:11px 0;border-top:1px solid var(--line)}
+ol.guide li:first-child{border-top:0;padding-top:2px}
+ol.guide li::before{content:counter(g);font-family:var(--display);font-weight:900;font-size:18px;color:var(--accent);line-height:1.25}
+ol.guide h4{font-size:15px;font-weight:700;margin-bottom:2px}
+ol.guide p{font-size:14.5px;color:var(--ink-2)}
+ol.guide .mins{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.07em;text-transform:uppercase}
+.legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.btn.big{font-size:13.5px;padding:11px 18px}
+@media (max-width:430px){
+  .case{grid-template-columns:1fr}
+  h2.step{font-size:22px}
+  .ficha .row{grid-template-columns:1fr auto 56px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<header>
+ <div class="wrap">
+  <div class="hd">
+   <h1>Cocina CC-1</h1>
+   <span class="chip">8° básico · 20 minutos</span>
+   <span class="chip">clasificador de texto · 14 ejemplos</span>
+   <span class="chip">funciona sin internet</span>
+  </div>
+  <nav id="nav" aria-label="Fases de la actividad"></nav>
+ </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<script>
+/* ───────── base de entrenamiento (la escribió el/la docente; es visible y editable) ───────── */
+const TRAIN_BASE=[
+ {t:"se quema el pan en el horno y queda negro",y:"Q"},
+ {t:"el aceite se pone rancio despues de varios meses",y:"Q"},
+ {t:"la manzana cortada se oscurece al contacto con el aire",y:"Q"},
+ {t:"el azucar se quema y se vuelve caramelo oscuro",y:"Q"},
+ {t:"la leche se corta y se forman grumos solidos",y:"Q"},
+ {t:"el cuchillo de acero se oxida y aparece una costra naranja",y:"Q"},
+ {t:"la masa con levadura fermenta y libera gas",y:"Q"},
+ {t:"el agua hierve en la olla y sale vapor",y:"F"},
+ {t:"la mantequilla se derrite en la sarten caliente",y:"F"},
+ {t:"la sal se disuelve en el agua",y:"F"},
+ {t:"el agua se congela y se forma hielo",y:"F"},
+ {t:"se corta la cebolla en trozos pequenos",y:"F"},
+ {t:"el vapor se condensa en la tapa fria",y:"F"},
+ {t:"se muele el cafe en granos hasta dejarlo en polvo",y:"F"}
+];
+const STOP=new Set(["que","con","por","una","uno","del","las","los","para","como","mas","sus","sobre","hasta","otra","otro","muy","esta","este","son","desde","varios"]);
+const tok=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-zñ ]/g," ").split(/\s+/).filter(w=>w.length>2&&!STOP.has(w));
+
+let extra=[], M=null;
+function train(){
+ const data=TRAIN_BASE.concat(extra), cQ={}, cF={}, V=new Set();
+ let NQ=0,NF=0,dQ=0,dF=0;
+ data.forEach(d=>{const ts=tok(d.t); d.y==="Q"?dQ++:dF++;
+  ts.forEach(w=>{V.add(w); if(d.y==="Q"){cQ[w]=(cQ[w]||0)+1;NQ++} else {cF[w]=(cF[w]||0)+1;NF++}})});
+ const vs=V.size, w={};
+ V.forEach(t=>{w[t]=Math.log(((cQ[t]||0)+1)/(NQ+vs))-Math.log(((cF[t]||0)+1)/(NF+vs))});
+ M={w,prior:Math.log(dQ/dF),vs,cQ,cF,n:data.length,dQ,dF};
+}
+function predict(text){
+ const ts=tok(text); let s=M.prior; const used=[],unk=[];
+ ts.forEach(t=>{ if(M.w[t]!==undefined){s+=M.w[t];used.push({t,v:M.w[t]})} else if(!unk.includes(t)) unk.push(t); });
+ return {s,lab:s>0?"Q":"F",p:1/(1+Math.exp(-Math.abs(s))),used,unk,tie:Math.abs(s)<0.2};
+}
+train();
+
+/* ───────── banco de prueba: referencia revisada por el/la docente ───────── */
+const CASES=[
+ {id:"c1",t:"El pan tostado se enfría sobre la rejilla.",ref:"F",why:"Enfriarse es un cambio de temperatura: la materia es la misma antes y después."},
+ {id:"c2",t:"La clara de huevo se vuelve blanca y firme en la sartén.",ref:"Q",why:"Las proteínas se desnaturalizan y se forman enlaces nuevos; el proceso no se revierte enfriando."},
+ {id:"c3",t:"El azúcar se disuelve en el té caliente.",ref:"F",why:"La sacarosa se dispersa entre las moléculas de agua y sigue siendo sacarosa; se recupera al evaporar el agua."},
+ {id:"c4",t:"El cuchillo mojado queda con una costra naranja después de una semana.",ref:"Q",why:"El hierro reacciona con oxígeno y agua; el óxido es una sustancia distinta del acero."},
+ {id:"c5",t:"Se derrite el queso sobre la pizza y los bordes se queman.",ref:"M",why:"Ocurren los dos a la vez: fusión (físico) y combustión incompleta en el borde (químico)."},
+ {id:"c6",t:"La sal se disuelve en el agua de la olla.",ref:"F",why:"Los iones se separan y se hidratan, pero no se forma una sustancia nueva."},
+ {id:"c7",t:"El jugo de limón hace que la leche forme grumos.",ref:"Q",why:"El ácido baja el pH y la caseína precipita; cambia la sustancia, no sólo su estado."},
+ {id:"c8",t:"El hielo del congelador se achica después de un mes.",ref:"F",why:"Sublimación: el hielo pasa a vapor sin derretirse. Sigue siendo agua."}
+];
+const REFNAME={F:"Físico",Q:"Químico",M:"Los dos"};
+
+/* ───────── preguntas sobre el funcionamiento del propio programa ───────── */
+const META=[
+ {q:"¿Cómo armaste esta respuesta?",a:"Separo el texto en palabras, busco cada palabra en una tabla de pesos y sumo los pesos. Si la suma queda sobre cero, entrego la etiqueta <b>químico</b>; si queda bajo cero, <b>físico</b>. No hay otro paso. El orden de las palabras no se usa."},
+ {q:"¿De dónde salen esos pesos?",a:"De contar en cuántos ejemplos de cada clase aparece cada palabra, dentro de una base de 14 frases escritas por tu profesora. Una palabra que aparece sólo en frases etiquetadas como químicas recibe peso positivo. Puedes abrir la base completa en la fase 2 y agregarle ejemplos."},
+ {q:"¿Qué pasa con una palabra que no está en tu tabla?",a:"Suma cero. El texto igual recibe una etiqueta, calculada sólo con las palabras que sí están en la tabla. En la fase 2 aparecen listadas como <b>palabras fuera del vocabulario</b>."},
+ {q:"¿Qué significa el porcentaje que muestras?",a:"Es el resultado de aplicar una fórmula a la suma de pesos: mide cuán lejos quedó esa suma del empate. <b>No mide si la etiqueta es correcta.</b> Con una base de 14 frases, un 95% puede acompañar una respuesta equivocada, y así ocurre en este banco de prueba."},
+ {q:"¿Puedes entregar una respuesta falsa?",a:"Sí. Siempre entrego una de dos etiquetas, incluso cuando ninguna palabra del texto está en mi tabla y la suma vale cero. Comparar mi salida con una fuente revisada es parte del trabajo de quien pregunta, no mío."},
+ {q:"¿Qué pasa si escribo una negación?",a:"Nada. <b>No se quema</b> y <b>se quema</b> comparten las mismas palabras con peso, así que la suma es idéntica. Pruébalo con el botón que está más abajo."},
+ {q:"¿En qué te pareces a los chatbots que uso en el celular?",a:"Comparten una cosa: los números de ambos se ajustan a partir de ejemplos. Las diferencias son grandes. Yo uso 14 frases y una tabla que cabe en una pantalla; un sistema de chat ajusta miles de millones de números y produce texto en vez de dos etiquetas. Y ninguno de los dos consulta una fuente mientras responde, salvo que tenga conectada una herramienta de búsqueda que entregue el link."}
+];
+const LIMITS=[
+ "No contiene química: no hay enlaces, ni átomos, ni reacciones dentro del programa. Sólo palabras y números.",
+ "No tiene la categoría <b>los dos a la vez</b>. Frente a un caso mixto entrega igual una de las dos etiquetas.",
+ "No usa el orden de las palabras ni las negaciones.",
+ "No distingue entre palabras parecidas: <b>congela</b> y <b>congelador</b> son dos entradas sin relación.",
+ "No busca en internet, no tiene fuentes, no entrega links ni DOI. Lo que dice no viene de ninguna parte verificable: viene de 14 frases.",
+ "No explica <b>por qué</b> un cambio es físico o químico. Esa explicación la tiene que poner una persona."
+];
+const CRIT=[
+ "Entrega una fuente que se puede abrir (link, libro, DOI).",
+ "Puedo repetir la observación y obtener lo mismo.",
+ "Coincide con lo que dice el texto de la asignatura.",
+ "Distingue entre lo que observo y lo que interpreto.",
+ "Dice qué parte de la respuesta no está respaldada.",
+ "Se banca una pregunta de seguimiento sin cambiar la respuesta."
+];
+const STARTERS=["¿Qué pasaría con las respuestas si…","¿Cuántos ejemplos harían falta para que…","¿Cómo podría comprobar en el laboratorio que…","¿Qué criterio me permitiría decidir si…"];
+
+/* ───────── estado ───────── */
+const S={step:0,mine:{},tested:{},meta:[],crit:[],veredicto:"",resguardo:"",pregunta:"",neg:null,probe:null};
+try{const raw=localStorage.getItem("cc1v2");if(raw)Object.assign(S,JSON.parse(raw))}catch(e){}
+function save(){try{localStorage.setItem("cc1v2",JSON.stringify(S))}catch(e){}}
+
+const STEPS=[
+ {n:"antes",k:"Cómo se usa"},
+ {n:"0–4",k:"Tu clasificación"},
+ {n:"4–9",k:"Cómo arma la respuesta"},
+ {n:"9–13",k:"Interrogar al programa"},
+ {n:"13–18",k:"Medir si funciona"},
+ {n:"18–20",k:"Veredicto y pregunta"}
+];
+
+/* ───────── utilidades de render ───────── */
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function fichaHTML(r){
+ const max=Math.max(1,...r.used.map(u=>Math.abs(u.v)));
+ const rows=r.used.map(u=>{
+  const w=Math.min(50,Math.abs(u.v)/max*50), cls=u.v>0?"q":"f";
+  const st=u.v>0?`left:50%;width:${w}%`:`left:${50-w}%;width:${w}%`;
+  return `<div class="row"><span>${esc(u.t)}</span><span class="bar" style="width:90px"><i class="${cls}" style="${st}"></i></span><span style="text-align:right">${u.v>0?"+":""}${u.v.toFixed(2)}</span></div>`;
+ }).join("")||'<div class="row"><span>ninguna palabra de este texto está en la tabla</span><span></span><span style="text-align:right">0.00</span></div>';
+ const lab=r.lab==="Q"?"químico":"físico";
+ return `<div class="ficha">
+  <div style="color:var(--ink-3);font-size:11px;letter-spacing:.06em;margin-bottom:6px">PESO POR PALABRA · izquierda = físico · derecha = químico</div>
+  ${rows}
+  <div class="tot"><span>suma de pesos</span><span>${r.s>0?"+":""}${r.s.toFixed(2)}</span></div>
+  <div class="tot" style="border:0;padding-top:2px"><span>etiqueta de salida</span><span class="tag ${r.lab.toLowerCase()==="q"?"q":"f"}">${lab} · ${(r.p*100).toFixed(0)}%</span></div>
+  ${r.unk.length?`<div class="unk">Fuera del vocabulario (suman 0): ${r.unk.map(esc).join(", ")}</div>`:""}
+  ${r.tie?`<div class="unk">La suma quedó cerca de cero: con un empate el programa entrega igual una etiqueta, la primera de la lista.</div>`:""}
+ </div>`;
+}
+function caseRow(c){
+ const m=S.mine[c.id]||"";
+ return `<div class="case"><div class="txt">${esc(c.t)}</div>
+  <div class="pick" role="group">
+   <button class="f" data-mine="${c.id}" data-v="F" aria-pressed="${m==="F"}">físico</button>
+   <button class="q" data-mine="${c.id}" data-v="Q" aria-pressed="${m==="Q"}">químico</button>
+  </div></div>`;
+}
+
+/* ───────── fases ───────── */
+function stepGuia(){
+ return `<div class="eyebrow">Antes de partir</div>
+ <h2 class="step">Qué vas a hacer en estos 20 minutos</h2>
+ <p class="lede">Vas a usar un programa que clasifica frases de cocina en <b>cambio físico</b> o <b>cambio químico</b>. Pero no lo vas a usar para que te dé la respuesta. Lo vas a abrir por dentro, buscarle los errores y decidir si sirve.</p>
+
+ <div class="card">
+  <h3>Para qué sirve esta actividad</h3>
+  <p class="sub">Cuando le preguntas algo a una aplicación de inteligencia artificial, te contesta al tiro y suena muy segura. La pregunta difícil no es qué te contestó, sino <b>cómo haces para saber si está bien</b>.</p>
+  <p class="sub" style="margin-top:9px">Este programa es chico a propósito: aprendió con sólo 14 frases, y esas 14 frases las puedes leer completas en la pantalla. Eso deja hacer algo que con una aplicación grande no se puede: ver exactamente de dónde salió cada respuesta, incluidas las equivocadas.</p>
+  <p class="sub" style="margin-top:9px">Al terminar vas a tener una lista de criterios tuyos para decidir cuándo creerle a una fuente: a este programa, a un video, a un chatbot y también a lo que tú afirmas.</p>
+ </div>
+
+ <div class="card">
+  <h3>Cómo funciona el programa, en tres frases</h3>
+  <ul class="limits">
+   <li>Corta la frase en palabras sueltas.</li>
+   <li>Busca cada palabra en una tabla donde cada una tiene un número asignado.</li>
+   <li>Suma esos números. Si la suma sale positiva responde <b>químico</b>; si sale negativa responde <b>físico</b>.</li>
+  </ul>
+  <p class="note">Eso es todo lo que hace. No sabe química, no entiende lo que lee y no busca en internet. Suma números.</p>
+ </div>
+
+ <div class="card">
+  <h3>Guía de uso: los cinco pasos</h3>
+  <ol class="guide">
+   <li><div><span class="mins">minutos 0 a 4</span><h4>Clasifica tú primero</h4><p>Aparecen 8 frases de cocina. En cada una aprietas el botón <b>físico</b> o el botón <b>químico</b>. Todavía no ves nada del programa: aquí importa lo que piensas tú.</p></div></li>
+   <li><div><span class="mins">minutos 4 a 9</span><h4>Mira cómo arma la respuesta</h4><p>Escribes cualquier frase y aprietas <b>Clasificar</b>. Abajo aparece la lista de palabras con su número y la suma final. También puedes agregarle ejemplos nuevos y ver cómo le cambian las respuestas.</p></div></li>
+   <li><div><span class="mins">minutos 9 a 13</span><h4>Hazle preguntas sobre él mismo</h4><p>Aprietas cada pregunta para abrirla. No son preguntas de cocina: son preguntas sobre cómo trabaja. Termina con la prueba de la negación, que es la más entretenida.</p></div></li>
+   <li><div><span class="mins">minutos 13 a 18</span><h4>Mídelo</h4><p>Aprietas <b>Clasificar los 8</b> y comparas tres cosas en cada caso: lo que dijiste tú, lo que dice la respuesta revisada por tu profesora y lo que dijo el programa. La tabla de resultados se arma sola.</p></div></li>
+   <li><div><span class="mins">minutos 18 a 20</span><h4>Da tu veredicto</h4><p>Decides si sirve o no, marcas qué le vas a exigir a una fuente para creerle, escribes una pregunta nueva y copias la ficha para pegarla en tu guía.</p></div></li>
+  </ol>
+ </div>
+
+ <div class="card">
+  <h3>Cosas prácticas</h3>
+  <ul class="limits">
+   <li>No necesitas internet. Si se cae el wifi, la actividad sigue igual.</li>
+   <li>Tus respuestas se van guardando solas. Si cierras la página sin querer, vuelves y sigues donde ibas.</li>
+   <li>Puedes moverte entre las fases con la barra gris de arriba o con los botones de abajo.</li>
+   <li>No hay nota por acertar. Equivocarse al clasificar es parte del trabajo: esos casos son los que sirven después.</li>
+  </ul>
+  <p class="sub" style="margin-top:10px">Los colores que vas a ver:</p>
+  <div class="legend">
+   <span class="tag f">físico</span>
+   <span class="tag q">químico</span>
+   <span class="tag ok">el programa coincide con la referencia</span>
+   <span class="tag err">el programa se equivocó</span>
+   <span class="tag na">tu respuesta o la referencia</span>
+  </div>
+  <div class="btnrow"><button class="btn big" data-go="1">Entendido, empezar →</button></div>
+ </div>`;
+}
+function step0(){
+ const done=Object.keys(S.mine).length;
+ return `<div class="eyebrow">Fase 1 · minutos 0 a 4</div>
+ <h2 class="step">Clasifica tú primero</h2>
+ <p class="lede">Ocho cosas que pasan en una cocina. Marca cada una antes de ver qué entrega el programa. Tus respuestas quedan guardadas y al final se comparan con las de él.</p>
+ <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Lee cada frase y aprieta <b>físico</b> o <b>químico</b>. Son 8 y nadie te corrige todavía. Si dudas, elige igual: lo importante es dejar registrado qué pensabas antes de ver la máquina.</div>
+ <div class="card">${CASES.map(caseRow).join("")}</div>
+ <p class="note">Van ${done} de 8. No busques en internet: esta parte es tu criterio.</p>`;
+}
+function step1(){
+ const probe=S.probe||CASES[1].t;
+ const r=predict(probe);
+ const lex=Object.entries(M.w).sort((a,b)=>b[1]-a[1]);
+ const top=lex.slice(0,6), bot=lex.slice(-6).reverse();
+ return `<div class="eyebrow">Fase 2 · minutos 4 a 9</div>
+ <h2 class="step">Cómo arma la respuesta</h2>
+ <p class="lede">El programa no lee la frase. La corta en palabras, busca cada palabra en una tabla y suma. Escribe cualquier cosa y mira la operación completa.</p>
+ <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Escribe una frase en el recuadro y aprieta <b>Clasificar</b>. Después mira el bloque gris de abajo: cada palabra con su número, la suma y la respuesta. Prueba con una frase que lo haga equivocarse a propósito.</div>
+ <div class="card">
+  <h3>Probar un texto</h3>
+  <input type="text" id="probe" value="${esc(probe)}" placeholder="Escribe una frase de cocina">
+  <div class="btnrow">
+   <button class="btn" id="run">Clasificar</button>
+   ${CASES.slice(0,4).map(c=>`<button class="btn ghost" data-probe="${esc(c.t)}">${esc(c.t.split(" ").slice(0,3).join(" "))}…</button>`).join("")}
+  </div>
+  ${fichaHTML(r)}
+  <p class="note">Las palabras fuera del vocabulario suman cero. Una frase entera de palabras desconocidas recibe igual una etiqueta.</p>
+ </div>
+ <div class="card">
+  <h3>La tabla viene de 14 frases</h3>
+  <p class="sub">Base actual: ${M.n} ejemplos (${M.dQ} químicos, ${M.dF} físicos), ${M.vs} palabras distintas. Pesos más extremos de cada lado:</p>
+  <div class="ficha">
+   ${top.map(([t,v])=>`<div class="row"><span>${esc(t)}</span><span class="tag q">químico</span><span style="text-align:right">+${v.toFixed(2)}</span></div>`).join("")}
+   ${bot.map(([t,v])=>`<div class="row"><span>${esc(t)}</span><span class="tag f">físico</span><span style="text-align:right">${v.toFixed(2)}</span></div>`).join("")}
+  </div>
+  <p class="note">Mira <b>pan</b> y <b>sartén</b>: no son palabras químicas ni físicas, pero cargan peso porque aparecieron en un ejemplo de ese lado.</p>
+  <details><summary>Ver las 14 frases de la base</summary>
+   <div class="ficha">${TRAIN_BASE.concat(extra).map(d=>`<div class="row" style="grid-template-columns:auto 1fr"><span class="tag ${d.y==="Q"?"q":"f"}">${d.y==="Q"?"quím":"físi"}</span><span style="text-align:left">${esc(d.t)}</span></div>`).join("")}</div>
+  </details>
+ </div>
+ <div class="card">
+  <h3>Agrega un ejemplo y vuelve a entrenar</h3>
+  <p class="sub">Escribe una frase, dile de qué tipo es y pulsa entrenar. Los pesos se recalculan al instante y las respuestas del programa cambian. Después puedes volver a medirlo en la fase 4.</p>
+  <input type="text" id="newex" placeholder="Ej.: la cáscara del plátano se pone café">
+  <div class="btnrow">
+   <button class="btn" data-add="F">Agregar como físico</button>
+   <button class="btn" data-add="Q">Agregar como químico</button>
+   ${extra.length?`<button class="btn ghost" id="reset-train">Volver a los 14 originales</button>`:""}
+  </div>
+  ${extra.length?`<p class="note">Agregaste ${extra.length} ejemplo${extra.length>1?"s":""}. La base tiene ahora ${M.n}.</p>`:""}
+ </div>`;
+}
+function step2(){
+ const neg=S.neg;
+ return `<div class="eyebrow">Fase 3 · minutos 9 a 13</div>
+ <h2 class="step">Interroga al programa</h2>
+ <p class="lede">No sobre cocina: sobre él mismo. Abre cada pregunta y contrasta la respuesta con lo que viste en la fase 2.</p>
+ <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Aprieta cada pregunta para abrirla y lee la respuesta. Luego aprieta <b>Clasificar las dos frases</b> en la prueba de la negación y fíjate en los dos números: tienen que ser distintos y no lo son.</div>
+ <div class="card">
+  ${META.map((m,i)=>`<button class="qbtn" data-meta="${i}" aria-expanded="${S.meta.includes(i)}">${esc(m.q)}</button>${S.meta.includes(i)?`<p class="ans">${m.a}</p>`:""}`).join("")}
+ </div>
+ <div class="card">
+  <h3>La prueba de la negación</h3>
+  <p class="sub">Dos frases que dicen lo contrario entre sí. Pulsa y compara las dos sumas.</p>
+  <div class="btnrow"><button class="btn" id="neg">Clasificar las dos frases</button></div>
+  ${neg?`<div style="display:grid;gap:10px;margin-top:10px">
+   <div><p class="mono" style="font-size:13px">"El pan se quema en el horno"</p>${fichaHTML(predict("El pan se quema en el horno"))}</div>
+   <div><p class="mono" style="font-size:13px">"El pan NO se quema en el horno"</p>${fichaHTML(predict("El pan no se quema en el horno"))}</div>
+   <p class="note">Misma suma, misma etiqueta, misma cifra de confianza. La palabra <b>no</b> no está en la tabla.</p>
+  </div>`:""}
+ </div>
+ <div class="card">
+  <h3>Lo que este programa no hace</h3>
+  <ul class="limits">${LIMITS.map(l=>`<li>${l}</li>`).join("")}</ul>
+  <p class="note">Esta lista es parte de la actividad, no una advertencia al margen: sin ella, cualquier cosa que entregue parece conocimiento.</p>
+ </div>`;
+}
+function step3(){
+ const res=CASES.map(c=>({c,r:predict(c.t)}));
+ const tested=res.filter(x=>S.tested[x.c.id]);
+ const bin=tested.filter(x=>x.c.ref!=="M");
+ const hit=bin.filter(x=>x.r.lab===x.c.ref).length;
+ const fq=bin.filter(x=>x.c.ref==="F"&&x.r.lab==="Q").length;
+ const ff=bin.filter(x=>x.c.ref==="Q"&&x.r.lab==="F").length;
+ const mix=tested.filter(x=>x.c.ref==="M").length;
+ const mineBin=CASES.filter(c=>c.ref!=="M"&&S.mine[c.id]);
+ const mineHit=mineBin.filter(c=>S.mine[c.id]===c.ref).length;
+ const conf=bin.filter(x=>x.r.lab!==x.c.ref).map(x=>(x.r.p*100).toFixed(0));
+ const pct=bin.length?Math.round(hit/bin.length*100):0;
+ return `<div class="eyebrow">Fase 4 · minutos 13 a 18</div>
+ <h2 class="step">Mide si funciona</h2>
+ <p class="lede">Pulsa <b>Clasificar</b> en cada caso. La columna <b>referencia</b> la revisó tu profesora, con justificación. La tabla de abajo se arma sola.</p>
+ <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Aprieta <b>Clasificar los 8</b>. En cada caso te van a quedar tres etiquetas a la vista: la referencia revisada, la tuya y la del programa. Busca los casos donde el programa se equivocó y mira con qué porcentaje de confianza lo hizo.</div>
+ <div class="card">
+  <div class="btnrow"><button class="btn" id="runall">Clasificar los 8</button>${tested.length?`<button class="btn ghost" id="clear">Borrar resultados</button>`:""}</div>
+  ${res.map(({c,r})=>{
+   const t=S.tested[c.id];
+   const ok=t&&c.ref!=="M"&&r.lab===c.ref, bad=t&&c.ref!=="M"&&r.lab!==c.ref;
+   return `<div class="case"><div class="txt">${esc(c.t)}
+    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+     <span class="tag ${c.ref==="M"?"na":(c.ref==="Q"?"q":"f")}">referencia: ${REFNAME[c.ref]}</span>
+     ${S.mine[c.id]?`<span class="tag na">tú: ${S.mine[c.id]==="Q"?"químico":"físico"}</span>`:""}
+     ${t?`<span class="tag ${r.lab==="Q"?"q":"f"}">programa: ${r.lab==="Q"?"químico":"físico"} ${(r.p*100).toFixed(0)}%</span>`:""}
+     ${ok?'<span class="tag ok">coincide</span>':""}
+     ${bad?'<span class="tag err">no coincide</span>':""}
+     ${t&&c.ref==="M"?'<span class="tag err">fuera de sus dos etiquetas</span>':""}
+    </div>
+    ${t?`<p class="note" style="margin-top:7px"><b>Por qué:</b> ${esc(c.why)}</p>${fichaHTML(r)}`:""}
+   </div>
+   <div class="pick">${t?"":`<button data-test="${c.id}">clasificar</button>`}</div></div>`;
+  }).join("")}
+ </div>
+ ${tested.length?`<div class="card">
+  <h3>Matriz de resultados</h3>
+  <div class="scroll"><table>
+   <tr><th class="lbl">referencia \\ programa</th><th>dijo físico</th><th>dijo químico</th></tr>
+   <tr><td class="lbl">era físico</td><td>${bin.filter(x=>x.c.ref==="F"&&x.r.lab==="F").length}</td><td>${fq}</td></tr>
+   <tr><td class="lbl">era químico</td><td>${ff}</td><td>${bin.filter(x=>x.c.ref==="Q"&&x.r.lab==="Q").length}</td></tr>
+   <tr><td class="lbl">era los dos</td><td colspan="2">${mix} caso${mix===1?"":"s"} que no cabe${mix===1?"":"n"} en ninguna columna</td></tr>
+  </table></div>
+  <div class="metrics">
+   <div class="metric"><div class="n">${pct}%</div><div class="k">aciertos del programa</div></div>
+   <div class="metric ${fq+ff?"bad":""}"><div class="n">${fq+ff}</div><div class="k">respuestas equivocadas</div></div>
+   <div class="metric"><div class="n">${mineBin.length?Math.round(mineHit/mineBin.length*100):"–"}${mineBin.length?"%":""}</div><div class="k">tus aciertos</div></div>
+  </div>
+  ${conf.length?`<p class="note">Las respuestas equivocadas salieron con ${conf.join("% y ")}% de confianza. El porcentaje mide la distancia al empate, no el acierto: por eso una cifra alta acompaña a un error.</p>`:""}
+  <p class="note">Un solo número esconde el tipo de error. ${fq?`Hubo ${fq} caso${fq>1?"s":""} físico${fq>1?"s":""} etiquetado${fq>1?"s":""} como químico`:""}${fq&&ff?" y ":""}${ff?`${ff} caso${ff>1?"s":""} químico${ff>1?"s":""} etiquetado${ff>1?"s":""} como físico`:""}${(fq||ff)?". Para una prueba de laboratorio los dos errores no cuestan lo mismo.":"Revisa el tipo de error, no sólo cuántos hubo."}</p>
+ </div>`:""}
+ ${tested.length===CASES.length?`<div class="card"><h3>Qué hacer con esto</h3>
+  <p class="sub">Vuelve a la fase 2, agrega un ejemplo a la base y vuelve aquí: la matriz cambia. Ese es el único modo de mejorarlo que tienes a mano, y sirve para ver qué tan frágil es un resultado construido con 14 frases.</p></div>`:""}`;
+}
+function step4(){
+ return `<div class="eyebrow">Fase 5 · minutos 18 a 20</div>
+ <h2 class="step">Tu veredicto</h2>
+ <p class="lede">Ya lo mediste. Ahora decide tú, y deja escrito con qué criterio decidiste.</p>
+ <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Cuatro cosas: elige una de las tres opciones, escribe el resguardo en una frase, marca los criterios que vas a exigir y escribe tu pregunta. Al final aprieta <b>Copiar ficha</b> y pégala en tu guía.</div>
+ <div class="card">
+  <h3>¿Sirve este programa para estudiar cambios físicos y químicos?</h3>
+  <div class="btnrow">
+   ${["Sí, como está","Sólo con resguardos","No"].map(v=>`<button class="btn ${S.veredicto===v?"":"ghost"}" data-ver="${esc(v)}">${v}</button>`).join("")}
+  </div>
+  <p class="sub" style="margin-top:12px">¿Con qué resguardo? (una frase)</p>
+  <input type="text" id="resg" value="${esc(S.resguardo)}" placeholder="Ej.: sólo si cada respuesta se contrasta con…">
+ </div>
+ <div class="card">
+  <h3>Criterios de validez que vas a exigir</h3>
+  <p class="sub">A cualquier fuente: a este programa, a un chatbot, a un video, y también a lo que tú afirmas.</p>
+  ${CRIT.map((c,i)=>`<label class="check"><input type="checkbox" data-crit="${i}" ${S.crit.includes(i)?"checked":""}><span>${esc(c)}</span></label>`).join("")}
+ </div>
+ <div class="card">
+  <h3>La pregunta con la que cierras</h3>
+  <p class="sub">Tiene que ser una pregunta que todavía no tenga respuesta en esta actividad y que puedas investigar.</p>
+  <div class="btnrow">${STARTERS.map(s=>`<button class="btn ghost" data-start="${esc(s)}">${esc(s)}</button>`).join("")}</div>
+  <textarea id="preg" placeholder="Escribe tu pregunta">${esc(S.pregunta)}</textarea>
+ </div>
+ <div class="card">
+  <h3>Ficha para entregar</h3>
+  <p class="sub">Copia el texto y pégalo en la guía del curso.</p>
+  <div class="btnrow"><button class="btn" id="copy">Copiar ficha</button><span id="copied"></span></div>
+  <textarea id="report" readonly style="margin-top:10px;min-height:150px;font-family:var(--mono);font-size:12.5px">${esc(buildReport())}</textarea>
+ </div>
+ <details><summary>Panel del/la docente · guion de los 20 minutos</summary>
+  <p><b>Antes de partir.</b> Proyectar la pantalla "Cómo se usa" y leerla en voz alta: propósito, las tres frases de cómo funciona el programa y los cinco pasos. Toma dos minutos y evita las preguntas de operación durante la actividad.</p>
+  <p><b>0–4.</b> Cada estudiante clasifica los 8 casos sin ver el programa. Registra en la pizarra cuántos marcaron el caso de la clara de huevo como físico: es la concepción alternativa que después va a reaparecer en la máquina.</p>
+  <p><b>4–9.</b> Fase 2 en proyector. El momento clave es el peso de <b>pan</b> y de <b>sartén</b>: palabras sin contenido químico que deciden la etiqueta. Pide que alguien escriba una frase que haga fallar al programa a propósito.</p>
+  <p><b>9–13.</b> Interrogación. La prueba de la negación se proyecta y se comenta: dos frases opuestas, salida idéntica.</p>
+  <p><b>13–18.</b> Medición. Deja que primero vean el porcentaje y recién después el tipo de error. La pregunta que abre la discusión: ¿preferirías un programa que se equivoca mucho avisando, o uno que se equivoca poco con 95% de confianza?</p>
+  <p><b>18–20.</b> Veredicto, criterios y pregunta investigable. Se recogen las fichas.</p>
+  <p><b>Si se cae internet:</b> no pasa nada, la actividad no la usa. El archivo funciona abierto desde el computador.</p>
+  <p><b>Qué puede ir mal:</b> que el curso concluya "la IA es mala". Granularidad: este programa tiene 14 ejemplos y dos etiquetas; falla por razones que se pueden señalar con el dedo en la tabla. La conclusión que se busca no es sobre la bondad de la herramienta sino sobre qué le exigimos a una fuente.</p>
+ </details>`;
+}
+function buildReport(){
+ const res=CASES.map(c=>({c,r:predict(c.t)}));
+ const bin=res.filter(x=>x.c.ref!=="M"&&S.tested[x.c.id]);
+ const hit=bin.filter(x=>x.r.lab===x.c.ref).length;
+ const L=[];
+ L.push("FICHA · Cocina CC-1 (clasificador de texto, 14 ejemplos)");
+ L.push("");
+ L.push("Medición del programa: "+(bin.length?`${hit} de ${bin.length} casos coinciden con la referencia (${Math.round(hit/bin.length*100)}%)`:"sin medir"));
+ const fq=bin.filter(x=>x.c.ref==="F"&&x.r.lab==="Q").length, ff=bin.filter(x=>x.c.ref==="Q"&&x.r.lab==="F").length;
+ L.push(`Tipos de error: ${fq} físico(s) etiquetado(s) como químico; ${ff} químico(s) etiquetado(s) como físico; 1 caso mixto sin categoría disponible.`);
+ const mineBin=CASES.filter(c=>c.ref!=="M"&&S.mine[c.id]);
+ if(mineBin.length) L.push(`Mi propia clasificación: ${mineBin.filter(c=>S.mine[c.id]===c.ref).length} de ${mineBin.length} coinciden con la referencia.`);
+ L.push("");
+ L.push("Veredicto: "+(S.veredicto||"(sin marcar)"));
+ L.push("Resguardo: "+(S.resguardo||"(sin escribir)"));
+ L.push("");
+ L.push("Criterios de validez exigidos:");
+ S.crit.length?S.crit.forEach(i=>L.push("- "+CRIT[i])):L.push("- (ninguno marcado)");
+ L.push("");
+ L.push("Pregunta investigable de cierre:");
+ L.push(S.pregunta||"(sin escribir)");
+ L.push("");
+ L.push("Lo que este programa no hace: no contiene química; no tiene categoría mixta; ignora el orden de las palabras y las negaciones; no distingue palabras emparentadas; no entrega fuentes ni links; no explica por qué un cambio es físico o químico.");
+ return L.join("\n");
+}
+
+/* ───────── render y eventos ───────── */
+const main=document.getElementById("main"), nav=document.getElementById("nav");
+function render(){
+ nav.innerHTML=STEPS.map((s,i)=>`<button data-step="${i}" aria-current="${i===S.step}"><span class="mn">${s.n}</span>${s.k}</button>`).join("");
+ main.innerHTML=[stepGuia,step0,step1,step2,step3,step4][S.step]()+
+  `<div class="foot">
+    <button class="btn ghost" data-go="-1" ${S.step===0?"disabled":""}>← anterior</button>
+    <button class="btn" data-go="1" ${S.step===5?"disabled":""}>${S.step===0?"empezar →":"siguiente →"}</button>
+   </div>`;
+ save();
+}
+document.addEventListener("click",e=>{
+ const b=e.target.closest("button"); if(!b) return;
+ const d=b.dataset;
+ if(d.step!==undefined){S.step=+d.step;window.scrollTo(0,0);return render()}
+ if(d.go){S.step=Math.max(0,Math.min(5,S.step+ +d.go));window.scrollTo(0,0);return render()}
+ if(d.mine){S.mine[d.mine]=d.v;return render()}
+ if(d.probe!==undefined){S.probe=d.probe;return render()}
+ if(b.id==="run"){S.probe=document.getElementById("probe").value;return render()}
+ if(d.add){
+  const v=document.getElementById("newex").value.trim();
+  if(v.length>5){extra.push({t:v,y:d.add});train();document.getElementById("newex").value=""}
+  return render();
+ }
+ if(b.id==="reset-train"){extra=[];train();return render()}
+ if(d.meta!==undefined){const i=+d.meta;S.meta=S.meta.includes(i)?S.meta.filter(x=>x!==i):S.meta.concat(i);return render()}
+ if(b.id==="neg"){S.neg=1;return render()}
+ if(d.test){S.tested[d.test]=1;return render()}
+ if(b.id==="runall"){CASES.forEach(c=>S.tested[c.id]=1);return render()}
+ if(b.id==="clear"){S.tested={};return render()}
+ if(d.ver){S.veredicto=d.ver;return render()}
+ if(d.start){const t=document.getElementById("preg");t.value=d.start+" ";t.focus();S.pregunta=t.value;return save()}
+ if(b.id==="copy"){
+  const txt=document.getElementById("report").value, tag=document.getElementById("copied");
+  const fb=()=>{const t=document.getElementById("report");t.select();tag.innerHTML='<span class="flash">selecciona y copia</span>'};
+  try{navigator.clipboard.writeText(txt).then(()=>{tag.innerHTML='<span class="flash">copiada</span>'},fb)}catch(err){fb()}
+  return;
+ }
+});
+document.addEventListener("input",e=>{
+ const t=e.target;
+ if(t.id==="resg"){S.resguardo=t.value;save()}
+ if(t.id==="preg"){S.pregunta=t.value;save();const r=document.getElementById("report");if(r)r.value=buildReport()}
+ if(t.dataset.crit!==undefined){const i=+t.dataset.crit;S.crit=t.checked?S.crit.concat(i):S.crit.filter(x=>x!==i);save();const r=document.getElementById("report");if(r)r.value=buildReport()}
+});
+document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="probe"){S.probe=e.target.value;render()}});
+render();
+</script>
+
+</body></html>
