@@ -5,7 +5,8 @@ de cocina, que el estudiante no consulta sino que audita y mide.
 
 Curso DDC-1037, Sesión 7. Prototipo del trío Bustos / Sepúlveda / Solís-Pinilla.
 Concepto de ML trabajado: **¿cómo se mide si un modelo "funciona"?**
-Contenido disciplinar: cambio físico y cambio químico, 1° medio.
+Contenido disciplinar: cambio físico y cambio químico.
+Destinatario: **8° año básico**.
 
 ---
 
@@ -23,6 +24,7 @@ revisada y decide si sirve.
 
 ## 2. Cómo se usa
 
+- **Primero**: proyectar la pantalla "Cómo se usa" y leerla con el curso.
 - **En clase**: abrir el archivo en el computador del aula y proyectar. También corre
   en el celular de cada estudiante si se comparte el archivo.
 - **No requiere**: internet, cuenta, instalación, API key.
@@ -30,10 +32,18 @@ revisada y decide si sirve.
 - El progreso se guarda en el navegador de cada estudiante. Al final hay un botón
   "Copiar ficha" que entrega el registro en texto para pegar en la guía del curso.
 
-## 3. Las cinco fases
+## 3. Las fases
+
+La primera pantalla, **Cómo se usa**, va antes del cronómetro. Declara el propósito de
+la actividad, explica en tres frases qué hace el programa y entrega la guía de uso paso
+a paso, redactada para 8° básico. Está pensada para proyectarse y leerse en voz alta en
+dos minutos antes de empezar. Además, cada fase abre con un recuadro verde
+**Qué tienes que hacer aquí** con la instrucción concreta: qué botón apretar y dónde
+mirar.
 
 | Min | Fase | Qué hace el estudiante |
 |---|---|---|
+| antes | Cómo se usa | Lee el propósito, cómo funciona el programa y los cinco pasos |
 | 0–4 | Tu clasificación | Etiqueta 8 casos de cocina sin ver el programa |
 | 4–9 | Cómo arma la respuesta | Prueba frases, ve pesos por palabra, agrega ejemplos y reentrena |
 | 9–13 | Interrogar al programa | 7 preguntas sobre su funcionamiento + prueba de la negación |
