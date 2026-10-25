@@ -264,6 +264,8 @@ pre.code{background:var(--panel);color:#EDEDEA;border:2px solid var(--edge);bord
 .wfoot{max-width:1060px;margin:20px auto 0;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));font-size:13px;color:var(--ink-3)}
 @media (max-width:900px){.heroin{grid-template-columns:1fr}.heroin .dia{order:-1;max-width:270px}.wcards{grid-template-columns:1fr}}
 .gate{position:fixed;inset:0;z-index:40;background:rgba(8,8,10,.62);display:flex;align-items:center;justify-content:center;padding:20px}
+/* display explícito gana al comportamiento por defecto de [hidden]: hay que anularlo a mano */
+.gate[hidden],.welcome[hidden],.sheetbtn[hidden]{display:none!important}
 .gatebox{background:var(--surface);border:2px solid var(--edge);border-radius:var(--r);padding:20px;width:min(420px,100%)}
 .gatebox h3{font-size:26px;font-weight:800;margin-bottom:8px}
 .gatebox .sub{margin-bottom:13px}
@@ -1359,10 +1361,10 @@ function render(){
  if(S.area==="pro"&&S.dstep>pro.length-1)S.dstep=0;
  const cur=S.area==="pro"?S.dstep:S.step;
  EL("welcome").hidden=!entrada;
- if(entrada){EL("welcome").innerHTML=vistaEntrada();EL("sheet").hidden=true;save();return}
+ EL("gate").hidden=!gate;
+ if(entrada){gate=false;EL("gate").hidden=true;EL("welcome").innerHTML=vistaEntrada();EL("sheet").hidden=true;save();return}
  EL("sheet").hidden=false;
  EL("roles").innerHTML=rolesBar();
- EL("gate").hidden=!gate;
  EL("nav").innerHTML=steps.map((s,i)=>'<button data-step="'+i+'" aria-current="'+(i===cur)+'"><span class="mn">'+s.n+'</span>'+s.k+'</button>').join("");
  const m=metrics();
  EL("strip").innerHTML=['base <b>'+M.n+'</b> ejemplos','vocabulario <b>'+M.vs+'</b> palabras',
