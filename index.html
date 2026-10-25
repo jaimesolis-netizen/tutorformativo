@@ -581,9 +581,14 @@ const ROLENAME={est:"estudiante",doc:"docente validador",admin:"administración"
 const CODE=()=>"CC1-"+Math.random().toString(36).toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,4);
 const S={step:0,dstep:0,area:"est",route:30,mstep:null,code:CODE(),mine:{},tested:{},meta:[],crit:[],veredicto:"",resguardo:"",pregunta:"",neg:null,probe:null,
  dlg:null,post:{},peer:{r:{},sug:{text:"",dim:"",sev:"",ev:""}},sent:null,msg:""};
-const CFG={pid:"",key:"",coll:"",aiKey:"",aiModel:"gemini-2.0-flash",texts:true,nval:5};
+/* Worker de Cloudflare que hace de intermediario con OpenRouter. La clave de OpenRouter
+   vive como secreto dentro del Worker y nunca llega al navegador. */
+const AI={url:"",model:"recursive/flint-v1.0:free"};
+const CFG={pid:"",key:"",coll:"",aiUrl:"",aiModel:"",texts:true,nval:5};
 const EFF=()=>({pid:CFG.pid||FIRE.pid,key:CFG.key||FIRE.key,coll:CFG.coll||FIRE.coll||"cc1_pilotos"});
+const EFFAI=()=>({url:CFG.aiUrl||AI.url,model:CFG.aiModel||AI.model||"recursive/flint-v1.0:free"});
 const cfgOk=()=>{const e=EFF();return !!(e.pid&&e.key)};
+const aiOk=()=>!!EFFAI().url;
 try{const a=localStorage.getItem("cc1v3");if(a)Object.assign(S,JSON.parse(a))}catch(e){}
 try{const b=localStorage.getItem("cc1cfg");if(b)Object.assign(CFG,JSON.parse(b))}catch(e){}
 function save(){try{localStorage.setItem("cc1v3",JSON.stringify(S))}catch(e){}}
@@ -807,15 +812,26 @@ function aprendizajePrompt(){
  return L.join("\n");
 }
 async function pedirIA(prompt){
- const u="https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(CFG.aiModel)+":generateContent?key="+encodeURIComponent(CFG.aiKey);
- const r=await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
- if(!r.ok)throw new Error(r.status+" "+(await r.text()).slice(0,140));
- const j=await r.json();
- return (j.candidates&&j.candidates[0]&&j.candidates[0].content.parts.map(x=>x.text).join(""))||"Respuesta vacía.";
+ const a=EFFAI();
+ const r=await fetch(a.url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,model:a.model})});
+ const j=await r.json().catch(()=>null);
+ if(!r.ok)throw new Error((j&&j.error)||(r.status+" del Worker"));
+ return (j&&j.text)||"Respuesta vacía.";
 }
+let aiMsg="";
+async function probarIA(){
+ aiMsg="Probando el Worker…";render();
+ const t0=Date.now();
+ try{
+  const r=await pedirIA("Responde exactamente con esta frase y nada más: conexion verificada.");
+  aiMsg="Respondió en "+((Date.now()-t0)/1000).toFixed(1)+" s → "+String(r).trim().slice(0,120);
+ }catch(e){aiMsg="Falló: "+e.message+". Si estás dentro de una vista previa, las llamadas externas están bloqueadas: prueba desde tu sitio publicado."}
+ render();
+}
+const SINAI="No hay Worker configurado. Copia el prompt con el botón de al lado, pégalo en el asistente que uses y trae el resultado al recuadro de abajo.";
 async function runAprendizaje(){
  if(!POOL.length){aprend="No hay sesiones cargadas. Ve a Datos y pulsa «Cargar respuestas».";return render()}
- if(!CFG.aiKey){aprend="Sin clave de modelo configurada. Usa «Copiar prompt del proceso» y pégalo en el asistente que prefieras; después trae el resultado a este recuadro.";return render()}
+ if(!aiOk()){aprend=SINAI;return render()}
  aprend="Compilando el análisis del proceso…";render();
  try{aprend=await pedirIA(aprendizajePrompt())}
  catch(e){aprend="No se pudo compilar: "+e.message+". Dentro de una vista previa las llamadas externas están bloqueadas; usa el prompt copiable."}
@@ -836,7 +852,7 @@ async function publicar(tipo,texto){
 }
 async function runInforme(){
  const p=informePrompt();
- if(!CFG.aiKey){informe="Sin clave de modelo configurada. Usa «Copiar prompt del informe» y pégalo en el asistente que prefieras; después puedes pegar el resultado aquí abajo y publicarlo.";return render()}
+ if(!aiOk()){informe=SINAI;return render()}
  informe="Generando el informe…";render();
  try{informe=await pedirIA(p)}
  catch(e){informe="No se pudo generar: "+e.message+". Dentro de una vista previa las llamadas externas están bloqueadas; usa el prompt copiable."}
@@ -845,15 +861,10 @@ async function runInforme(){
 async function runAI(){
  const p=analysisPrompt();
  if(!p){analysis="No hay datos cargados todavía.";return render()}
- if(!CFG.aiKey){analysis="Sin clave de modelo configurada. Usa «Copiar prompt de análisis» y pégalo en el asistente que prefieras.";return render()}
+ if(!aiOk()){analysis=SINAI;return render()}
  analysis="Analizando…";render();
- try{
-  const u="https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(CFG.aiModel)+":generateContent?key="+encodeURIComponent(CFG.aiKey);
-  const r=await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:p}]}]})});
-  if(!r.ok)throw new Error(r.status+" "+(await r.text()).slice(0,140));
-  const j=await r.json();
-  analysis=(j.candidates&&j.candidates[0]&&j.candidates[0].content.parts.map(x=>x.text).join(""))||"Respuesta vacía.";
- }catch(e){analysis="No se pudo analizar: "+e.message+". Dentro de una vista previa las llamadas externas están bloqueadas; usa el prompt copiable."}
+ try{analysis=await pedirIA(p)}
+ catch(e){analysis="No se pudo analizar: "+e.message+". Dentro de una vista previa las llamadas externas están bloqueadas; usa el prompt copiable."}
  render();
 }
 
@@ -1226,11 +1237,19 @@ function dAnalisis(){
  return '<div class="eyebrow">Validación con los datos del piloto</div><h2 class="step">Análisis</h2>'+
  '<p class="lede">El análisis se arma con los datos agregados que están cargados. Puede ejecutarse con un modelo conectado o copiarse como prompt para pegarlo donde prefieras.</p>'+
  (a?'':'<div class="warnbox">No hay datos cargados. Ve a <b>Datos y piloto</b> y pulsa «Cargar respuestas».</div>')+
- '<div class="card"><h3>Modelo de análisis (opcional)</h3><div class="grid2">'+
- '<div><label class="fld">Clave de API</label><input type="password" id="cfg-aikey" value="'+esc(CFG.aiKey)+'" placeholder="déjala vacía para no usar modelo"></div>'+
- '<div><label class="fld">Modelo</label><input type="text" id="cfg-aimodel" value="'+esc(CFG.aiModel)+'"></div></div>'+
- '<div class="btnrow"><button class="btn" id="saveai">Guardar</button><button class="btn hl" id="runai"'+(a?"":" disabled")+'>Analizar con IA</button><button class="btn ghost" id="copyprompt2"'+(a?"":" disabled")+'>Copiar prompt de análisis</button></div>'+
- '<p class="note">La clave queda en este navegador y viaja sólo al proveedor que elijas. Para un pilotaje institucional conviene no usar clave aquí y copiar el prompt.</p></div>'+
+ '<div class="card"><h3>Conexión con el modelo</h3>'+
+ '<p class="sub">Las peticiones pasan por un Worker de Cloudflare que guarda la clave de OpenRouter como secreto. El navegador nunca la ve, así que el archivo se puede publicar sin exponer nada.</p>'+
+ '<div class="grid2" style="margin-top:12px">'+
+ '<div><label class="fld">URL del Worker</label><input type="text" id="cfg-aiurl" value="'+esc(EFFAI().url)+'" placeholder="https://cocina-ia.tu-cuenta.workers.dev"></div>'+
+ '<div><label class="fld">Modelo en OpenRouter</label><input type="text" id="cfg-aimodel" value="'+esc(EFFAI().model)+'"></div></div>'+
+ '<div class="btnrow"><button class="btn" id="saveai">Guardar</button><button class="btn ghost" id="probeai"'+(aiOk()?"":" disabled")+'>Probar conexión</button>'+
+ '<span class="sync '+(aiOk()?"on":"off")+'">'+(aiOk()?"worker configurado":"sin worker")+'</span></div>'+
+ (aiMsg?'<p class="note">'+esc(aiMsg)+'</p>':"")+
+ '<pre class="code">const AI={url:"'+esc(EFFAI().url)+'", model:"'+esc(EFFAI().model)+'"};</pre>'+
+ '<div class="btnrow"><button class="btn ghost" id="copyai">Copiar constante para el archivo</button></div>'+
+ '<p class="note">Sin Worker todo sigue funcionando: los prompts se copian y se pegan en cualquier asistente.</p></div>'+
+ '<div class="card"><h3>Análisis de los datos</h3><p class="sub">Lectura de las respuestas recogidas: exactitud medida, ciclos CER, concepciones y criterios bajo 3,5.</p>'+
+ '<div class="btnrow"><button class="btn hl" id="runai"'+(a?"":" disabled")+'>Analizar con IA</button><button class="btn ghost" id="copyprompt2"'+(a?"":" disabled")+'>Copiar prompt de análisis</button></div></div>'+
  (a?'<div class="card"><h3>Lectura automática, sin modelo</h3><ul class="limits">'+
   ['Sesiones: <b>'+a.n+'</b>. Con menos de 15 el resultado es exploratorio y no admite comparación entre grupos.',
    'Exactitud media del clasificador medida por los participantes: <b>'+(a.exactitud===null?"s/d":a.exactitud.toFixed(1)+"%")+'</b>; aciertos propios: <b>'+(a.misAciertos===null?"s/d":a.misAciertos.toFixed(1)+"%")+'</b>.',
@@ -1451,7 +1470,9 @@ document.addEventListener("click",e=>{
  if(d.peer){S.peer.r[d.peer]=d.v==="NO"?"NO":+d.v;return render()}
  if(d.texts){CFG.texts=d.texts==="1";saveCfg();return render()}
  if(b.id==="savecfg"){CFG.pid=EL("cfg-pid").value.trim();CFG.key=EL("cfg-key").value.trim();CFG.coll=EL("cfg-coll").value.trim()||"cc1_pilotos";saveCfg();return render()}
- if(b.id==="saveai"){CFG.aiKey=EL("cfg-aikey").value.trim();CFG.aiModel=EL("cfg-aimodel").value.trim()||"gemini-2.0-flash";saveCfg();return render()}
+ if(b.id==="saveai"){CFG.aiUrl=EL("cfg-aiurl").value.trim().replace(/\/+$/,"");CFG.aiModel=EL("cfg-aimodel").value.trim();aiMsg="";saveCfg();return render()}
+ if(b.id==="copyai"){copyTo('const AI={url:"'+EFFAI().url+'", model:"'+EFFAI().model+'"};');return}
+ if(b.id==="probeai"){probarIA();return}
  if(b.id==="copyrules"){copyTo(document.querySelector("pre.code").textContent);return}
  if(b.id==="loadpool"){loadPool();return}
  if(b.id==="send"){sendPilot();return}
