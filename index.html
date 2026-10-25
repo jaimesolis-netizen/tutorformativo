@@ -569,7 +569,7 @@ const SEV={P1:"Crítica",P2:"Alta",P3:"Media",P4:"Baja"};
 /* Configuración del pilotaje incrustada en el archivo publicado. La clave web de Firebase
    no es un secreto: lo que protege los datos son las reglas de Firestore. Rellenar antes
    de publicar para que docentes validadores puedan enviar y leer sin configurar nada. */
-const FIRE={pid:"",key:"",coll:"cc1_pilotos"};
+const FIRE={pid:"cocina-cc1",key:"AIzaSyBBIpxwCUTO7nzX2hHzaN8Rvxt5oZT4R7Q",coll:"cc1_pilotos"};
 /* Perfiles. Las claves se guardan como hash djb2, nunca en texto plano.
    docente validador: validar-cc1 · administración: cocina-admin
    Para cambiarlas, usa el generador de hash en el panel de administración. */
@@ -1165,7 +1165,7 @@ function dEtica(){
  '<p><b>Si se cae internet:</b> la actividad completa sigue funcionando. Sólo el envío al piloto y el análisis con modelo quedan fuera.</p></details>';
 }
 function dDatos(){
- const rules='rules_version = "2";\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /'+CFG.coll+'/{doc} {\n      allow create: if request.resource.data.version == "cc1-v3";\n      allow read:   if true;\n      allow update, delete: if false;\n    }\n  }\n}';
+ const rules='rules_version = "2";\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /'+EFF().coll+'/{doc} {\n      // sesiones de estudiantes, coevaluaciones y los dos informes de cierre\n      allow create: if request.resource.data.version in ["cc1-v3","cc1-informe","cc1-aprendizaje"]\n                    && request.resource.data.size() < 40;\n      allow read:   if true;\n      allow update, delete: if false;\n    }\n  }\n}';
  return '<div class="eyebrow">Pilotaje</div><h2 class="step">Datos y Firebase</h2>'+
  '<p class="lede">La recolección usa Firestore por API REST: sin SDK, sin cuentas y sin dependencias. Pega aquí los datos de tu proyecto y el aplicativo queda listo para recibir respuestas de quienes lo pilotean.</p>'+
  '<div class="warnbox">Las llamadas externas están bloqueadas dentro de las vistas previas incrustadas. Para que el envío funcione, publica este archivo en tu propio sitio, por ejemplo en GitHub Pages.</div>'+
