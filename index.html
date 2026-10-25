@@ -1301,7 +1301,9 @@ function rail(){
 }
 
 /* ---- pantalla de entrada ---- */
-let entrada=true,wrole=ROLE,werr="",wpass="";
+/* La pantalla de entrada parte siempre en estudiante, aunque la pestaña recuerde un perfil
+   con clave: la clave sólo aparece después de elegir docente validador o administración. */
+let entrada=true,wrole="est",werr="",wpass="";
 const DIAGRAMA='<svg class="dia" viewBox="0 0 280 212" width="100%" role="img" aria-label="Diagrama: tú, el clasificador y la referencia revisada miran la misma frase">'+
  '<path d="M140 52 L62 168 M140 52 L218 168 M62 168 L218 168" fill="none" stroke="rgba(255,255,255,.26)" stroke-width="2" stroke-dasharray="5 7"/>'+
  '<rect x="98" y="88" width="84" height="46" rx="9" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.22)" stroke-width="2"/>'+
