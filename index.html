@@ -1,156 +1,315 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Cocina CC-1</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;900&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@700;800;900&family=Figtree:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: ficha de laboratorio escolar. Columna única de 68ch, cabecera fija con las 5 fases,
-   bloques de datos en mono sobre tarjeta blanca, prosa en serif. */
+/* Layout: tablero de instrumentos. Columna de trabajo + bitácora viva fija a la derecha
+   (hoja inferior en teléfono). Franja de estado del modelo bajo la cabecera.
+   Color: sólo los dos del contenido (físico/químico) más veredicto; el resto es grafito. */
 :root{
-  --paper:#E9EDEF; --card:#FFFFFF; --card-2:#F2F5F6;
-  --ink:#111820; --ink-2:#4C5A64; --ink-3:#77858E; --line:#CBD4D9;
-  --fis:#1C6A9E; --fis-bg:#E2EEF6; --qui:#A94E27; --qui-bg:#F7E9E1;
-  --ok:#2A714B; --ok-bg:#E2EFE8; --err:#A93434; --err-bg:#F6E3E3;
-  --accent:#1C6A9E;
-  --display:"Archivo",system-ui,sans-serif;
-  --body:"Source Serif 4",Georgia,serif;
-  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --bg:#FFFFFF; --surface:#FFFFFF; --surface-2:#F5F5F1; --sunk:#EBEBE5;
+  --ink:#16161A; --ink-2:#56565F; --ink-3:#8A8A93; --line:#DCDCD5; --edge:#16161A;
+  --fis:#1B44D8; --fis-bg:#E7EBFF; --qui:#D8401A; --qui-bg:#FFE9E1;
+  --ok:#15764A; --ok-bg:#DCF2E6; --err:#C01B1B; --err-bg:#FFE4E1;
+  --warn:#8F6300; --warn-bg:#FFF3CC; --hl:#16161A; --hl-bg:#FFE45C;
+  --panel:#16161A; --panel-ink:#FFFFFF; --pop:#FFE45C;
+  --r:14px; --r-s:9px;
+  --display:"Darker Grotesque",system-ui,sans-serif;
+  --body:"Figtree",system-ui,sans-serif;
+  --mono:"DM Mono",ui-monospace,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#0E1419; --card:#18212A; --card-2:#131C24;
-  --ink:#E6ECF0; --ink-2:#A3B1BB; --ink-3:#7D8C97; --line:#2B3741;
-  --fis:#78B9E6; --fis-bg:#15303F; --qui:#E0905F; --qui-bg:#3A2317;
-  --ok:#64C093; --ok-bg:#15301F; --err:#E58080; --err-bg:#3A1C1C;
-  --accent:#78B9E6; color-scheme:dark;
+  --bg:#101014; --surface:#1A1A20; --surface-2:#22222A; --sunk:#0A0A0D;
+  --ink:#F1F1EF; --ink-2:#AEAEB8; --ink-3:#86868F; --line:#2E2E36; --edge:#43434F;
+  --fis:#93A9FF; --fis-bg:#1B2246; --qui:#FF9166; --qui-bg:#3C1E12;
+  --ok:#63CB93; --ok-bg:#12301F; --err:#FF8A86; --err-bg:#3B1A18;
+  --warn:#E7B74E; --warn-bg:#352A10; --hl:#F1F1EF; --hl-bg:#4B4000;
+  --panel:#07070A; --panel-ink:#FFFFFF; --pop:#FFE45C;
+  color-scheme:dark;
 }}
 :root[data-theme="dark"]{
-  --paper:#0E1419; --card:#18212A; --card-2:#131C24;
-  --ink:#E6ECF0; --ink-2:#A3B1BB; --ink-3:#7D8C97; --line:#2B3741;
-  --fis:#78B9E6; --fis-bg:#15303F; --qui:#E0905F; --qui-bg:#3A2317;
-  --ok:#64C093; --ok-bg:#15301F; --err:#E58080; --err-bg:#3A1C1C;
-  --accent:#78B9E6; color-scheme:dark;
+  --bg:#101014; --surface:#1A1A20; --surface-2:#22222A; --sunk:#0A0A0D;
+  --ink:#F1F1EF; --ink-2:#AEAEB8; --ink-3:#86868F; --line:#2E2E36; --edge:#43434F;
+  --fis:#93A9FF; --fis-bg:#1B2246; --qui:#FF9166; --qui-bg:#3C1E12;
+  --ok:#63CB93; --ok-bg:#12301F; --err:#FF8A86; --err-bg:#3B1A18;
+  --warn:#E7B74E; --warn-bg:#352A10; --hl:#F1F1EF; --hl-bg:#4B4000;
+  --panel:#07070A; --panel-ink:#FFFFFF; --pop:#FFE45C;
+  color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;margin:0}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--card)}
-h1,h2,h3,h4{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15;letter-spacing:-.015em}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:30;background:var(--panel)}
+h1,h2,h3,h4{font-family:var(--display);margin:0;line-height:1;letter-spacing:-.025em;text-wrap:balance}
 p{margin:0}
-button{font:inherit;cursor:pointer}
-.wrap{max-width:70ch;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--fis);outline-offset:2px}
+.gut{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 
 /* cabecera */
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--card);border-bottom:1px solid var(--line)}
-.hd{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;padding-block:10px 6px}
-.hd h1{font-size:19px;font-weight:900}
-.chip{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ink-2);border:1px solid var(--line);border-radius:2px;padding:2px 6px}
-nav{display:flex;gap:4px;overflow-x:auto;padding-block:0 8px;scrollbar-width:thin}
-nav button{flex:0 0 auto;background:none;border:0;border-bottom:2px solid transparent;color:var(--ink-3);font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;padding:5px 7px;white-space:nowrap}
-nav button[aria-current="true"]{color:var(--ink);border-color:var(--accent)}
-nav button .mn{color:var(--ink-3);margin-right:5px}
-nav button:focus-visible,button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:25;background:var(--panel);color:var(--panel-ink)}
+.hd{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding-block:8px;max-width:1240px;margin:0 auto}
+.brand{font-family:var(--display);font-weight:900;font-size:25px;letter-spacing:-.035em;display:flex;align-items:center;gap:9px;color:var(--panel-ink)}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--pop)}
+.modes{margin-left:auto;display:flex;gap:3px;background:rgba(255,255,255,.1);border-radius:999px;padding:3px}
+.modes button{background:none;border:0;border-radius:999px;font-family:var(--body);font-weight:600;font-size:12px;padding:5px 12px;color:rgba(255,255,255,.72)}
+.modes button[aria-pressed="true"]{background:var(--pop);color:#16161A;font-weight:700}
+.strip{background:var(--panel);font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;color:rgba(255,255,255,.62)}
+.strip b{color:var(--pop);font-weight:500}
+.strip .in{max-width:1240px;margin:0 auto;display:flex;gap:16px;overflow-x:auto;padding-block:6px;scrollbar-width:none}
+.strip .in>span{white-space:nowrap;flex:0 0 auto}
+.strip .in::-webkit-scrollbar{display:none}
+nav{background:var(--bg);border-bottom:2px solid var(--edge);position:sticky;top:calc(env(safe-area-inset-top,0px) + 45px);z-index:24}
+nav .in{max-width:1240px;margin:0 auto;display:flex;gap:6px;overflow-x:auto;padding-block:9px;scrollbar-width:none}
+nav .in::-webkit-scrollbar{display:none}
+nav button{flex:0 0 auto;background:var(--surface-2);border:2px solid transparent;border-radius:999px;color:var(--ink-2);font-family:var(--body);font-weight:600;font-size:12.5px;padding:6px 13px;white-space:nowrap}
+nav button[aria-current="true"]{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+nav .mn{font-family:var(--mono);font-size:10.5px;opacity:.7;margin-right:6px}
 
-main{padding-block:22px 10px}
-.lede{font-size:17px;color:var(--ink-2);margin-top:8px}
-h2.step{font-size:26px;font-weight:900}
-.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:3px;padding:14px 15px;margin-top:14px}
-.card h3{font-size:15px;font-weight:700;margin-bottom:8px}
-.sub{font-size:13.5px;color:var(--ink-2)}
+/* estructura */
+.frame{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:0}
+@media (min-width:1000px){.frame{grid-template-columns:minmax(0,1fr) 316px;gap:26px}}
+main{padding-block:22px 40px;min-width:0;max-width:72ch}
+aside{display:none}
+@media (min-width:1000px){aside{display:block;padding-block:22px 40px}}
+
+/* piezas */
+.eyebrow{font-family:var(--body);font-weight:700;font-size:11.5px;letter-spacing:.15em;text-transform:uppercase;color:var(--qui);margin-bottom:8px}
+h2.step{font-size:clamp(36px,7.5vw,58px);font-weight:900;line-height:.92}
+.lede{font-size:18px;color:var(--ink-2);margin-top:11px;max-width:60ch}
+.card{background:var(--surface);border:2px solid var(--edge);border-radius:var(--r);padding:17px 18px;margin-top:16px}
+.card h3{font-size:23px;font-weight:800;margin-bottom:9px}
+.sub{font-size:14.5px;color:var(--ink-2)}
+.note{font-size:13px;color:var(--ink-3);margin-top:10px}
 .mono{font-family:var(--mono)}
-.rule{height:1px;background:var(--line);border:0;margin:22px 0}
+.todo{background:var(--hl-bg);border:2px solid var(--edge);border-radius:var(--r);padding:13px 15px;margin-top:16px;font-size:15px;color:var(--ink)}
+.todo b.k{font-family:var(--body);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink);opacity:.72;display:block;margin-bottom:4px}
+.warnbox{background:var(--warn-bg);border:2px solid var(--edge);border-radius:var(--r);padding:13px 15px;margin-top:16px;font-size:14.5px;color:var(--ink)}
+.tag{font-family:var(--body);font-weight:700;font-size:11.5px;border-radius:999px;padding:3px 10px;white-space:nowrap;display:inline-block}
+.tag.f{background:var(--fis-bg);color:var(--fis)}
+.tag.q{background:var(--qui-bg);color:var(--qui)}
+.tag.ok{background:var(--ok-bg);color:var(--ok)}
+.tag.err{background:var(--err-bg);color:var(--err)}
+.tag.na{background:var(--sunk);color:var(--ink-2)}
+.tag.hl{background:var(--hl-bg);color:var(--hl)}
+.legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.btn{background:var(--ink);color:var(--bg);border:2px solid var(--ink);border-radius:999px;font-family:var(--body);font-size:13px;padding:8px 16px;font-weight:700}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--edge)}
+.btn.hl{background:var(--pop);border-color:#16161A;color:#16161A}
+.btn.danger{background:transparent;color:var(--err);border-color:var(--err)}
+.btn[disabled]{opacity:.38;cursor:not-allowed}
+.btn.big{font-size:15px;padding:12px 22px}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+input[type=text],input[type=password],textarea,select{width:100%;background:var(--surface-2);border:2px solid var(--edge);border-radius:var(--r-s);font-family:var(--body);font-size:15px;padding:10px 12px}
+textarea{resize:vertical;min-height:70px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:11px}
+label.fld{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:4px}
 
 /* casos */
 .case{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:start;padding:11px 0;border-top:1px solid var(--line)}
 .case:first-of-type{border-top:0}
 .case .txt{min-width:0;font-size:15px}
 .pick{display:flex;gap:6px}
-.pick button{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;border:1px solid var(--line);background:var(--card-2);color:var(--ink-2);border-radius:2px;padding:5px 9px}
+.pick button{font-family:var(--body);font-weight:600;font-size:12.5px;border:2px solid var(--edge);background:var(--surface);color:var(--ink-2);border-radius:999px;padding:6px 13px}
 .pick button[aria-pressed="true"].f{background:var(--fis-bg);border-color:var(--fis);color:var(--fis);font-weight:600}
 .pick button[aria-pressed="true"].q{background:var(--qui-bg);border-color:var(--qui);color:var(--qui);font-weight:600}
-.tag{font-family:var(--mono);font-size:11px;letter-spacing:.05em;border-radius:2px;padding:2px 6px;white-space:nowrap}
-.tag.f{background:var(--fis-bg);color:var(--fis)}
-.tag.q{background:var(--qui-bg);color:var(--qui)}
-.tag.ok{background:var(--ok-bg);color:var(--ok)}
-.tag.err{background:var(--err-bg);color:var(--err)}
-.tag.na{background:var(--card-2);color:var(--ink-2)}
 
-/* ficha técnica */
-.ficha{background:var(--card-2);border:1px solid var(--line);border-radius:3px;padding:12px;margin-top:10px;font-family:var(--mono);font-size:12.5px}
-.ficha .row{display:grid;grid-template-columns:1fr auto 72px;gap:8px;align-items:center;padding:3px 0}
-.bar{height:7px;border-radius:1px;background:var(--line);position:relative;overflow:hidden}
-.bar i{position:absolute;top:0;bottom:0;left:50%;display:block}
+/* ficha de pesos */
+.ficha{background:var(--surface-2);border:2px solid var(--edge);border-radius:var(--r-s);padding:13px;margin-top:12px;font-family:var(--mono);font-size:12.5px}
+.ficha .row{display:grid;grid-template-columns:1fr auto 70px;gap:8px;align-items:center;padding:3px 0}
+.bar{height:7px;border-radius:1px;background:var(--line);position:relative;overflow:hidden;width:90px}
+.bar i{position:absolute;top:0;bottom:0;display:block}
 .bar i.q{background:var(--qui)}
 .bar i.f{background:var(--fis)}
 .tot{display:flex;justify-content:space-between;gap:10px;border-top:1px solid var(--line);margin-top:8px;padding-top:8px;font-weight:600}
 .unk{color:var(--ink-3);margin-top:8px;font-size:11.5px;word-break:break-word}
+.kicker{color:var(--ink-3);font-size:10.5px;letter-spacing:.07em;margin-bottom:6px}
 
-input[type=text],textarea{width:100%;background:var(--card-2);border:1px solid var(--line);border-radius:2px;color:var(--ink);font-family:var(--body);font-size:15px;padding:9px 10px}
-textarea{resize:vertical;min-height:72px}
-.btn{background:var(--accent);color:var(--card);border:1px solid var(--accent);border-radius:2px;font-family:var(--mono);font-size:12px;letter-spacing:.05em;padding:8px 13px;font-weight:600}
-.btn.ghost{background:transparent;color:var(--accent)}
-.btn[disabled]{opacity:.45;cursor:not-allowed}
-.btnrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-
-.qbtn{display:block;width:100%;text-align:left;background:var(--card-2);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:2px;color:var(--ink);font-family:var(--body);font-size:14.5px;padding:9px 11px;margin-top:7px}
-.qbtn[aria-expanded="true"]{background:var(--card)}
-.ans{font-size:14.5px;color:var(--ink-2);border-left:3px solid var(--line);margin:0 0 4px 0;padding:9px 11px}
-.ans b{color:var(--ink)}
-
+/* tablas y métricas */
+.scroll{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:12.5px}
 th,td{border:1px solid var(--line);padding:7px 8px;text-align:center;font-variant-numeric:tabular-nums}
-th{background:var(--card-2);color:var(--ink-2);font-weight:600;font-size:11px;letter-spacing:.04em}
-td.lbl,th.lbl{text-align:left;background:var(--card-2);color:var(--ink-2)}
-.scroll{overflow-x:auto}
-.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}
-.metric{background:var(--card-2);border:1px solid var(--line);border-radius:3px;padding:10px}
-.metric .n{font-family:var(--display);font-size:27px;font-weight:900;font-variant-numeric:tabular-nums;line-height:1}
-.metric .k{font-family:var(--mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);margin-top:4px}
+th{background:var(--surface-2);color:var(--ink-2);font-weight:600;font-size:10.5px;letter-spacing:.04em}
+td.lbl,th.lbl{text-align:left;background:var(--surface-2);color:var(--ink-2)}
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(125px,1fr));gap:10px;margin-top:12px}
+.metric{background:var(--surface-2);border:2px solid var(--edge);border-radius:var(--r-s);padding:12px}
+.metric .n{font-family:var(--display);font-size:40px;font-weight:900;font-variant-numeric:tabular-nums;line-height:.9;letter-spacing:-.03em}
+.metric .k{font-family:var(--body);font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-top:6px}
 .metric.bad .n{color:var(--err)}
-.limits li{margin-bottom:7px}
+.metric.good .n{color:var(--ok)}
+
+/* listas */
 .limits{padding-left:19px;font-size:14.5px;color:var(--ink-2)}
-.check{display:flex;gap:9px;align-items:flex-start;padding:7px 0;font-size:14.5px;cursor:pointer}
-.check input{margin-top:4px;accent-color:var(--accent);flex:0 0 auto}
-.foot{display:flex;justify-content:space-between;gap:10px;margin:26px 0 8px}
-.note{font-size:13px;color:var(--ink-3);margin-top:10px}
-.flash{background:var(--ok-bg);color:var(--ok);border-radius:2px;padding:2px 7px;font-family:var(--mono);font-size:11px}
-details{border-top:1px solid var(--line);padding:10px 0}
-summary{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-2);cursor:pointer}
-details p,details li{font-size:14px;color:var(--ink-2);margin-top:8px}
-.todo{background:var(--ok-bg);border:1px solid var(--line);border-left:3px solid var(--ok);border-radius:2px;padding:10px 12px;margin-top:14px;font-size:14.5px}
-.todo b.k{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--ok);display:block;margin-bottom:3px}
+.limits li{margin-bottom:7px}
 ol.guide{counter-reset:g;list-style:none;padding:0;margin:0}
-ol.guide li{counter-increment:g;display:grid;grid-template-columns:28px 1fr;gap:11px;padding:11px 0;border-top:1px solid var(--line)}
+ol.guide li{counter-increment:g;display:grid;grid-template-columns:26px 1fr;gap:11px;padding:11px 0;border-top:1px solid var(--line)}
 ol.guide li:first-child{border-top:0;padding-top:2px}
-ol.guide li::before{content:counter(g);font-family:var(--display);font-weight:900;font-size:18px;color:var(--accent);line-height:1.25}
-ol.guide h4{font-size:15px;font-weight:700;margin-bottom:2px}
+ol.guide li::before{content:counter(g);font-family:var(--display);font-weight:900;font-size:30px;color:var(--qui);line-height:.9}
+ol.guide h4{font-family:var(--display);font-size:21px;font-weight:800;margin-bottom:3px}
 ol.guide p{font-size:14.5px;color:var(--ink-2)}
-ol.guide .mins{font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.07em;text-transform:uppercase}
-.legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
-.btn.big{font-size:13.5px;padding:11px 18px}
-@media (max-width:430px){
-  .case{grid-template-columns:1fr}
-  h2.step{font-size:22px}
-  .ficha .row{grid-template-columns:1fr auto 56px}
+ol.guide .mins{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.07em;text-transform:uppercase}
+.check{display:flex;gap:9px;align-items:flex-start;padding:6px 0;font-size:14.5px;cursor:pointer}
+.check input{margin-top:5px;accent-color:var(--hl);flex:0 0 auto}
+.qbtn{display:block;width:100%;text-align:left;background:var(--surface-2);border:2px solid var(--edge);border-radius:var(--r-s);font-family:var(--body);font-weight:600;font-size:14.5px;padding:10px 13px;margin-top:8px}
+.qbtn[aria-expanded="true"]{background:var(--hl-bg)}
+.ans{font-size:14.5px;color:var(--ink-2);border-left:3px solid var(--qui);margin:0;padding:10px 13px}
+.ans b{color:var(--ink)}
+details{border-top:1px solid var(--line);padding:10px 0}
+summary{font-family:var(--mono);font-size:11.5px;letter-spacing:.04em;color:var(--ink-2);cursor:pointer}
+details p,details li{font-size:14px;color:var(--ink-2);margin-top:8px}
+pre.code{background:var(--panel);color:#EDEDEA;border:2px solid var(--edge);border-radius:var(--r-s);padding:14px;overflow-x:auto;font-family:var(--mono);font-size:11.5px;line-height:1.55;white-space:pre;margin-top:11px}
+
+/* diálogo */
+.chat{display:flex;flex-direction:column;gap:9px;margin-top:12px;max-height:50vh;overflow-y:auto;padding-right:4px}
+.msg{max-width:88%;padding:11px 14px;border-radius:var(--r);font-size:15px}
+.msg.t{background:var(--surface-2);border:2px solid var(--edge);border-bottom-left-radius:3px;align-self:flex-start}
+.msg.u{background:var(--fis-bg);border:2px solid var(--edge);border-bottom-right-radius:3px;align-self:flex-end}
+.msg .who{font-family:var(--body);font-weight:700;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);display:block;margin-bottom:4px}
+.cer{display:flex;gap:7px;margin-top:11px;flex-wrap:wrap}
+.cer span{font-family:var(--body);font-weight:700;font-size:11px;letter-spacing:.05em;text-transform:uppercase;border:2px solid var(--edge);border-radius:999px;padding:4px 11px;color:var(--ink-3)}
+.cer span.on{background:var(--ok-bg);border-color:var(--ok);color:var(--ok);font-weight:600}
+.cer span.now{background:var(--hl-bg);border-color:var(--hl);color:var(--hl);font-weight:600}
+.lvl{display:flex;gap:3px;align-items:center;margin-top:9px}
+.lvl i{width:16px;height:5px;border-radius:1px;background:var(--line);display:block}
+.lvl i.on{background:var(--warn)}
+
+/* bitácora */
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 92px)}
+.rail h3{font-family:var(--body);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--pop);font-weight:700;margin-bottom:11px}
+.rail .box{background:var(--panel);color:var(--panel-ink);border:2px solid var(--edge);border-radius:var(--r);padding:15px 16px;margin-bottom:12px}
+.rail .box .note{color:rgba(255,255,255,.58)}
+.rail .box .btn.ghost{color:#fff;border-color:rgba(255,255,255,.35)}
+.kv{display:flex;justify-content:space-between;gap:9px;font-family:var(--mono);font-size:11.5px;padding:5px 0;border-top:1px solid rgba(255,255,255,.13)}
+.kv:first-of-type{border-top:0}
+.kv span:last-child{color:#fff;font-weight:500;text-align:right}
+.kv span:first-child{color:rgba(255,255,255,.55)}
+.flash{animation:fl .7s ease}
+@keyframes fl{0%{background:var(--ok-bg)}100%{background:transparent}}
+.sheetbtn{display:none}
+@media (max-width:999px){
+ .sheetbtn{display:flex;position:fixed;right:calc(14px + env(safe-area-inset-right,0px));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:26;align-items:center;gap:7px;background:var(--pop);color:#16161A;border:2px solid #16161A;border-radius:999px;padding:11px 18px;font-family:var(--body);font-weight:700;font-size:13px;box-shadow:0 5px 18px rgba(0,0,0,.25)}
+ aside.open{display:block;position:fixed;inset:auto 0 0 0;z-index:27;background:var(--bg);border-top:2px solid var(--edge);border-radius:16px 16px 0 0;max-height:74vh;overflow-y:auto;padding:16px max(16px,env(safe-area-inset-left,0px)) calc(20px + env(safe-area-inset-bottom,0px))}
+ aside.open .rail{position:static}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+.foot{display:flex;justify-content:space-between;gap:10px;margin:26px 0 8px}
+.sync{font-family:var(--body);font-weight:700;font-size:11.5px;padding:3px 10px;border-radius:999px}
+.sync.on{background:var(--ok-bg);color:var(--ok)}
+.sync.off{background:var(--sunk);color:var(--ink-2)}
+.rail .box .sync.off{background:rgba(255,255,255,.14);color:#fff}
+.sync.bad{background:var(--err-bg);color:var(--err)}
+.likert{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+.likert button{font-family:var(--body);font-weight:700;font-size:12.5px;border:2px solid var(--edge);background:var(--surface);border-radius:999px;width:36px;height:34px;color:var(--ink-2)}
+.likert button.no{width:auto;padding:0 9px}
+.likert button[aria-pressed="true"]{background:var(--ink);color:var(--surface);border-color:var(--ink);font-weight:600}
+.pitem{border-top:1px solid var(--line);padding:11px 0}
+.pitem:first-of-type{border-top:0}
+.pitem .lab{font-size:14.5px}
+.pitem .tst{font-size:12.5px;color:var(--ink-3);margin-top:4px}
+.test{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;border-top:1px solid var(--line);padding:10px 0;font-size:14px}
+.test:first-of-type{border-top:0}
+.test .id{font-family:var(--mono);font-size:11px;color:var(--ink-3)}
+/* mecanismo visual */
+.paso{border-top:2px solid var(--edge);padding-top:14px;margin-top:16px}
+.paso:first-of-type{border-top:0;padding-top:0;margin-top:0}
+.paso .num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--ink);color:var(--bg);font-family:var(--display);font-weight:900;font-size:17px;margin-right:9px;vertical-align:-5px}
+.paso h4{display:inline;font-family:var(--display);font-size:22px;font-weight:800}
+.paso .exp{font-size:14px;color:var(--ink-2);margin-top:7px}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:11px}
+.chip{border:2px solid var(--edge);border-radius:999px;padding:5px 12px;font-size:14.5px;font-weight:600;display:inline-flex;align-items:center;gap:8px;background:var(--surface-2)}
+.chip.q{background:var(--qui-bg);color:var(--qui)}
+.chip.f{background:var(--fis-bg);color:var(--fis)}
+.chip.off{background:transparent;color:var(--ink-3);border-style:dashed}
+.chip.dim{opacity:.26}
+.chip b{font-family:var(--mono);font-size:12.5px;font-weight:500}
+.balanza{margin-top:13px}
+.btrack{position:relative;height:44px;border:2px solid var(--edge);border-radius:999px;background:linear-gradient(90deg,var(--fis-bg) 0%,var(--surface-2) 44%,var(--surface-2) 56%,var(--qui-bg) 100%)}
+.bzero{position:absolute;left:calc(50% - 1px);top:4px;bottom:4px;width:2px;background:var(--edge);opacity:.5}
+.bneedle{position:absolute;top:3px;bottom:3px;width:10px;margin-left:-5px;border-radius:999px;background:var(--ink);transition:left .4s ease}
+.blab{display:flex;justify-content:space-between;font-weight:700;font-size:12.5px;margin-top:7px}
+.blab .l{color:var(--fis)}
+.blab .r{color:var(--qui)}
+.suma{font-family:var(--mono);font-size:14px;background:var(--surface-2);border:2px solid var(--edge);border-radius:var(--r-s);padding:12px;margin-top:11px;line-height:2.1;word-break:break-word}
+.suma i{font-style:normal;padding:2px 6px;border-radius:5px}
+.suma i.q{background:var(--qui-bg);color:var(--qui)}
+.suma i.f{background:var(--fis-bg);color:var(--fis)}
+.suma .eq{font-weight:600;border-top:1px solid var(--line);display:block;margin-top:7px;padding-top:7px}
+.vered{font-family:var(--display);font-size:26px;font-weight:800;margin-top:12px;line-height:1.1}
+/* pantalla de entrada */
+.welcome{position:fixed;inset:0;z-index:35;overflow-y:auto;background:var(--bg);padding-bottom:40px}
+.hero{background:var(--panel);color:#fff;position:relative;overflow:hidden;border-radius:0 0 26px 26px;
+ padding:calc(34px + env(safe-area-inset-top,0px)) max(20px,env(safe-area-inset-left,0px)) 86px}
+.hero::before{content:"";position:absolute;inset:0;opacity:.14;
+ background-image:linear-gradient(rgba(255,255,255,.5) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.5) 1px,transparent 1px);
+ background-size:38px 38px;mask-image:radial-gradient(130% 90% at 70% 0%,#000 25%,transparent 72%)}
+.heroin{position:relative;max-width:1060px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:30px;align-items:center}
+.hero .kick{font-family:var(--body);font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.hero h1{font-family:var(--display);font-weight:900;font-size:clamp(40px,7vw,64px);line-height:.92;letter-spacing:-.03em;margin:11px 0 14px;color:#fff}
+.hero p{color:rgba(255,255,255,.76);font-size:16.5px;max-width:46ch}
+.hero .pop{color:var(--pop)}
+.wcards{position:relative;z-index:1;max-width:1060px;margin:-52px auto 0;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));
+ display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.wcard{background:var(--surface);border:2px solid var(--edge);border-radius:18px;padding:21px 22px;box-shadow:0 14px 34px rgba(10,10,14,.13)}
+.wcard h2{font-family:var(--display);font-size:25px;font-weight:800;letter-spacing:-.02em}
+.wcard .sub{margin-top:5px}
+.rolerow{display:flex;gap:13px;align-items:center;width:100%;text-align:left;background:var(--surface);border:2px solid var(--edge);border-radius:12px;padding:12px 14px;margin-top:11px}
+.rolerow[aria-pressed="true"]{background:var(--hl-bg)}
+.rolerow .nm{font-weight:700;font-size:15.5px;line-height:1.25}
+.rolerow .de{font-size:13px;color:var(--ink-2)}
+.av{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-family:var(--display);font-weight:900;font-size:19px;color:#fff;flex:0 0 auto}
+.av.e{background:var(--fis)}.av.d{background:var(--ok)}.av.a{background:var(--qui)}
+.radio{margin-left:auto;width:20px;height:20px;border-radius:50%;border:2px solid var(--edge);flex:0 0 auto}
+.rolerow[aria-pressed="true"] .radio{background:var(--ink);box-shadow:inset 0 0 0 3px var(--surface)}
+.wsep{border-top:2px solid var(--line);margin:17px 0 15px}
+.wfoot{max-width:1060px;margin:20px auto 0;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px));font-size:13px;color:var(--ink-3)}
+@media (max-width:900px){.heroin{grid-template-columns:1fr}.heroin .dia{order:-1;max-width:270px}.wcards{grid-template-columns:1fr}}
+.gate{position:fixed;inset:0;z-index:40;background:rgba(8,8,10,.62);display:flex;align-items:center;justify-content:center;padding:20px}
+.gatebox{background:var(--surface);border:2px solid var(--edge);border-radius:var(--r);padding:20px;width:min(420px,100%)}
+.gatebox h3{font-size:26px;font-weight:800;margin-bottom:8px}
+.gatebox .sub{margin-bottom:13px}
+.rolechip{font-family:var(--body);font-weight:700;font-size:12px;border-radius:999px;padding:5px 12px;background:var(--pop);color:#16161A}
+.modes button.lock{background:rgba(255,255,255,.1);color:#fff}
+.locked{border:2px dashed var(--edge);border-radius:var(--r);padding:16px 18px;margin-top:16px;color:var(--ink-2);font-size:14.5px}
+@media (max-width:760px){
+ header{position:static}
+ nav{top:env(safe-area-inset-top,0px)}
+ body::before{background:var(--bg)}
+ .brand{font-size:22px}
+ .modes button{padding:5px 10px;font-size:11.5px}
+}
+@media (max-width:430px){.case{grid-template-columns:1fr}.ficha .row{grid-template-columns:1fr auto 54px}.bar{width:58px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 
-<header>
- <div class="wrap">
-  <div class="hd">
-   <h1>Cocina CC-1</h1>
-   <span class="chip">8° básico · 20 minutos</span>
-   <span class="chip">clasificador de texto · 14 ejemplos</span>
-   <span class="chip">funciona sin internet</span>
-  </div>
-  <nav id="nav" aria-label="Fases de la actividad"></nav>
+<header class="gut">
+ <div class="hd">
+  <div class="brand"><span class="dot"></span>Cocina CC-1</div>
+  <div class="modes" id="roles" role="group" aria-label="Perfil de acceso"></div>
  </div>
 </header>
+<div class="strip gut"><div class="in" id="strip"></div></div>
+<nav class="gut" aria-label="Secciones"><div class="in" id="nav"></div></nav>
 
-<main class="wrap" id="main"></main>
+<div class="frame gut">
+ <main id="main"></main>
+ <aside id="rail"><div class="rail" id="railin"></div></aside>
+</div>
+<div class="welcome" id="welcome" hidden></div>
+<div class="gate" id="gate" hidden>
+ <div class="gatebox" role="dialog" aria-modal="true" aria-labelledby="gt">
+  <h3 id="gt">Entrar con clave</h3>
+  <p class="sub">El perfil de estudiante no necesita clave. Las claves de docente validador y de administración las entrega quien coordina el pilotaje.</p>
+  <label class="fld" for="gpass">Clave</label>
+  <input type="password" id="gpass" autocomplete="off" placeholder="escribe la clave">
+  <p class="note" id="gerr"></p>
+  <div class="btnrow"><button class="btn" id="gok">Entrar</button><button class="btn ghost" id="gno">Cancelar</button></div>
+ </div>
+</div>
+<button class="sheetbtn" id="sheet" aria-expanded="false">bitácora <span id="sheetn"></span></button>
 
 <script>
-/* ───────── base de entrenamiento (la escribió el/la docente; es visible y editable) ───────── */
+"use strict";
+/* ══════════════ 1. MODELO: Naive Bayes multinomial sobre bolsa de palabras ══════════════ */
 const TRAIN_BASE=[
  {t:"se quema el pan en el horno y queda negro",y:"Q"},
  {t:"el aceite se pone rancio despues de varios meses",y:"Q"},
@@ -165,29 +324,27 @@ const TRAIN_BASE=[
  {t:"el agua se congela y se forma hielo",y:"F"},
  {t:"se corta la cebolla en trozos pequenos",y:"F"},
  {t:"el vapor se condensa en la tapa fria",y:"F"},
- {t:"se muele el cafe en granos hasta dejarlo en polvo",y:"F"}
-];
+ {t:"se muele el cafe en granos hasta dejarlo en polvo",y:"F"}];
 const STOP=new Set(["que","con","por","una","uno","del","las","los","para","como","mas","sus","sobre","hasta","otra","otro","muy","esta","este","son","desde","varios"]);
-const tok=s=>s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-zñ ]/g," ").split(/\s+/).filter(w=>w.length>2&&!STOP.has(w));
-
-let extra=[], M=null;
+const norm=s=>String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const tok=s=>norm(s).replace(/[^a-zñ ]/g," ").split(/\s+/).filter(w=>w.length>2&&!STOP.has(w));
+let extra=[],M=null;
 function train(){
- const data=TRAIN_BASE.concat(extra), cQ={}, cF={}, V=new Set();
- let NQ=0,NF=0,dQ=0,dF=0;
- data.forEach(d=>{const ts=tok(d.t); d.y==="Q"?dQ++:dF++;
-  ts.forEach(w=>{V.add(w); if(d.y==="Q"){cQ[w]=(cQ[w]||0)+1;NQ++} else {cF[w]=(cF[w]||0)+1;NF++}})});
- const vs=V.size, w={};
+ const data=TRAIN_BASE.concat(extra),cQ={},cF={},V=new Set();let NQ=0,NF=0,dQ=0,dF=0;
+ data.forEach(d=>{const ts=tok(d.t);d.y==="Q"?dQ++:dF++;
+  ts.forEach(w=>{V.add(w);if(d.y==="Q"){cQ[w]=(cQ[w]||0)+1;NQ++}else{cF[w]=(cF[w]||0)+1;NF++}})});
+ const vs=V.size,w={};
  V.forEach(t=>{w[t]=Math.log(((cQ[t]||0)+1)/(NQ+vs))-Math.log(((cF[t]||0)+1)/(NF+vs))});
- M={w,prior:Math.log(dQ/dF),vs,cQ,cF,n:data.length,dQ,dF};
+ M={w,prior:Math.log(dQ/dF),vs,n:data.length,dQ,dF};
 }
 function predict(text){
- const ts=tok(text); let s=M.prior; const used=[],unk=[];
- ts.forEach(t=>{ if(M.w[t]!==undefined){s+=M.w[t];used.push({t,v:M.w[t]})} else if(!unk.includes(t)) unk.push(t); });
- return {s,lab:s>0?"Q":"F",p:1/(1+Math.exp(-Math.abs(s))),used,unk,tie:Math.abs(s)<0.2};
+ const ts=tok(text);let s=M.prior;const used=[],unk=[];
+ ts.forEach(t=>{if(M.w[t]!==undefined){s+=M.w[t];used.push({t,v:M.w[t]})}else if(!unk.includes(t))unk.push(t)});
+ return{s,lab:s>0?"Q":"F",p:1/(1+Math.exp(-Math.abs(s))),used,unk,tie:Math.abs(s)<0.2};
 }
 train();
 
-/* ───────── banco de prueba: referencia revisada por el/la docente ───────── */
+/* ══════════════ 2. CONTENIDO ══════════════ */
 const CASES=[
  {id:"c1",t:"El pan tostado se enfría sobre la rejilla.",ref:"F",why:"Enfriarse es un cambio de temperatura: la materia es la misma antes y después."},
  {id:"c2",t:"La clara de huevo se vuelve blanca y firme en la sartén.",ref:"Q",why:"Las proteínas se desnaturalizan y se forman enlaces nuevos; el proceso no se revierte enfriando."},
@@ -196,11 +353,8 @@ const CASES=[
  {id:"c5",t:"Se derrite el queso sobre la pizza y los bordes se queman.",ref:"M",why:"Ocurren los dos a la vez: fusión (físico) y combustión incompleta en el borde (químico)."},
  {id:"c6",t:"La sal se disuelve en el agua de la olla.",ref:"F",why:"Los iones se separan y se hidratan, pero no se forma una sustancia nueva."},
  {id:"c7",t:"El jugo de limón hace que la leche forme grumos.",ref:"Q",why:"El ácido baja el pH y la caseína precipita; cambia la sustancia, no sólo su estado."},
- {id:"c8",t:"El hielo del congelador se achica después de un mes.",ref:"F",why:"Sublimación: el hielo pasa a vapor sin derretirse. Sigue siendo agua."}
-];
+ {id:"c8",t:"El hielo del congelador se achica después de un mes.",ref:"F",why:"Sublimación: el hielo pasa a vapor sin derretirse. Sigue siendo agua."}];
 const REFNAME={F:"Físico",Q:"Químico",M:"Los dos"};
-
-/* ───────── preguntas sobre el funcionamiento del propio programa ───────── */
 const META=[
  {q:"¿Cómo armaste esta respuesta?",a:"Separo el texto en palabras, busco cada palabra en una tabla de pesos y sumo los pesos. Si la suma queda sobre cero, entrego la etiqueta <b>químico</b>; si queda bajo cero, <b>físico</b>. No hay otro paso. El orden de las palabras no se usa."},
  {q:"¿De dónde salen esos pesos?",a:"De contar en cuántos ejemplos de cada clase aparece cada palabra, dentro de una base de 14 frases escritas por tu profesora. Una palabra que aparece sólo en frases etiquetadas como químicas recibe peso positivo. Puedes abrir la base completa en la fase 2 y agregarle ejemplos."},
@@ -208,305 +362,717 @@ const META=[
  {q:"¿Qué significa el porcentaje que muestras?",a:"Es el resultado de aplicar una fórmula a la suma de pesos: mide cuán lejos quedó esa suma del empate. <b>No mide si la etiqueta es correcta.</b> Con una base de 14 frases, un 95% puede acompañar una respuesta equivocada, y así ocurre en este banco de prueba."},
  {q:"¿Puedes entregar una respuesta falsa?",a:"Sí. Siempre entrego una de dos etiquetas, incluso cuando ninguna palabra del texto está en mi tabla y la suma vale cero. Comparar mi salida con una fuente revisada es parte del trabajo de quien pregunta, no mío."},
  {q:"¿Qué pasa si escribo una negación?",a:"Nada. <b>No se quema</b> y <b>se quema</b> comparten las mismas palabras con peso, así que la suma es idéntica. Pruébalo con el botón que está más abajo."},
- {q:"¿En qué te pareces a los chatbots que uso en el celular?",a:"Comparten una cosa: los números de ambos se ajustan a partir de ejemplos. Las diferencias son grandes. Yo uso 14 frases y una tabla que cabe en una pantalla; un sistema de chat ajusta miles de millones de números y produce texto en vez de dos etiquetas. Y ninguno de los dos consulta una fuente mientras responde, salvo que tenga conectada una herramienta de búsqueda que entregue el link."}
-];
+ {q:"¿En qué te pareces a los chatbots que uso en el celular?",a:"Comparten una cosa: los números de ambos se ajustan a partir de ejemplos. Las diferencias son grandes. Yo uso 14 frases y una tabla que cabe en una pantalla; un sistema de chat ajusta miles de millones de números y produce texto en vez de dos etiquetas. Y ninguno de los dos consulta una fuente mientras responde, salvo que tenga conectada una herramienta de búsqueda que entregue el link."}];
 const LIMITS=[
  "No contiene química: no hay enlaces, ni átomos, ni reacciones dentro del programa. Sólo palabras y números.",
  "No tiene la categoría <b>los dos a la vez</b>. Frente a un caso mixto entrega igual una de las dos etiquetas.",
  "No usa el orden de las palabras ni las negaciones.",
  "No distingue entre palabras parecidas: <b>congela</b> y <b>congelador</b> son dos entradas sin relación.",
  "No busca en internet, no tiene fuentes, no entrega links ni DOI. Lo que dice no viene de ninguna parte verificable: viene de 14 frases.",
- "No explica <b>por qué</b> un cambio es físico o químico. Esa explicación la tiene que poner una persona."
-];
-const CRIT=[
- "Entrega una fuente que se puede abrir (link, libro, DOI).",
- "Puedo repetir la observación y obtener lo mismo.",
- "Coincide con lo que dice el texto de la asignatura.",
- "Distingue entre lo que observo y lo que interpreto.",
- "Dice qué parte de la respuesta no está respaldada.",
- "Se banca una pregunta de seguimiento sin cambiar la respuesta."
-];
+ "No explica <b>por qué</b> un cambio es físico o químico. Esa explicación la tiene que poner una persona."];
+const CRIT=["Entrega una fuente que se puede abrir (link, libro, DOI).","Puedo repetir la observación y obtener lo mismo.","Coincide con lo que dice el texto de la asignatura.","Distingue entre lo que observo y lo que interpreto.","Dice qué parte de la respuesta no está respaldada.","Se banca una pregunta de seguimiento sin cambiar la respuesta."];
 const STARTERS=["¿Qué pasaría con las respuestas si…","¿Cuántos ejemplos harían falta para que…","¿Cómo podría comprobar en el laboratorio que…","¿Qué criterio me permitiría decidir si…"];
 
-/* ───────── estado ───────── */
-const S={step:0,mine:{},tested:{},meta:[],crit:[],veredicto:"",resguardo:"",pregunta:"",neg:null,probe:null};
-try{const raw=localStorage.getItem("cc1v2");if(raw)Object.assign(S,JSON.parse(raw))}catch(e){}
-function save(){try{localStorage.setItem("cc1v2",JSON.stringify(S))}catch(e){}}
+/* ══════════════ 3. TUTOR CER: motor de andamiaje ══════════════ */
+const OBS=["color","olor","burbuj","humo","gas","vapor","temperatura","calor","caliente","frio","textura","solido","liquido","grumo","costra","ceniza","negro","naranja","blanca","blanco","firme","espuma","llama","achica","desaparece","derrite","disuelve","oxida","quema","hierve","congela","evapora","duro","blando","peso","masa","sabor"];
+const RAZ=["sustancia nueva","nueva sustancia","sustancia distinta","otra sustancia","sustancias nuevas","misma sustancia","sigue siendo","se forma","no se forma","se puede recuperar","no se puede recuperar","cambio de estado","cambia de estado","reaccion","reacciona","se combina","composicion"];
+const CLAIM=[["Q",["quimico","quimica"]],["F",["fisico","fisica"]],["M",["los dos","ambos","mixto","las dos"]]];
+const CONCEP=[
+ {id:"color",pat:["cambia de color","cambio de color","cambia el color","se puso de otro color","porque es de otro color"],name:"el color decide",
+  reply:"El color es una pista, no un criterio. Al agua con colorante le cambia el color y sigue siendo agua con colorante: no apareció ninguna sustancia nueva. ¿Qué otra cosa observaste además del color?"},
+ {id:"revert",pat:["se puede volver","es reversible","se puede devolver","vuelve a ser","no se puede volver","irreversible","no tiene vuelta"],name:"la reversibilidad decide",
+  reply:"Cuidado con ese criterio. Romper una hoja de papel no se puede deshacer y sigue siendo un cambio físico: los pedazos son papel. Lo que decide es si al final hay una sustancia distinta, no si se puede volver atrás. En tu caso, ¿al final hay la misma sustancia o una distinta?"},
+ {id:"calor",pat:["porque hay calor","porque se calienta","porque esta caliente","porque le ponen calor","el calor siempre"],name:"el calor decide",
+  reply:"Calentar algo no lo vuelve químico por sí solo: el agua caliente sigue siendo agua. El calor a veces provoca una reacción y a veces sólo sube la temperatura. ¿Cómo distinguirías esos dos casos mirando lo que queda al final?"},
+ {id:"disol",pat:["disolver es quimico","disolverse es quimico","se disuelve entonces es quimico","al disolverse se transforma","se disuelve asi que es quimico"],name:"disolver es químico",
+  reply:"Prueba este contraejemplo: si dejas evaporar el agua con sal, la sal vuelve a aparecer. Nunca dejó de ser sal. ¿Eso te hace cambiar tu afirmación o la mantienes?"},
+ {id:"estado",pat:["cambia de estado entonces es quimico","hervir es quimico","derretir es quimico","de liquido a gas es quimico"],name:"cambio de estado es químico",
+  reply:"Hielo, agua líquida y vapor son la misma sustancia en tres estados distintos. ¿Qué tendría que pasar, además del cambio de estado, para hablar de cambio químico?"},
+ {id:"burbuja",pat:["porque hace burbujas","hay burbujas entonces","burbujas es quimico","tiene burbujas asi que"],name:"las burbujas deciden",
+  reply:"El agua hirviendo hace burbujas, y esas burbujas son vapor de agua: la misma sustancia. Las burbujas importan cuando el gas es distinto de lo que había antes. ¿De qué serían las burbujas en tu caso?"}];
+const ASKANS=["dame la respuesta","dime la respuesta","cual es la respuesta","solo dime","respuesta correcta","dimelo","cual es","no me preguntes","dame el resultado"];
+const OFFTOPIC=["capital de","quien gano","pelicula","presidente","futbol","novia","chiste","clave del wifi","tarea de historia","resumen del libro"];
+const has=(t,arr)=>arr.some(p=>norm(t).includes(p));
+const HINTS={
+ claim:["Partamos por tu posición. ¿Dirías que es un cambio físico, uno químico, o los dos a la vez?",
+        "Necesito una afirmación tuya antes de seguir. Elige una: físico, químico o los dos.",
+        "Escribe sólo una palabra: <b>físico</b>, <b>químico</b> o <b>los dos</b>. Después te pido lo demás."],
+ ev:["Ahora la evidencia: ¿qué se puede <b>observar</b> en ese caso? Algo que se vea, se huela, se toque o se mida.",
+     "Todavía no me diste algo observable. Por ejemplo: cambios de color, olor, burbujas, temperatura, textura o estado.",
+     "Dime una sola observación concreta de ese caso, aunque sea obvia. Lo que aparece, lo que desaparece o lo que queda distinto."],
+ raz:["Falta el razonamiento: ¿esa observación indica que hay una <b>sustancia nueva</b>, o que es la misma sustancia con otra forma?",
+      "Conecta tu evidencia con el criterio del curso. La pregunta es si lo que queda al final es la misma sustancia o una distinta.",
+      "Completa esta frase con tus palabras: «esto indica que al final hay __________ porque __________»."]};
+function newDlg(caseId){return{caseId,stage:0,level:1,asked:0,flags:[],claim:"",turns:[{r:"t",m:"Trabajemos un caso. Te voy a pedir tres cosas en este orden: tu <b>afirmación</b>, una <b>evidencia</b> observable y tu <b>razonamiento</b>. No te voy a dar la respuesta antes de eso.<br><br>Caso: <b>"+CASES.find(c=>c.id===caseId).t+"</b><br><br>¿Es un cambio físico, químico o los dos?"}]}}
+function tutorTurn(d,text){
+ const c=CASES.find(x=>x.id===d.caseId),out=[];
+ if(has(text,OFFTOPIC)){out.push("Eso queda fuera de lo mío: sólo trabajo cambios físicos y químicos en situaciones de cocina. Volvamos al caso. "+HINTS[["claim","ev","raz"][Math.min(d.stage,2)]][0]);return out}
+ const con=CONCEP.find(k=>has(text,k.pat));
+ if(con&&!d.flags.includes(con.id)){d.flags.push(con.id);d.level=Math.min(5,d.level+1);out.push(con.reply);return out}
+ if(has(text,ASKANS)){
+  d.asked++;
+  if(d.asked>=3){d.stage=3;out.push("Te la voy a dar, pero dejo constancia de que la pediste sin completar el ciclo.<br><br>Referencia revisada: <b>"+REFNAME[c.ref]+"</b>. "+c.why+"<br><br>Ahora sí una pregunta para ti: ¿qué observación habrías necesitado para llegar sola o solo a eso?");return out}
+  out.push("No te la voy a dar todavía. "+(d.asked===1?"Primero tu posición, aunque te equivoques: equivocarse aquí no cuesta nada.":"Segunda vez que me la pides. Te doy una pista en vez de la respuesta: fíjate en qué queda al final del proceso y si eso es lo mismo que había al principio.")+"<br><br>"+HINTS[["claim","ev","raz"][Math.min(d.stage,2)]][Math.min(d.level-1,2)]);
+  return out}
+ if(d.stage===0){
+  const hit=CLAIM.find(([,pats])=>has(text,pats));
+  if(!hit){d.level=Math.min(5,d.level+1);out.push(HINTS.claim[Math.min(d.level-1,2)]);return out}
+  d.claim=hit[0];d.stage=1;
+  out.push("Anotado: dices <b>"+REFNAME[d.claim].toLowerCase()+"</b>. No te voy a decir si está bien todavía.<br><br>"+HINTS.ev[0]);
+  return out}
+ if(d.stage===1){
+  if(!has(text,OBS)){d.level=Math.min(5,d.level+1);out.push(HINTS.ev[Math.min(d.level-1,2)]);return out}
+  d.stage=2;out.push("Esa sí es una observación. "+HINTS.raz[0]);return out}
+ if(d.stage===2){
+  if(!has(text,RAZ)){d.level=Math.min(5,d.level+1);out.push(HINTS.raz[Math.min(d.level-1,2)]);return out}
+  d.stage=3;
+  const acierta=d.claim===c.ref;
+  const nueva=has(text,["sustancia nueva","nueva sustancia","sustancia distinta","otra sustancia","sustancias nuevas","no es la misma"]);
+  const misma=has(text,["misma sustancia","sigue siendo"]);
+  if((d.claim==="F"&&nueva&&!misma)||(d.claim==="Q"&&misma&&!nueva)){
+   d.incoherente=true;
+   out.push("Antes de la referencia, mira tu propio argumento: afirmaste <b>"+REFNAME[d.claim].toLowerCase()+"</b> y tu razonamiento dice que al final hay <b>"+(nueva?"una sustancia distinta":"la misma sustancia")+"</b>. Esas dos cosas no calzan entre sí.");
+  }
+  out.push("Ciclo completo: afirmación, evidencia y razonamiento.<br><br>Referencia revisada por tu profesora: <b>"+REFNAME[c.ref]+"</b>. "+c.why+
+   "<br><br>"+(acierta?"Tu afirmación coincide. Lo que vale no es que coincida, sino que ahora puedes decir en qué te apoyaste.":"Tu afirmación no coincide, y eso no invalida tu razonamiento: revisa cuál de los dos pasos falló, la observación o la conexión con el criterio.")+
+   "<br><br>Para cerrar: ¿qué dato tendrías que buscar para estar segura o seguro, sin preguntarle a nadie?");
+  return out}
+ out.push("Ese caso ya lo cerramos. Puedes elegir otro arriba o escribir tu pregunta de cierre en la fase final.");
+ return out;
+}
 
-const STEPS=[
- {n:"antes",k:"Cómo se usa"},
- {n:"0–4",k:"Tu clasificación"},
- {n:"4–9",k:"Cómo arma la respuesta"},
- {n:"9–13",k:"Interrogar al programa"},
- {n:"13–18",k:"Medir si funciona"},
- {n:"18–20",k:"Veredicto y pregunta"}
-];
+/* ══════════════ 4. SYSTEM PROMPT documentado ══════════════ */
+const SYSTEM_PROMPT=`### 1 · ROL Y PERSONALIDAD
+Eres «Cocina CC-1», tutor de ciencias naturales para estudiantes de 8.º básico (13-14 años) en Chile.
+Dominio único: distinción entre cambio físico y cambio químico en situaciones de cocina doméstica.
+Registro: cercano, breve, en segunda persona singular, español de Chile, sin diminutivos ni emojis.
+NO eres un buscador ni un resolvedor de tareas. Eres un interlocutor que exige argumentos.
 
-/* ───────── utilidades de render ───────── */
-const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+### 2 · OBJETIVO DIDÁCTICO
+Que el estudiante construya y defienda una explicación propia usando el criterio nuclear:
+hay cambio químico cuando al final del proceso existe al menos una SUSTANCIA DISTINTA de las iniciales.
+Razonamiento a desarrollar: pasar de indicios perceptivos sueltos (color, burbujas, calor)
+a un criterio de identidad de la sustancia, y reconocer cuándo un indicio no es concluyente.
+
+### 3 · REGLAS DE INTERACCIÓN
+<regla_1> Nunca entregues la clasificación de un caso antes de que el estudiante haya producido,
+en este orden: (a) una AFIRMACIÓN, (b) una EVIDENCIA observable, (c) un RAZONAMIENTO que conecte ambas. </regla_1>
+<regla_2> Si pide la respuesta directa, niégala y devuelve una pregunta o una pista.
+A la tercera petición explícita, entrégala, declara que se entregó sin completar el ciclo y pide
+al estudiante reconstruir qué le faltaba. </regla_2>
+<regla_3> Una respuesta por turno y una sola pregunta por turno. Máximo 80 palabras. </regla_3>
+<regla_4> Ante una concepción alternativa catalogada (el color decide / la reversibilidad decide /
+el calor decide / disolver es químico / cambio de estado es químico / las burbujas deciden),
+responde con un CONTRAEJEMPLO concreto y verificable, nunca con una corrección frontal. </regla_4>
+<regla_5> Escala el andamiaje en 5 niveles. Nivel 1: pregunta abierta. Nivel 5: frase incompleta
+para que el estudiante sólo complete. Sube un nivel cada vez que el estudiante no logra el paso. </regla_5>
+<regla_6> Evalúa con CER y nómbralo: di qué parte está presente y cuál falta. </regla_6>
+<regla_7> No inventes datos, fuentes, DOI ni links. Si no sabes, dilo y deriva al texto del curso
+o al docente. No afirmes que consultaste nada. </regla_7>
+<regla_8> Un error del clasificador estadístico no es un error de química: cuando el estudiante lo
+detecte, trátalo como hallazgo y pídele que explique de dónde vino. </regla_8>
+
+### 4 · EJEMPLOS (FEW-SHOT)
+<ejemplo tipo="esperado">
+E: creo que es químico porque se puso negro
+T: Anotado: dices químico. El color es una pista, no un criterio: al agua con colorante también
+le cambia el color y sigue siendo agua con colorante. ¿Qué otra cosa se puede observar en ese caso?
+</ejemplo>
+<ejemplo tipo="caso_limite">
+E: ya po, dime la respuesta, no tengo tiempo
+T: No te la voy a dar todavía. Primero tu posición, aunque te equivoques: equivocarse aquí no cuesta
+nada. ¿Dirías que es un cambio físico, uno químico, o los dos a la vez?
+</ejemplo>
+<ejemplo tipo="fuera_de_dominio">
+E: ¿cuál es la capital de Francia?
+T: Eso queda fuera de lo mío: sólo trabajo cambios físicos y químicos en situaciones de cocina.
+Volvamos al caso: ¿qué se puede observar ahí?
+</ejemplo>
+
+### 5 · RESTRICCIONES Y SEGURIDAD
+- Dominio cerrado: fuera de cambio físico/químico en cocina, declina y reencauza en una línea.
+- Sin datos personales: no pidas nombre, curso, correo, edad ni ubicación. Si el estudiante los
+  escribe, no los repitas ni los uses.
+- Sin juicios sobre la persona: se evalúa el argumento, nunca la capacidad.
+- Sin recetas peligrosas: no indiques mezclas de productos de limpieza ni procedimientos con fuego.
+- Si el estudiante expresa malestar o una situación de riesgo, sal del rol y sugiere hablar con un
+  adulto del establecimiento.
+
+### 6 · VALIDACIÓN
+Casos de prueba obligatorios (ver pestaña Validación del aplicativo):
+petición de respuesta directa · concepción alternativa de color · concepción de disolución ·
+pregunta fuera de dominio · ciclo CER completo · entrega tras tercera insistencia.
+Criterio de éxito: el tutor no entrega la clasificación antes del ciclo CER, salvo en el caso 6,
+donde debe entregarla declarando que se entregó sin completar el ciclo.
+Registro de errores: cada ejecución queda en el banco de pruebas con esperado / obtenido.`;
+
+/* ══════════════ 5. BANCO DE VALIDACIÓN ══════════════ */
+function runTests(){
+ const R=[];
+ const sim=(caseId,msgs)=>{const d=newDlg(caseId);let last=[];msgs.forEach(m=>{last=tutorTurn(d,m);d.turns.push({r:"u",m});last.forEach(x=>d.turns.push({r:"t",m:x}))});return{d,last:last.join(" ")}};
+ let x;
+ x=sim("c4",["dame la respuesta altiro"]);
+ R.push({id:"T1",n:"Petición de respuesta directa",esp:"No revela la clasificación y devuelve una pregunta",got:x.last,ok:!/Referencia revisada/.test(x.last)&&x.last.includes("?")});
+ x=sim("c2",["es quimico porque cambia de color"]);
+ R.push({id:"T2",n:"Concepción alternativa: el color decide",esp:"Responde con contraejemplo del colorante",got:x.last,ok:/colorante/.test(x.last)&&x.d.flags.includes("color")});
+ x=sim("c6",["creo que disolver es quimico"]);
+ R.push({id:"T3",n:"Concepción alternativa: disolver es químico",esp:"Contraejemplo de la sal recuperable",got:x.last,ok:/evaporar el agua con sal/.test(x.last)});
+ x=sim("c1",["cual es la capital de Francia"]);
+ R.push({id:"T4",n:"Pregunta fuera de dominio",esp:"Declina y reencauza al caso",got:x.last,ok:/fuera de lo mío/.test(x.last)});
+ x=sim("c4",["es quimico","quedó una costra naranja","porque el oxido es una sustancia distinta del acero"]);
+ R.push({id:"T5",n:"Ciclo CER completo",esp:"Cierra con la referencia y una pregunta de extensión",got:x.last,ok:/Referencia revisada/.test(x.last)&&x.d.stage===3});
+ x=sim("c3",["dame la respuesta","dime la respuesta","cual es la respuesta"]);
+ R.push({id:"T6",n:"Tercera insistencia",esp:"Entrega la referencia declarando que fue sin completar el ciclo",got:x.last,ok:/sin completar el ciclo/.test(x.last)});
+ x=sim("c7",["es quimico","se formaron grumos","porque la leche se convierte en otra sustancia"]);
+ R.push({id:"T7",n:"Afirmación correcta con razonamiento",esp:"Reconoce coincidencia sin premiar el acierto por sí solo",got:x.last,ok:/coincide/.test(x.last)});
+ const a=predict("El pan se quema en el horno"),b=predict("El pan no se quema en el horno");
+ R.push({id:"T8",n:"Invariancia ante negación (clasificador)",esp:"Las dos frases dan la misma suma: la negación no se procesa",got:"suma A="+a.s.toFixed(2)+" · suma B="+b.s.toFixed(2),ok:Math.abs(a.s-b.s)<1e-9});
+ const m=predict(CASES[4].t);
+ R.push({id:"T9",n:"Caso mixto sin categoría disponible",esp:"El modelo no puede acertar: sólo tiene dos etiquetas",got:"entrega "+REFNAME[m.lab]+", la referencia es «los dos»",ok:CASES[4].ref==="M"&&(m.lab==="F"||m.lab==="Q")});
+ const before=JSON.stringify(M.w);extra.push({t:"prueba de reentrenamiento con cascara de platano",y:"Q"});train();const after=JSON.stringify(M.w);extra.pop();train();
+ R.push({id:"T10",n:"El reentrenamiento modifica los pesos",esp:"Agregar un ejemplo cambia la tabla y por tanto las respuestas",got:before===after?"sin cambio":"tabla modificada",ok:before!==after});
+ const pl=payload(),keys=Object.keys(pl),BAN=["nombre","apellido","correo","email","rut","curso","edad","colegio","establecimiento","telefono","ip"];
+ const malos=keys.filter(k=>BAN.includes(k.toLowerCase())),hayMail=/[\w.+-]+@[\w-]+\.[\w.]+/.test(JSON.stringify(pl));
+ R.push({id:"T11",n:"Privacidad del envío al piloto",esp:"Ningún campo identificatorio y ningún correo en los valores",
+  got:(malos.length?"campos prohibidos: "+malos.join(", "):"sin campos identificatorios")+(hayMail?"; se detectó un correo en los valores":"")+" · campos: "+keys.join(", "),
+  ok:malos.length===0&&!hayMail});
+ return R;
+}
+
+/* ══════════════ 6. COEVALUACIÓN (instrumento entre pares) ══════════════ */
+const PEER=[
+ {id:"rigor",t:"Veracidad y rigor",items:[
+  ["V1","Las referencias y justificaciones científicas distinguen cambios físicos y químicos con criterios consistentes para 8.º básico.","Contrasta al menos dos casos, incluido el mixto y el del limón con la leche."],
+  ["V2","El recurso diferencia la predicción estadística del modelo de una explicación científica validada.","Compara predicciones con la referencia en la fase de medición."],
+  ["V3","Describe con precisión las limitaciones y no equipara confianza con acierto.","Revisa la fase de interrogación y el tratamiento de la negación."]]},
+ {id:"feedback",t:"Retroalimentación",items:[
+  ["R1","La comparación entre predicción, referencia y justificación permite examinar las causas de un error.","Escoge una clasificación incorrecta y mira qué información queda disponible."],
+  ["R2","La tabla de pesos y la matriz aportan evidencia interpretable del comportamiento del clasificador.","Relaciona un peso por palabra con una predicción concreta."],
+  ["R3","Tras el reentrenamiento se puede comparar si el rendimiento mejora, empeora o no cambia.","Agrega un ejemplo y compara antes y después."]]},
+ {id:"tutor",t:"Tutor CER",items:[
+  ["C1","El tutor sostiene el andamiaje y no entrega la clasificación antes del ciclo afirmación-evidencia-razonamiento.","Pídele la respuesta directa dos veces seguidas."],
+  ["C2","Responde a las concepciones alternativas con contraejemplos verificables y no con correcciones frontales.","Escribe «es químico porque cambia de color»."],
+  ["C3","Declara sus límites de dominio y no inventa fuentes.","Pregúntale algo ajeno a la cocina y pídele una referencia bibliográfica."]]},
+ {id:"interface",t:"Interfaz y acceso",items:[
+  ["I1","Las fases se reconocen y recorren sin perder la ubicación.","Navega hacia adelante y atrás."],
+  ["I2","Los controles responden de forma previsible y completan lo que anuncian.","Prueba clasificar, reentrenar, dialogar y copiar la ficha."],
+  ["I3","Los textos y estados son legibles en el dispositivo usado.","Observa tamaño, contraste y distinción de etiquetas."]]},
+ {id:"pedagogy",t:"Diseño didáctico",items:[
+  ["D1","La clasificación inicial y su contraste posterior favorecen revisar ideas previas con evidencia nueva.","Comprueba que se registre la respuesta propia antes de ver la del modelo."],
+  ["D2","El análisis de errores y límites promueve argumentos apoyados en evidencia.","Revisa si el cierre exige justificar y formular una pregunta investigable."],
+  ["D3","Secuencia, lenguaje y carga son pertinentes para 8.º básico en el tiempo propuesto.","Considera la ruta elegida y la factibilidad real."]]}];
+const SEV={P1:"Crítica",P2:"Alta",P3:"Media",P4:"Baja"};
+
+/* ══════════════ 7. ESTADO ══════════════ */
+/* Configuración del pilotaje incrustada en el archivo publicado. La clave web de Firebase
+   no es un secreto: lo que protege los datos son las reglas de Firestore. Rellenar antes
+   de publicar para que docentes validadores puedan enviar y leer sin configurar nada. */
+const FIRE={pid:"",key:"",coll:"cc1_pilotos"};
+/* Perfiles. Las claves se guardan como hash djb2, nunca en texto plano.
+   docente validador: validar-cc1 · administración: cocina-admin
+   Para cambiarlas, usa el generador de hash en el panel de administración. */
+const ROLES={doc:1685826815,admin:785861979};
+const dj=s=>{let h=5381;for(const c of String(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]/g,""))h=((h<<5)+h+c.charCodeAt(0))|0;return h>>>0};
+let ROLE="est",gate=false,gateErr="";
+try{const r=sessionStorage.getItem("cc1rol");if(r==="doc"||r==="admin")ROLE=r}catch(e){}
+const ROLENAME={est:"estudiante",doc:"docente validador",admin:"administración"};
+const CODE=()=>"CC1-"+Math.random().toString(36).toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,4);
+const S={step:0,dstep:0,area:"est",route:30,mstep:null,code:CODE(),mine:{},tested:{},meta:[],crit:[],veredicto:"",resguardo:"",pregunta:"",neg:null,probe:null,
+ dlg:null,post:{},peer:{r:{},sug:{text:"",dim:"",sev:"",ev:""}},sent:null,msg:""};
+const CFG={pid:"",key:"",coll:"",aiKey:"",aiModel:"gemini-2.0-flash",texts:true,nval:5};
+const EFF=()=>({pid:CFG.pid||FIRE.pid,key:CFG.key||FIRE.key,coll:CFG.coll||FIRE.coll||"cc1_pilotos"});
+const cfgOk=()=>{const e=EFF();return !!(e.pid&&e.key)};
+try{const a=localStorage.getItem("cc1v3");if(a)Object.assign(S,JSON.parse(a))}catch(e){}
+try{const b=localStorage.getItem("cc1cfg");if(b)Object.assign(CFG,JSON.parse(b))}catch(e){}
+function save(){try{localStorage.setItem("cc1v3",JSON.stringify(S))}catch(e){}}
+function saveCfg(){try{localStorage.setItem("cc1cfg",JSON.stringify(CFG))}catch(e){}}
+let POOL=[],poolMsg="",tests=null,analysis="",informe="",INFORME=null,aprend="",APREND=null;
+
+/* ══════════════ 8. FIRESTORE REST ══════════════ */
+function toFire(v){
+ if(v===null||v===undefined)return{nullValue:null};
+ if(typeof v==="string")return{stringValue:v};
+ if(typeof v==="boolean")return{booleanValue:v};
+ if(typeof v==="number")return Number.isInteger(v)?{integerValue:String(v)}:{doubleValue:v};
+ if(Array.isArray(v))return{arrayValue:{values:v.map(toFire)}};
+ const f={};Object.keys(v).forEach(k=>f[k]=toFire(v[k]));return{mapValue:{fields:f}};
+}
+function fromFire(v){
+ if(!v)return null;
+ if("stringValue"in v)return v.stringValue;
+ if("integerValue"in v)return Number(v.integerValue);
+ if("doubleValue"in v)return Number(v.doubleValue);
+ if("booleanValue"in v)return v.booleanValue;
+ if("nullValue"in v)return null;
+ if("arrayValue"in v)return(v.arrayValue.values||[]).map(fromFire);
+ if("mapValue"in v){const o={},f=v.mapValue.fields||{};Object.keys(f).forEach(k=>o[k]=fromFire(f[k]));return o}
+ return null;
+}
+const fireUrl=()=>{const e=EFF();return "https://firestore.googleapis.com/v1/projects/"+encodeURIComponent(e.pid)+"/databases/(default)/documents/"+encodeURIComponent(e.coll)+"?key="+encodeURIComponent(e.key)};
+function metrics(){
+ const res=CASES.map(c=>({c,r:predict(c.t)})),bin=res.filter(x=>x.c.ref!=="M"&&S.tested[x.c.id]);
+ const hit=bin.filter(x=>x.r.lab===x.c.ref).length;
+ const mineBin=CASES.filter(c=>c.ref!=="M"&&S.mine[c.id]);
+ return{probados:bin.length,aciertos:hit,exactitud:bin.length?Math.round(hit/bin.length*100):null,
+  misAciertos:mineBin.length?Math.round(mineBin.filter(c=>S.mine[c.id]===c.ref).length/mineBin.length*100):null,
+  coincidoConModelo:CASES.filter(c=>S.mine[c.id]&&S.tested[c.id]&&S.mine[c.id]===predict(c.t).lab).length};
+}
+function payload(){
+ const m=metrics(),d=S.dlg;
+ const o={codigo:S.code,fecha:new Date().toISOString().slice(0,10),ruta:S.route,
+  ejemplos_base:M.n,vocabulario:M.vs,
+  mis_clasificaciones:CASES.map(c=>(S.mine[c.id]||"-")).join(""),
+  revision_final:CASES.map(c=>(S.post[c.id]||"-")).join(""),
+  cambios_de_posicion:CASES.filter(c=>S.post[c.id]&&S.mine[c.id]&&S.post[c.id]!==S.mine[c.id]).length,
+  revision_completada:Object.keys(S.post).length,
+  dialogo_incoherencia:!!(S.dlg&&S.dlg.incoherente),
+  exactitud_modelo:m.exactitud===null?-1:m.exactitud,mis_aciertos:m.misAciertos===null?-1:m.misAciertos,
+  preguntas_abiertas:S.meta.length,criterios:S.crit.map(i=>CRIT[i]),veredicto:S.veredicto,
+  dialogo_etapa:d?d.stage:-1,dialogo_nivel:d?d.level:-1,dialogo_concepciones:d?d.flags:[],
+  dialogo_turnos:d?d.turns.filter(t=>t.r==="u").length:0,
+  coevaluacion:S.peer.r,
+  version:"cc1-v3"};
+ if(CFG.texts){o.resguardo=S.resguardo.slice(0,400);o.pregunta_cierre=S.pregunta.slice(0,400);o.sugerencia=S.peer.sug.text.slice(0,500);o.sugerencia_gravedad=S.peer.sug.sev;o.sugerencia_evidencia=S.peer.sug.ev.slice(0,500)}
+ return o;
+}
+async function sendPilot(){
+ if(!cfgOk()){S.msg="El pilotaje no está configurado en este archivo. Pídeselo a quien administra.";return render()}
+ S.msg="Enviando…";render();
+ try{
+  const r=await fetch(fireUrl(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fields:toFire(payload()).mapValue.fields})});
+  if(!r.ok){const t=await r.text();throw new Error(r.status+" "+t.slice(0,160))}
+  S.sent=new Date().toLocaleTimeString("es-CL",{hour:"2-digit",minute:"2-digit"});S.msg="Enviado al piloto a las "+S.sent;
+ }catch(e){S.msg="No se pudo enviar: "+e.message+". Si estás viendo esto dentro de una vista previa, el envío está bloqueado; publica el archivo en tu sitio.";}
+ save();render();
+}
+async function loadPool(){
+ if(!cfgOk()){poolMsg="El pilotaje no está configurado en este archivo.";return render()}
+ poolMsg="Cargando…";render();
+ try{
+  const r=await fetch(fireUrl().replace("?key=","?pageSize=300&key="));
+  if(!r.ok)throw new Error(r.status);
+  const j=await r.json();
+  const todo=(j.documents||[]).map(d=>{const o={};Object.keys(d.fields||{}).forEach(k=>o[k]=fromFire(d.fields[k]));return o});
+  POOL=todo.filter(d=>d.version!=="cc1-informe");
+  const ult=v=>{const x=todo.filter(d=>d.version===v).sort((a,b)=>String(a.fecha).localeCompare(String(b.fecha)));return x.length?x[x.length-1]:null};
+  INFORME=ult("cc1-informe");APREND=ult("cc1-aprendizaje");
+  if(INFORME&&!informe)informe=INFORME.texto||"";
+  if(APREND&&!aprend)aprend=APREND.texto||"";
+  poolMsg=POOL.length+" respuestas · "+validadores()+" con coevaluación"+(INFORME?" · validación publicada":"")+(APREND?" · análisis del proceso publicado":"");
+ }catch(e){POOL=[];poolMsg="No se pudo leer: "+e.message+". Revisa reglas de Firestore y la clave."}
+ render();
+}
+
+/* ══════════════ 9. ANÁLISIS ══════════════ */
+function aggregate(){
+ if(!POOL.length)return null;
+ const n=POOL.length,num=k=>POOL.map(p=>Number(p[k])).filter(v=>Number.isFinite(v)&&v>=0);
+ const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+ const vered={};POOL.forEach(p=>{const v=p.veredicto||"(sin marcar)";vered[v]=(vered[v]||0)+1});
+ const crit={};POOL.forEach(p=>(p.criterios||[]).forEach(c=>crit[c]=(crit[c]||0)+1));
+ const conc={};POOL.forEach(p=>(p.dialogo_concepciones||[]).forEach(c=>conc[c]=(conc[c]||0)+1));
+ const porCaso=CASES.map((c,i)=>{let f=0,q=0,sin=0;POOL.forEach(p=>{const ch=(p.mis_clasificaciones||"")[i];ch==="F"?f++:ch==="Q"?q++:sin++});
+  const dif=c.ref==="M"?f+q:(c.ref==="F"?q:f);return{caso:c.t,ref:REFNAME[c.ref],f,q,sin,difiere:dif}});
+ const peer={};PEER.forEach(d=>d.items.forEach(([id])=>{const v=POOL.map(p=>Number((p.coevaluacion||{})[id])).filter(x=>Number.isFinite(x)&&x>=1&&x<=5);peer[id]={n:v.length,avg:avg(v)}}));
+ const sug=POOL.filter(p=>p.sugerencia).map(p=>({sev:p.sugerencia_gravedad||"-",t:p.sugerencia,ev:p.sugerencia_evidencia||""}));
+ const revN=POOL.filter(p=>Number(p.revision_completada)>0).length;
+ const cambios=POOL.map(p=>Number(p.cambios_de_posicion)).filter(v=>Number.isFinite(v)&&v>=0);
+ const porCasoRev=CASES.map((c,i)=>{let cam=0,haciaRef=0,desdeRef=0,fin={F:0,Q:0};
+  POOL.forEach(p=>{const a=(p.mis_clasificaciones||"")[i],b=(p.revision_final||"")[i];
+   if(b==="F"||b==="Q")fin[b]++;
+   if((a==="F"||a==="Q")&&(b==="F"||b==="Q")&&a!==b){cam++;if(b===c.ref)haciaRef++;else if(a===c.ref)desdeRef++}});
+  return{caso:c.t,ref:REFNAME[c.ref],cam,haciaRef,desdeRef,fin}});
+ const incoh=POOL.filter(p=>p.dialogo_incoherencia===true).length;
+ return{n,exactitud:avg(num("exactitud_modelo")),misAciertos:avg(num("mis_aciertos")),
+  turnos:avg(num("dialogo_turnos")),etapa3:POOL.filter(p=>Number(p.dialogo_etapa)===3).length,
+  nivel:avg(num("dialogo_nivel")),vered,crit,conc,porCaso,peer,sug,
+  revN,cambiosAvg:avg(cambios),porCasoRev,incoh,
+  resguardos:POOL.map(p=>p.resguardo).filter(Boolean),
+  preguntas:POOL.map(p=>p.pregunta_cierre).filter(Boolean)};
+}
+function analysisPrompt(){
+ const a=aggregate();if(!a)return"";
+ const L=[];
+ L.push("Eres evaluador de recursos didácticos. Analiza estos datos de pilotaje de un tutor escolar de 8.º básico sobre cambio físico y químico. El tutor incluye un clasificador de texto auditable (Naive Bayes, 14 ejemplos) y un diálogo con andamiaje CER.");
+ L.push("");
+ L.push("DATOS AGREGADOS (n="+a.n+" sesiones)");
+ L.push("- Exactitud media del clasificador medida por los participantes: "+(a.exactitud===null?"s/d":a.exactitud.toFixed(1)+"%"));
+ L.push("- Aciertos propios medios de los participantes: "+(a.misAciertos===null?"s/d":a.misAciertos.toFixed(1)+"%"));
+ L.push("- Diálogo CER: "+(a.turnos===null?"s/d":a.turnos.toFixed(1))+" turnos medios; "+a.etapa3+" sesiones completaron el ciclo; nivel medio de andamiaje "+(a.nivel===null?"s/d":a.nivel.toFixed(1))+"/5");
+ L.push("- Concepciones alternativas detectadas: "+(Object.keys(a.conc).length?Object.entries(a.conc).map(([k,v])=>k+"="+v).join(", "):"ninguna"));
+ L.push("- Veredictos: "+Object.entries(a.vered).map(([k,v])=>k+"="+v).join(" · "));
+ L.push("- Criterios de validez más exigidos: "+Object.entries(a.crit).sort((x,y)=>y[1]-x[1]).slice(0,4).map(([k,v])=>v+"× "+k).join(" | "));
+ L.push("");
+ L.push("CLASIFICACIÓN POR CASO (cuántos participantes difieren de la referencia revisada)");
+ a.porCaso.forEach(c=>L.push("- ["+c.ref+"] "+c.caso+" → difieren "+c.difiere+" de "+a.n));
+ L.push("");
+ L.push("COEVALUACIÓN ENTRE PARES (media /5 por ítem)");
+ PEER.forEach(d=>d.items.forEach(([id,lab])=>{const p=a.peer[id];L.push("- "+id+" ("+d.t+"): "+(p.avg===null?"s/d":p.avg.toFixed(2))+" (n="+p.n+") · "+lab)}));
+ if(a.sug.length){L.push("");L.push("SUGERENCIAS DE LOS PARES");a.sug.forEach(s=>L.push("- ["+s.sev+"] "+s.t+(s.ev?" || evidencia: "+s.ev:"")))}
+ if(a.preguntas.length){L.push("");L.push("PREGUNTAS INVESTIGABLES FORMULADAS AL CIERRE");a.preguntas.slice(0,25).forEach(q=>L.push("- "+q))}
+ L.push("");
+ L.push("ENTREGA tu análisis en cinco secciones breves:");
+ L.push("1. Qué sostienen los datos y qué NO permiten concluir (tamaño muestral, autoselección, ausencia de medida de aprendizaje).");
+ L.push("2. Evidencia sobre el andamiaje: ¿el ciclo CER se completa o se abandona? ¿qué indica el nivel medio de andamiaje?");
+ L.push("3. Concepciones alternativas: cuáles aparecen y qué ajuste del tutor propondrías.");
+ L.push("4. Ítems de la coevaluación bajo 3,5: diagnóstico y una modificación concreta por ítem.");
+ L.push("5. Tres cambios priorizados antes de una segunda aplicación, con el criterio de priorización explícito.");
+ L.push("No inventes datos que no estén arriba. Si algo no se puede concluir, dilo.");
+ return L.join("\n");
+}
+/* ---- la IA como validadora independiente + informe de cierre ---- */
+function validadores(){return POOL.filter(p=>p.coevaluacion&&Object.keys(p.coevaluacion).length).length}
+function informePrompt(){
+ const a=aggregate(),T=tests||runTests(),L=[];
+ L.push("Actúas como VALIDADOR INDEPENDIENTE de un recurso educativo, dentro de un panel donde el resto son docentes humanos. Tu tarea es emitir tu propio juicio y luego cerrar el proceso con un informe.");
+ L.push("");
+ L.push("## EL RECURSO");
+ L.push("«Cocina CC-1», tutor para 8.º básico sobre cambio físico y químico. Tres piezas: (1) un clasificador Naive Bayes auditable entrenado con 14 frases visibles para el estudiante; (2) un tutor conversacional con andamiaje CER que no entrega la clasificación antes de que el estudiante produzca afirmación, evidencia y razonamiento; (3) una capa de pilotaje anónima. Funciona sin conexión.");
+ L.push("");
+ L.push("## EVIDENCIA TÉCNICA (ejecutada automáticamente sobre el motor real)");
+ T.forEach(t=>L.push("- "+t.id+" ["+(t.ok?"APRUEBA":"FALLA")+"] "+t.n+" → esperado: "+t.esp));
+ L.push("");
+ L.push("## DESEMPEÑO DEL CLASIFICADOR (banco de 8 casos, base de "+M.n+" ejemplos)");
+ CASES.forEach(c=>{const r=predict(c.t);L.push("- «"+c.t+"» | referencia revisada: "+REFNAME[c.ref]+" | el modelo responde: "+REFNAME[r.lab]+" con "+(r.p*100).toFixed(0)+"% de confianza | justificación científica de la referencia: "+c.why)});
+ L.push("");
+ L.push("## LÍMITES QUE EL PROPIO RECURSO DECLARA EN PANTALLA");
+ LIMITS.forEach(l=>L.push("- "+l.replace(/<[^>]+>/g,"")));
+ L.push("");
+ L.push("## LOS 15 CRITERIOS DEL PANEL");
+ PEER.forEach(d=>d.items.forEach(([id,lab,tst])=>L.push("- "+id+" ("+d.t+"): "+lab+" [qué comprobar: "+tst+"]")));
+ L.push("");
+ if(a){
+  L.push("## JUICIOS DE LOS VALIDADORES HUMANOS (n="+a.n+" sesiones, "+validadores()+" con coevaluación)");
+  PEER.forEach(d=>d.items.forEach(([id])=>{const p=a.peer[id];L.push("- "+id+": media "+(p.avg===null?"sin datos":p.avg.toFixed(2)+"/5")+" (n="+p.n+")")}));
+  L.push("");
+  L.push("## CONDUCTA DE USO OBSERVADA");
+  L.push("- Exactitud media del clasificador según los participantes: "+(a.exactitud===null?"s/d":a.exactitud.toFixed(1)+"%"));
+  L.push("- Ciclos CER completados: "+a.etapa3+" de "+a.n+"; nivel medio de andamiaje "+(a.nivel===null?"s/d":a.nivel.toFixed(1))+"/5; turnos medios "+(a.turnos===null?"s/d":a.turnos.toFixed(1)));
+  L.push("- Concepciones alternativas detectadas: "+(Object.keys(a.conc).length?Object.entries(a.conc).sort((x,y)=>y[1]-x[1]).map(([k,v])=>k+"="+v).join(", "):"ninguna"));
+  L.push("- Veredictos de los participantes: "+Object.entries(a.vered).map(([k,v])=>k+"="+v).join(" · "));
+  L.push("- Divergencia por caso respecto de la referencia: "+a.porCaso.map(c=>c.caso.slice(0,28)+"… ("+c.difiere+"/"+a.n+")").join(" | "));
+  if(a.sug.length){L.push("");L.push("## SUGERENCIAS DE LOS VALIDADORES");a.sug.forEach(s=>L.push("- ["+s.sev+"] "+s.t+(s.ev?" || evidencia: "+s.ev:"")))}
+  if(a.preguntas.length){L.push("");L.push("## PREGUNTAS INVESTIGABLES FORMULADAS AL CIERRE");a.preguntas.slice(0,30).forEach(q=>L.push("- "+q))}
+ }else{L.push("## JUICIOS HUMANOS");L.push("Todavía no hay sesiones cargadas: emite sólo tu propio juicio y dilo explícitamente.")}
+ L.push("");
+ L.push("## LO QUE DEBES ENTREGAR, en este orden y con estos títulos");
+ L.push("1. **Mi puntuación como validador**: los 15 criterios con tu nota de 1 a 5 y una línea de justificación anclada en la evidencia de arriba. Donde la evidencia no alcance para puntuar, escribe NO en vez de estimar, y di qué te faltó.");
+ L.push("2. **Divergencias con el panel humano**: criterios donde tu nota se aparta en 1 punto o más de la media humana. Para cada uno, una hipótesis de por qué, sin asumir que tu juicio es el correcto.");
+ L.push("3. **Hallazgos críticos**: lo que impediría aplicar el recurso tal como está. Si no hay ninguno, dilo.");
+ L.push("4. **Tres cambios priorizados** antes de la próxima aplicación, con el criterio de priorización explícito.");
+ L.push("5. **Límites de este informe**: qué no se puede concluir con estos datos. Incluye obligatoriamente que ninguna de estas medidas evalúa aprendizaje de estudiantes, el tamaño muestral y el sesgo de autoselección de quienes validan.");
+ L.push("");
+ L.push("Reglas: no inventes datos que no estén arriba. No cites fuentes que no se te hayan entregado. Si un criterio depende de observar estudiantes reales, dilo en vez de puntuarlo. Escribe en español de Chile, en prosa sobria, sin adjetivos promocionales.");
+ return L.join("\n");
+}
+function aprendizajePrompt(){
+ const a=aggregate(),L=[];
+ L.push("Actúas como analista didáctico. Vas a compilar un informe del PROCESO DE APRENDIZAJE de un curso de 8.º básico a partir de las trazas que dejó una actividad de 20 a 30 minutos sobre cambio físico y químico.");
+ L.push("");
+ L.push("## QUÉ HIZO EL CURSO");
+ L.push("1) Clasificó 8 situaciones de cocina en físico o químico, sin ver todavía la máquina. 2) Abrió un clasificador automático y vio de dónde salen sus respuestas. 3) Lo interrogó sobre su propio funcionamiento. 4) Lo midió contra una referencia revisada por la docente. 5) Defendió un caso ante un tutor que exige afirmación, evidencia y razonamiento (CER). 6) Revisó sus ocho marcas iniciales, fijó criterios de validez y formuló una pregunta investigable.");
+ L.push("");
+ if(!a){L.push("No hay sesiones cargadas. Dilo y no inventes datos.");return L.join("\n")}
+ L.push("## CLASIFICACIÓN INICIAL (antes de ver el clasificador), n="+a.n);
+ a.porCaso.forEach(c=>L.push("- «"+c.caso+"» | referencia: "+c.ref+" | marcaron físico "+c.f+", químico "+c.q+", sin marcar "+c.sin+" | difieren de la referencia: "+c.difiere));
+ L.push("");
+ L.push("## REVISIÓN FINAL (los mismos 8 casos, después de toda la actividad)");
+ L.push("Sesiones que completaron la revisión: "+a.revN+" de "+a.n+". Cambios de posición por sesión: media "+(a.cambiosAvg===null?"s/d":a.cambiosAvg.toFixed(2)));
+ a.porCasoRev.forEach(c=>L.push("- «"+c.caso.slice(0,46)+"…» | referencia: "+c.ref+" | cambiaron de posición: "+c.cam+" (hacia la referencia: "+c.haciaRef+", alejándose: "+c.desdeRef+") | posición final: físico "+c.fin.F+", químico "+c.fin.Q));
+ L.push("");
+ L.push("## ARGUMENTACIÓN EN EL DIÁLOGO CER");
+ L.push("- Ciclos completados (llegaron a razonamiento): "+a.etapa3+" de "+a.n);
+ L.push("- Turnos medios del estudiante: "+(a.turnos===null?"s/d":a.turnos.toFixed(1)));
+ L.push("- Nivel medio de andamiaje alcanzado: "+(a.nivel===null?"s/d":a.nivel.toFixed(1))+" de 5 (1 = pregunta abierta bastó; 5 = hubo que dar una frase para completar)");
+ L.push("- Sesiones donde la afirmación contradecía el propio razonamiento: "+a.incoh);
+ L.push("- Concepciones alternativas detectadas por el tutor: "+(Object.keys(a.conc).length?Object.entries(a.conc).sort((x,y)=>y[1]-x[1]).map(([k,v])=>k+"="+v).join(", "):"ninguna")+" (claves: color = el cambio de color decide; revert = la reversibilidad decide; calor = el calor decide; disol = disolver es químico; estado = el cambio de estado es químico; burbuja = las burbujas deciden)");
+ L.push("");
+ L.push("## CIERRE EPISTÉMICO");
+ L.push("- Veredictos sobre si el recurso sirve: "+Object.entries(a.vered).map(([k,v])=>k+"="+v).join(" · "));
+ L.push("- Criterios de validez que el curso decidió exigir a una fuente: "+(Object.keys(a.crit).length?Object.entries(a.crit).sort((x,y)=>y[1]-x[1]).map(([k,v])=>v+"× "+k).join(" | "):"ninguno"));
+ if(a.resguardos.length){L.push("");L.push("### Resguardos escritos por los estudiantes (textual)");a.resguardos.slice(0,30).forEach(r=>L.push("- "+r))}
+ if(a.preguntas.length){L.push("");L.push("### Preguntas investigables formuladas al cierre (textual)");a.preguntas.slice(0,40).forEach(q=>L.push("- "+q))}
+ L.push("");
+ L.push("## LO QUE DEBES ENTREGAR, con estos títulos");
+ L.push("1. **De dónde parte el curso**: qué revelan las marcas iniciales sobre las ideas previas, caso por caso. Nombra la concepción probable detrás de cada patrón de error, no sólo el porcentaje.");
+ L.push("2. **Qué se movió y qué no**: lee la revisión final contra la inicial. Distingue el movimiento hacia la referencia del movimiento que se aleja, y señala los casos donde nadie se movió. Un cambio de marca no es por sí mismo aprendizaje: dilo donde corresponda.");
+ L.push("3. **Calidad del razonamiento**: interpreta el nivel de andamiaje, los ciclos incompletos y las incoherencias entre afirmación y razonamiento. ¿El curso argumenta con evidencia o justifica con indicios perceptivos?");
+ L.push("4. **Las preguntas de cierre**: clasifícalas en investigables y no investigables, y en las que apuntan al modelo frente a las que apuntan a la química. Cita textualmente al menos cuatro y explica qué muestra cada una.");
+ L.push("5. **Tres focos para la clase siguiente**: qué enseñar, con la evidencia concreta de arriba que lo sostiene y una actividad breve para cada uno.");
+ L.push("6. **Qué NO se puede concluir**: estas son trazas de una sesión, no una medida de aprendizaje. No hay grupo de control, la revisión final es posterior a haber visto las referencias, y el registro es anónimo y autoinformado. Sé explícito.");
+ L.push("");
+ L.push("Reglas: no inventes datos. Cuando una cifra sea pequeña, dilo en vez de generalizar. Escribe en español de Chile, para una reunión de departamento, en prosa sobria y sin adjetivos promocionales.");
+ return L.join("\n");
+}
+async function pedirIA(prompt){
+ const u="https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(CFG.aiModel)+":generateContent?key="+encodeURIComponent(CFG.aiKey);
+ const r=await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})});
+ if(!r.ok)throw new Error(r.status+" "+(await r.text()).slice(0,140));
+ const j=await r.json();
+ return (j.candidates&&j.candidates[0]&&j.candidates[0].content.parts.map(x=>x.text).join(""))||"Respuesta vacía.";
+}
+async function runAprendizaje(){
+ if(!POOL.length){aprend="No hay sesiones cargadas. Ve a Datos y pulsa «Cargar respuestas».";return render()}
+ if(!CFG.aiKey){aprend="Sin clave de modelo configurada. Usa «Copiar prompt del proceso» y pégalo en el asistente que prefieras; después trae el resultado a este recuadro.";return render()}
+ aprend="Compilando el análisis del proceso…";render();
+ try{aprend=await pedirIA(aprendizajePrompt())}
+ catch(e){aprend="No se pudo compilar: "+e.message+". Dentro de una vista previa las llamadas externas están bloqueadas; usa el prompt copiable."}
+ render();
+}
+async function publicar(tipo,texto){
+ if(!cfgOk()){S.msg="El pilotaje no está configurado.";return render()}
+ if(!texto||texto.length<80){S.msg="Genera o pega el texto antes de publicarlo.";return render()}
+ S.msg="Publicando…";render();
+ try{
+  const doc={version:tipo,fecha:new Date().toISOString().slice(0,16).replace("T"," "),validadores:validadores(),sesiones:POOL.length,texto:texto.slice(0,18000)};
+  const r=await fetch(fireUrl(),{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({fields:toFire(doc).mapValue.fields})});
+  if(!r.ok)throw new Error(r.status+" "+(await r.text()).slice(0,140));
+  if(tipo==="cc1-informe"){INFORME=doc;S.msg="Informe de validación publicado: ya lo ven los validadores."}
+  else{APREND=doc;S.msg="Análisis del proceso publicado: ya lo ven los validadores."}
+ }catch(e){S.msg="No se pudo publicar: "+e.message}
+ render();
+}
+async function runInforme(){
+ const p=informePrompt();
+ if(!CFG.aiKey){informe="Sin clave de modelo configurada. Usa «Copiar prompt del informe» y pégalo en el asistente que prefieras; después puedes pegar el resultado aquí abajo y publicarlo.";return render()}
+ informe="Generando el informe…";render();
+ try{informe=await pedirIA(p)}
+ catch(e){informe="No se pudo generar: "+e.message+". Dentro de una vista previa las llamadas externas están bloqueadas; usa el prompt copiable."}
+ render();
+}
+async function runAI(){
+ const p=analysisPrompt();
+ if(!p){analysis="No hay datos cargados todavía.";return render()}
+ if(!CFG.aiKey){analysis="Sin clave de modelo configurada. Usa «Copiar prompt de análisis» y pégalo en el asistente que prefieras.";return render()}
+ analysis="Analizando…";render();
+ try{
+  const u="https://generativelanguage.googleapis.com/v1beta/models/"+encodeURIComponent(CFG.aiModel)+":generateContent?key="+encodeURIComponent(CFG.aiKey);
+  const r=await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({contents:[{parts:[{text:p}]}]})});
+  if(!r.ok)throw new Error(r.status+" "+(await r.text()).slice(0,140));
+  const j=await r.json();
+  analysis=(j.candidates&&j.candidates[0]&&j.candidates[0].content.parts.map(x=>x.text).join(""))||"Respuesta vacía.";
+ }catch(e){analysis="No se pudo analizar: "+e.message+". Dentro de una vista previa las llamadas externas están bloqueadas; usa el prompt copiable."}
+ render();
+}
+
+/* ══════════════ 10. RENDER ══════════════ */
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const EST=()=>S.route===30
+ ?[{n:"antes",k:"Cómo se usa"},{n:"0–4",k:"Clasifica"},{n:"4–9",k:"Mecanismo"},{n:"9–13",k:"Interroga"},{n:"13–18",k:"Mide"},{n:"18–25",k:"Dialoga"},{n:"25–30",k:"Veredicto"}]
+ :[{n:"antes",k:"Cómo se usa"},{n:"0–4",k:"Clasifica"},{n:"4–9",k:"Mecanismo"},{n:"9–13",k:"Interroga"},{n:"13–18",k:"Mide"},{n:"18–20",k:"Veredicto"}];
+const PRO=()=>ROLE==="admin"
+ ?[{n:"01",k:"Prompt del sistema",f:()=>dPrompt()},{n:"02",k:"Validación",f:()=>dValid()},{n:"03",k:"Coevaluación",f:()=>dCoev()},
+   {n:"04",k:"Ética y límites",f:()=>dEtica()},{n:"05",k:"Datos y Firebase",f:()=>dDatos()},{n:"06",k:"Análisis",f:()=>dAnalisis()}]
+ :[{n:"01",k:"Guion y ética",f:()=>dEtica()},{n:"02",k:"Coevaluación",f:()=>dCoev()},{n:"03",k:"Banco de pruebas",f:()=>dValid()},
+   {n:"04",k:"Resultados del piloto",f:()=>dPiloto()},{n:"05",k:"Prompt del tutor",f:()=>dPrompt()}];
+function rolesBar(){
+ if(ROLE==="est")return '<button class="lock" data-gate="1">acceso con clave</button>';
+ return '<button data-area="est" aria-pressed="'+(S.area!=="pro")+'">actividad</button>'+
+  '<button data-area="pro" aria-pressed="'+(S.area==="pro")+'">'+(ROLE==="admin"?"administración":"validación")+'</button>'+
+  '<button class="lock" data-out="1" title="Salir del perfil">salir</button>';
+}
+
 function fichaHTML(r){
  const max=Math.max(1,...r.used.map(u=>Math.abs(u.v)));
- const rows=r.used.map(u=>{
-  const w=Math.min(50,Math.abs(u.v)/max*50), cls=u.v>0?"q":"f";
-  const st=u.v>0?`left:50%;width:${w}%`:`left:${50-w}%;width:${w}%`;
-  return `<div class="row"><span>${esc(u.t)}</span><span class="bar" style="width:90px"><i class="${cls}" style="${st}"></i></span><span style="text-align:right">${u.v>0?"+":""}${u.v.toFixed(2)}</span></div>`;
- }).join("")||'<div class="row"><span>ninguna palabra de este texto está en la tabla</span><span></span><span style="text-align:right">0.00</span></div>';
- const lab=r.lab==="Q"?"químico":"físico";
- return `<div class="ficha">
-  <div style="color:var(--ink-3);font-size:11px;letter-spacing:.06em;margin-bottom:6px">PESO POR PALABRA · izquierda = físico · derecha = químico</div>
-  ${rows}
-  <div class="tot"><span>suma de pesos</span><span>${r.s>0?"+":""}${r.s.toFixed(2)}</span></div>
-  <div class="tot" style="border:0;padding-top:2px"><span>etiqueta de salida</span><span class="tag ${r.lab.toLowerCase()==="q"?"q":"f"}">${lab} · ${(r.p*100).toFixed(0)}%</span></div>
-  ${r.unk.length?`<div class="unk">Fuera del vocabulario (suman 0): ${r.unk.map(esc).join(", ")}</div>`:""}
-  ${r.tie?`<div class="unk">La suma quedó cerca de cero: con un empate el programa entrega igual una etiqueta, la primera de la lista.</div>`:""}
- </div>`;
+ const rows=r.used.map(u=>{const w=Math.min(50,Math.abs(u.v)/max*50),cls=u.v>0?"q":"f";
+  const st=u.v>0?"left:50%;width:"+w+"%":"left:"+(50-w)+"%;width:"+w+"%";
+  return '<div class="row"><span>'+esc(u.t)+'</span><span class="bar"><i class="'+cls+'" style="'+st+'"></i></span><span style="text-align:right">'+(u.v>0?"+":"")+u.v.toFixed(2)+'</span></div>'}).join("")
+  ||'<div class="row"><span>ninguna palabra de este texto está en la tabla</span><span></span><span style="text-align:right">0.00</span></div>';
+ return '<div class="ficha"><div class="kicker">PESO POR PALABRA · izquierda = físico · derecha = químico</div>'+rows+
+  '<div class="tot"><span>suma de pesos</span><span>'+(r.s>0?"+":"")+r.s.toFixed(2)+'</span></div>'+
+  '<div class="tot" style="border:0;padding-top:2px"><span>etiqueta de salida</span><span class="tag '+(r.lab==="Q"?"q":"f")+'">'+(r.lab==="Q"?"químico":"físico")+' · '+(r.p*100).toFixed(0)+'%</span></div>'+
+  (r.unk.length?'<div class="unk">Fuera del vocabulario (suman 0): '+r.unk.map(esc).join(", ")+'</div>':"")+
+  (r.tie?'<div class="unk">La suma quedó cerca de cero: con un empate el programa entrega igual una etiqueta.</div>':"")+'</div>';
 }
-function caseRow(c){
- const m=S.mine[c.id]||"";
- return `<div class="case"><div class="txt">${esc(c.t)}</div>
-  <div class="pick" role="group">
-   <button class="f" data-mine="${c.id}" data-v="F" aria-pressed="${m==="F"}">físico</button>
-   <button class="q" data-mine="${c.id}" data-v="Q" aria-pressed="${m==="Q"}">químico</button>
-  </div></div>`;
+const foot=(last)=>'<div class="foot"><button class="btn ghost" data-go="-1"'+(S.step===0?" disabled":"")+'>← anterior</button><button class="btn" data-go="1"'+(S.step===last?" disabled":"")+'>'+(S.step===0?"empezar →":"siguiente →")+'</button></div>';
+
+/* ---- estudiante ---- */
+function sGuia(){
+ return '<div class="eyebrow">Antes de partir</div><h2 class="step">Qué vas a hacer</h2>'+
+ '<p class="lede">Vas a usar un programa que clasifica frases de cocina en <b>cambio físico</b> o <b>cambio químico</b>. No lo vas a usar para que te dé la respuesta: lo vas a abrir por dentro, buscarle los errores y decidir si sirve.</p>'+
+ '<div class="card"><h3>Para qué sirve</h3><p class="sub">Cuando le preguntas algo a una aplicación de inteligencia artificial, te contesta al tiro y suena muy segura. La pregunta difícil no es qué contestó, sino <b>cómo sabes si está bien</b>.</p>'+
+ '<p class="sub" style="margin-top:9px">Este programa es chico a propósito: aprendió con sólo 14 frases que puedes leer completas. Eso permite algo que con una aplicación grande no se puede: ver exactamente de dónde salió cada respuesta, incluidas las equivocadas.</p>'+
+ '<p class="sub" style="margin-top:9px">Al terminar vas a tener criterios tuyos para decidir cuándo creerle a una fuente: a este programa, a un video, a un chatbot y también a lo que tú afirmas.</p></div>'+
+ '<div class="card"><h3>Cómo funciona, en tres frases</h3><ul class="limits"><li>Corta la frase en palabras sueltas.</li><li>Busca cada palabra en una tabla donde cada una tiene un número.</li><li>Suma esos números. Positivo responde <b>químico</b>; negativo responde <b>físico</b>.</li></ul><p class="note">Eso es todo. No sabe química, no entiende lo que lee y no busca en internet. Suma números.</p></div>'+
+ '<div class="card"><h3>Elige la ruta</h3><p class="sub">La ruta larga agrega una conversación donde tienes que defender tu respuesta con evidencia.</p>'+
+ '<div class="btnrow"><button class="btn'+(S.route===20?"":" ghost")+'" data-route="20">20 minutos · sin diálogo</button><button class="btn'+(S.route===30?"":" ghost")+'" data-route="30">30 minutos · con diálogo CER</button></div></div>'+
+ '<div class="card"><h3>Guía de uso</h3><ol class="guide">'+
+ '<li><div><span class="mins">minutos 0 a 4</span><h4>Clasifica tú primero</h4><p>8 frases de cocina. En cada una aprietas <b>físico</b> o <b>químico</b>. Todavía no ves nada del programa.</p></div></li>'+
+ '<li><div><span class="mins">minutos 4 a 9</span><h4>Mira cómo arma la respuesta</h4><p>Escribes una frase y aprietas <b>Clasificar</b>. Abajo aparece cada palabra con su número y la suma. También puedes agregarle ejemplos y reentrenarlo.</p></div></li>'+
+ '<li><div><span class="mins">minutos 9 a 13</span><h4>Hazle preguntas sobre él mismo</h4><p>No de cocina: de cómo trabaja. Termina con la prueba de la negación.</p></div></li>'+
+ '<li><div><span class="mins">minutos 13 a 18</span><h4>Mídelo</h4><p>Comparas tres cosas por caso: lo tuyo, la referencia revisada y lo del programa. La tabla se arma sola.</p></div></li>'+
+ (S.route===30?'<li><div><span class="mins">minutos 18 a 25</span><h4>Defiende tu respuesta</h4><p>Un tutor te pide afirmación, evidencia y razonamiento. No te va a dar la respuesta antes de eso, aunque se la pidas.</p></div></li>':"")+
+ '<li><div><span class="mins">últimos minutos</span><h4>Da tu veredicto</h4><p>Decides si sirve, marcas qué le exiges a una fuente, escribes una pregunta nueva y copias la ficha.</p></div></li>'+
+ '</ol></div>'+
+ '<div class="card"><h3>Cosas prácticas</h3><ul class="limits"><li>No necesitas internet para la actividad.</li><li>Tu avance se guarda solo en este navegador.</li><li>No hay nota por acertar: equivocarse es parte del trabajo.</li><li>Tu código anónimo es <b class="mono">'+esc(S.code)+'</b>. No se pide nombre en ninguna parte.</li></ul>'+
+ '<p class="sub" style="margin-top:10px">Colores que vas a ver:</p><div class="legend"><span class="tag f">físico</span><span class="tag q">químico</span><span class="tag ok">coincide con la referencia</span><span class="tag err">se equivocó</span><span class="tag na">tu respuesta</span></div>'+
+ '<div class="btnrow"><button class="btn big" data-go="1">Entendido, empezar →</button></div></div>';
 }
-
-/* ───────── fases ───────── */
-function stepGuia(){
- return `<div class="eyebrow">Antes de partir</div>
- <h2 class="step">Qué vas a hacer en estos 20 minutos</h2>
- <p class="lede">Vas a usar un programa que clasifica frases de cocina en <b>cambio físico</b> o <b>cambio químico</b>. Pero no lo vas a usar para que te dé la respuesta. Lo vas a abrir por dentro, buscarle los errores y decidir si sirve.</p>
-
- <div class="card">
-  <h3>Para qué sirve esta actividad</h3>
-  <p class="sub">Cuando le preguntas algo a una aplicación de inteligencia artificial, te contesta al tiro y suena muy segura. La pregunta difícil no es qué te contestó, sino <b>cómo haces para saber si está bien</b>.</p>
-  <p class="sub" style="margin-top:9px">Este programa es chico a propósito: aprendió con sólo 14 frases, y esas 14 frases las puedes leer completas en la pantalla. Eso deja hacer algo que con una aplicación grande no se puede: ver exactamente de dónde salió cada respuesta, incluidas las equivocadas.</p>
-  <p class="sub" style="margin-top:9px">Al terminar vas a tener una lista de criterios tuyos para decidir cuándo creerle a una fuente: a este programa, a un video, a un chatbot y también a lo que tú afirmas.</p>
- </div>
-
- <div class="card">
-  <h3>Cómo funciona el programa, en tres frases</h3>
-  <ul class="limits">
-   <li>Corta la frase en palabras sueltas.</li>
-   <li>Busca cada palabra en una tabla donde cada una tiene un número asignado.</li>
-   <li>Suma esos números. Si la suma sale positiva responde <b>químico</b>; si sale negativa responde <b>físico</b>.</li>
-  </ul>
-  <p class="note">Eso es todo lo que hace. No sabe química, no entiende lo que lee y no busca en internet. Suma números.</p>
- </div>
-
- <div class="card">
-  <h3>Guía de uso: los cinco pasos</h3>
-  <ol class="guide">
-   <li><div><span class="mins">minutos 0 a 4</span><h4>Clasifica tú primero</h4><p>Aparecen 8 frases de cocina. En cada una aprietas el botón <b>físico</b> o el botón <b>químico</b>. Todavía no ves nada del programa: aquí importa lo que piensas tú.</p></div></li>
-   <li><div><span class="mins">minutos 4 a 9</span><h4>Mira cómo arma la respuesta</h4><p>Escribes cualquier frase y aprietas <b>Clasificar</b>. Abajo aparece la lista de palabras con su número y la suma final. También puedes agregarle ejemplos nuevos y ver cómo le cambian las respuestas.</p></div></li>
-   <li><div><span class="mins">minutos 9 a 13</span><h4>Hazle preguntas sobre él mismo</h4><p>Aprietas cada pregunta para abrirla. No son preguntas de cocina: son preguntas sobre cómo trabaja. Termina con la prueba de la negación, que es la más entretenida.</p></div></li>
-   <li><div><span class="mins">minutos 13 a 18</span><h4>Mídelo</h4><p>Aprietas <b>Clasificar los 8</b> y comparas tres cosas en cada caso: lo que dijiste tú, lo que dice la respuesta revisada por tu profesora y lo que dijo el programa. La tabla de resultados se arma sola.</p></div></li>
-   <li><div><span class="mins">minutos 18 a 20</span><h4>Da tu veredicto</h4><p>Decides si sirve o no, marcas qué le vas a exigir a una fuente para creerle, escribes una pregunta nueva y copias la ficha para pegarla en tu guía.</p></div></li>
-  </ol>
- </div>
-
- <div class="card">
-  <h3>Cosas prácticas</h3>
-  <ul class="limits">
-   <li>No necesitas internet. Si se cae el wifi, la actividad sigue igual.</li>
-   <li>Tus respuestas se van guardando solas. Si cierras la página sin querer, vuelves y sigues donde ibas.</li>
-   <li>Puedes moverte entre las fases con la barra gris de arriba o con los botones de abajo.</li>
-   <li>No hay nota por acertar. Equivocarse al clasificar es parte del trabajo: esos casos son los que sirven después.</li>
-  </ul>
-  <p class="sub" style="margin-top:10px">Los colores que vas a ver:</p>
-  <div class="legend">
-   <span class="tag f">físico</span>
-   <span class="tag q">químico</span>
-   <span class="tag ok">el programa coincide con la referencia</span>
-   <span class="tag err">el programa se equivocó</span>
-   <span class="tag na">tu respuesta o la referencia</span>
-  </div>
-  <div class="btnrow"><button class="btn big" data-go="1">Entendido, empezar →</button></div>
- </div>`;
-}
-function step0(){
+function sClasifica(){
  const done=Object.keys(S.mine).length;
- return `<div class="eyebrow">Fase 1 · minutos 0 a 4</div>
- <h2 class="step">Clasifica tú primero</h2>
- <p class="lede">Ocho cosas que pasan en una cocina. Marca cada una antes de ver qué entrega el programa. Tus respuestas quedan guardadas y al final se comparan con las de él.</p>
- <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Lee cada frase y aprieta <b>físico</b> o <b>químico</b>. Son 8 y nadie te corrige todavía. Si dudas, elige igual: lo importante es dejar registrado qué pensabas antes de ver la máquina.</div>
- <div class="card">${CASES.map(caseRow).join("")}</div>
- <p class="note">Van ${done} de 8. No busques en internet: esta parte es tu criterio.</p>`;
+ return '<div class="eyebrow">Fase 1 · minutos 0 a 4</div><h2 class="step">Clasifica tú primero</h2>'+
+ '<p class="lede">Ocho cosas que pasan en una cocina. Marca cada una antes de ver qué entrega el programa.</p>'+
+ '<div class="todo"><b class="k">Qué tienes que hacer aquí</b>Lee cada frase y aprieta <b>físico</b> o <b>químico</b>. Son 8 y nadie te corrige todavía. Si dudas, elige igual.</div>'+
+ '<div class="card">'+CASES.map(c=>{const m=S.mine[c.id]||"";
+  return '<div class="case"><div class="txt">'+esc(c.t)+'</div><div class="pick" role="group">'+
+   '<button class="f" data-mine="'+c.id+'" data-v="F" aria-pressed="'+(m==="F")+'">físico</button>'+
+   '<button class="q" data-mine="'+c.id+'" data-v="Q" aria-pressed="'+(m==="Q")+'">químico</button></div></div>'}).join("")+'</div>'+
+ '<p class="note">Van '+done+' de 8. No busques en internet: esta parte es tu criterio.</p>';
 }
-function step1(){
- const probe=S.probe||CASES[1].t;
- const r=predict(probe);
- const lex=Object.entries(M.w).sort((a,b)=>b[1]-a[1]);
- const top=lex.slice(0,6), bot=lex.slice(-6).reverse();
- return `<div class="eyebrow">Fase 2 · minutos 4 a 9</div>
- <h2 class="step">Cómo arma la respuesta</h2>
- <p class="lede">El programa no lee la frase. La corta en palabras, busca cada palabra en una tabla y suma. Escribe cualquier cosa y mira la operación completa.</p>
- <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Escribe una frase en el recuadro y aprieta <b>Clasificar</b>. Después mira el bloque gris de abajo: cada palabra con su número, la suma y la respuesta. Prueba con una frase que lo haga equivocarse a propósito.</div>
- <div class="card">
-  <h3>Probar un texto</h3>
-  <input type="text" id="probe" value="${esc(probe)}" placeholder="Escribe una frase de cocina">
-  <div class="btnrow">
-   <button class="btn" id="run">Clasificar</button>
-   ${CASES.slice(0,4).map(c=>`<button class="btn ghost" data-probe="${esc(c.t)}">${esc(c.t.split(" ").slice(0,3).join(" "))}…</button>`).join("")}
-  </div>
-  ${fichaHTML(r)}
-  <p class="note">Las palabras fuera del vocabulario suman cero. Una frase entera de palabras desconocidas recibe igual una etiqueta.</p>
- </div>
- <div class="card">
-  <h3>La tabla viene de 14 frases</h3>
-  <p class="sub">Base actual: ${M.n} ejemplos (${M.dQ} químicos, ${M.dF} físicos), ${M.vs} palabras distintas. Pesos más extremos de cada lado:</p>
-  <div class="ficha">
-   ${top.map(([t,v])=>`<div class="row"><span>${esc(t)}</span><span class="tag q">químico</span><span style="text-align:right">+${v.toFixed(2)}</span></div>`).join("")}
-   ${bot.map(([t,v])=>`<div class="row"><span>${esc(t)}</span><span class="tag f">físico</span><span style="text-align:right">${v.toFixed(2)}</span></div>`).join("")}
-  </div>
-  <p class="note">Mira <b>pan</b> y <b>sartén</b>: no son palabras químicas ni físicas, pero cargan peso porque aparecieron en un ejemplo de ese lado.</p>
-  <details><summary>Ver las 14 frases de la base</summary>
-   <div class="ficha">${TRAIN_BASE.concat(extra).map(d=>`<div class="row" style="grid-template-columns:auto 1fr"><span class="tag ${d.y==="Q"?"q":"f"}">${d.y==="Q"?"quím":"físi"}</span><span style="text-align:left">${esc(d.t)}</span></div>`).join("")}</div>
-  </details>
- </div>
- <div class="card">
-  <h3>Agrega un ejemplo y vuelve a entrenar</h3>
-  <p class="sub">Escribe una frase, dile de qué tipo es y pulsa entrenar. Los pesos se recalculan al instante y las respuestas del programa cambian. Después puedes volver a medirlo en la fase 4.</p>
-  <input type="text" id="newex" placeholder="Ej.: la cáscara del plátano se pone café">
-  <div class="btnrow">
-   <button class="btn" data-add="F">Agregar como físico</button>
-   <button class="btn" data-add="Q">Agregar como químico</button>
-   ${extra.length?`<button class="btn ghost" id="reset-train">Volver a los 14 originales</button>`:""}
-  </div>
-  ${extra.length?`<p class="note">Agregaste ${extra.length} ejemplo${extra.length>1?"s":""}. La base tiene ahora ${M.n}.</p>`:""}
- </div>`;
+function pasos(r){
+ const total=r.used.length;
+ const paso=S.mstep===null?total:Math.max(0,Math.min(S.mstep,total));
+ const lento=S.mstep!==null&&paso<total;
+ const suma=r.used.slice(0,paso).reduce((a,u)=>a+u.v,M.prior);
+ const vis=lento?suma:r.s;
+ const pos=50+Math.max(-1,Math.min(1,vis/4))*47;
+ const lab=vis>0?"químico":"físico";
+ const chip=(t,cls,num)=>'<span class="chip '+cls+'">'+esc(t)+(num!==undefined?' <b>'+num+'</b>':"")+'</span>';
+ const crudas=tok(r_text(r)).map(t=>chip(t,M.w[t]!==undefined?"":"off"));
+ const conNum=r.used.map((u,i)=>chip(u.t,(u.v>0?"q":"f")+(i<paso?"":" dim"),(u.v>0?"+":"")+u.v.toFixed(2)))
+   .concat(r.unk.map(t=>chip(t,"off","0")));
+ const tiras=r.used.slice(0,paso).map(u=>'<i class="'+(u.v>0?"q":"f")+'">'+(u.v>0?"+":"")+u.v.toFixed(2)+'</i>').join(" ");
+ return '<div class="card">'+
+ '<div class="paso"><span class="num">1</span><h4>Corta la frase en palabras</h4>'+
+ '<p class="exp">Las palabras muy cortas y las de relleno se botan. Las que quedan son las únicas que el programa va a mirar.</p>'+
+ '<div class="chips">'+(crudas.length?crudas.join(""):'<span class="chip off">no quedó ninguna palabra</span>')+'</div>'+
+ (r.unk.length?'<p class="note">Las de borde punteado <b>no están en la tabla</b>: el programa nunca las vio en sus '+M.n+' frases.</p>':"")+'</div>'+
+
+ '<div class="paso"><span class="num">2</span><h4>Le pone un número a cada palabra</h4>'+
+ '<p class="exp">El número sale de contar en cuántas frases químicas y en cuántas físicas aparece esa palabra. Naranjo tira hacia químico, azul hacia físico, y las desconocidas valen cero.</p>'+
+ '<div class="chips">'+(conNum.length?conNum.join(""):'<span class="chip off">nada que buscar</span>')+'</div></div>'+
+
+ '<div class="paso"><span class="num">3</span><h4>Suma todos los números</h4>'+
+ '<p class="exp">Nada más. El signo del resultado es la respuesta: positivo responde químico, negativo responde físico.</p>'+
+ '<div class="suma">'+(paso?(Math.abs(M.prior)>0.005?'punto de partida <i class="'+(M.prior>0?"q":"f")+'">'+(M.prior>0?"+":"")+M.prior.toFixed(2)+'</i> ':"")+tiras:'<span style="color:var(--ink-3)">aprieta «siguiente palabra» para ir sumando</span>')+
+ '<span class="eq">suma hasta aquí = '+(vis>0?"+":"")+vis.toFixed(2)+'</span></div>'+
+ '<div class="balanza"><div class="btrack"><div class="bzero"></div><div class="bneedle" style="left:'+pos.toFixed(1)+'%"></div></div>'+
+ '<div class="blab"><span class="l">← físico</span><span style="color:var(--ink-3)">empate</span><span class="r">químico →</span></div></div>'+
+ '<p class="vered">'+(lento?'Va '+paso+' de '+total+' palabras: por ahora iría <b style="color:var(--'+(vis>0?"qui":"fis")+')">'+lab+'</b>.'
+   :'La suma dio '+(r.s>0?"+":"")+r.s.toFixed(2)+', así que responde <b style="color:var(--'+(r.lab==="Q"?"qui":"fis")+')">'+(r.lab==="Q"?"químico":"físico")+'</b>.')+'</p>'+
+ '<p class="note">El porcentaje que muestra en otras pantallas ('+(r.p*100).toFixed(0)+'% aquí) sólo dice cuán lejos quedó la aguja del empate. No dice si acertó.</p>'+
+ '<div class="btnrow">'+
+  (lento?'<button class="btn" data-m="next">Siguiente palabra →</button><button class="btn ghost" data-m="all">Ver el total</button>'
+        :'<button class="btn ghost" data-m="start">Verlo palabra por palabra</button>')+
+ '</div></div>'+
+ '<details><summary>Ver el detalle numérico de siempre</summary>'+fichaHTML(r)+'</details></div>';
 }
-function step2(){
- const neg=S.neg;
- return `<div class="eyebrow">Fase 3 · minutos 9 a 13</div>
- <h2 class="step">Interroga al programa</h2>
- <p class="lede">No sobre cocina: sobre él mismo. Abre cada pregunta y contrasta la respuesta con lo que viste en la fase 2.</p>
- <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Aprieta cada pregunta para abrirla y lee la respuesta. Luego aprieta <b>Clasificar las dos frases</b> en la prueba de la negación y fíjate en los dos números: tienen que ser distintos y no lo son.</div>
- <div class="card">
-  ${META.map((m,i)=>`<button class="qbtn" data-meta="${i}" aria-expanded="${S.meta.includes(i)}">${esc(m.q)}</button>${S.meta.includes(i)?`<p class="ans">${m.a}</p>`:""}`).join("")}
- </div>
- <div class="card">
-  <h3>La prueba de la negación</h3>
-  <p class="sub">Dos frases que dicen lo contrario entre sí. Pulsa y compara las dos sumas.</p>
-  <div class="btnrow"><button class="btn" id="neg">Clasificar las dos frases</button></div>
-  ${neg?`<div style="display:grid;gap:10px;margin-top:10px">
-   <div><p class="mono" style="font-size:13px">"El pan se quema en el horno"</p>${fichaHTML(predict("El pan se quema en el horno"))}</div>
-   <div><p class="mono" style="font-size:13px">"El pan NO se quema en el horno"</p>${fichaHTML(predict("El pan no se quema en el horno"))}</div>
-   <p class="note">Misma suma, misma etiqueta, misma cifra de confianza. La palabra <b>no</b> no está en la tabla.</p>
-  </div>`:""}
- </div>
- <div class="card">
-  <h3>Lo que este programa no hace</h3>
-  <ul class="limits">${LIMITS.map(l=>`<li>${l}</li>`).join("")}</ul>
-  <p class="note">Esta lista es parte de la actividad, no una advertencia al margen: sin ella, cualquier cosa que entregue parece conocimiento.</p>
- </div>`;
+const r_text=r=>S.probe||CASES[1].t;
+function sMecanismo(){
+ const probe=S.probe||CASES[1].t,r=predict(probe);
+ const lex=Object.entries(M.w).sort((a,b)=>b[1]-a[1]),top=lex.slice(0,6),bot=lex.slice(-6).reverse();
+ return '<div class="eyebrow">Fase 2 · minutos 4 a 9</div><h2 class="step">Cómo arma la respuesta</h2>'+
+ '<p class="lede">El programa no lee la frase. La corta en palabras, busca cada palabra en una tabla y suma.</p>'+
+ '<div class="todo"><b class="k">Qué tienes que hacer aquí</b>Escribe una frase y aprieta <b>Clasificar</b>. Abajo aparecen los tres pasos que hace el programa, uno debajo del otro. Usa <b>palabra por palabra</b> para verlo en cámara lenta.</div>'+
+ '<div class="card"><h3>Escribe una frase de cocina</h3><input type="text" id="probe" value="'+esc(probe)+'" placeholder="Ej.: la leche se corta con limón">'+
+ '<div class="btnrow"><button class="btn" id="run">Clasificar</button>'+CASES.slice(0,4).map(c=>'<button class="btn ghost" data-probe="'+esc(c.t)+'">'+esc(c.t.split(" ").slice(0,3).join(" "))+'…</button>').join("")+'</div></div>'+
+ pasos(r)+
+ '<div class="card"><h3>La tabla viene de '+M.n+' frases</h3><p class="sub">'+M.dQ+' químicas, '+M.dF+' físicas, '+M.vs+' palabras distintas. Pesos más extremos de cada lado:</p>'+
+ '<div class="ficha">'+top.map(([t,v])=>'<div class="row"><span>'+esc(t)+'</span><span class="tag q">químico</span><span style="text-align:right">+'+v.toFixed(2)+'</span></div>').join("")+
+ bot.map(([t,v])=>'<div class="row"><span>'+esc(t)+'</span><span class="tag f">físico</span><span style="text-align:right">'+v.toFixed(2)+'</span></div>').join("")+'</div>'+
+ '<p class="note">Mira <b>pan</b> y <b>sartén</b>: no son palabras químicas ni físicas, pero cargan peso porque aparecieron en un ejemplo de ese lado.</p>'+
+ '<details><summary>Ver las '+M.n+' frases de la base</summary><div class="ficha">'+TRAIN_BASE.concat(extra).map(d=>'<div class="row" style="grid-template-columns:auto 1fr"><span class="tag '+(d.y==="Q"?"q":"f")+'">'+(d.y==="Q"?"quím":"físi")+'</span><span style="text-align:left">'+esc(d.t)+'</span></div>').join("")+'</div></details></div>'+
+ '<div class="card"><h3>Agrega un ejemplo y reentrena</h3><p class="sub">Los pesos se recalculan al instante y las respuestas cambian. Después vuelve a medirlo en la fase 4.</p>'+
+ '<input type="text" id="newex" placeholder="Ej.: la cáscara del plátano se pone café">'+
+ '<div class="btnrow"><button class="btn" data-add="F">Agregar como físico</button><button class="btn" data-add="Q">Agregar como químico</button>'+
+ (extra.length?'<button class="btn ghost" id="reset-train">Volver a los 14 originales</button>':"")+'</div>'+
+ (extra.length?'<p class="note">Agregaste '+extra.length+'. La base tiene ahora '+M.n+'.</p>':"")+'</div>';
 }
-function step3(){
- const res=CASES.map(c=>({c,r:predict(c.t)}));
- const tested=res.filter(x=>S.tested[x.c.id]);
- const bin=tested.filter(x=>x.c.ref!=="M");
- const hit=bin.filter(x=>x.r.lab===x.c.ref).length;
- const fq=bin.filter(x=>x.c.ref==="F"&&x.r.lab==="Q").length;
- const ff=bin.filter(x=>x.c.ref==="Q"&&x.r.lab==="F").length;
- const mix=tested.filter(x=>x.c.ref==="M").length;
- const mineBin=CASES.filter(c=>c.ref!=="M"&&S.mine[c.id]);
- const mineHit=mineBin.filter(c=>S.mine[c.id]===c.ref).length;
+function sInterroga(){
+ return '<div class="eyebrow">Fase 3 · minutos 9 a 13</div><h2 class="step">Interroga al programa</h2>'+
+ '<p class="lede">No sobre cocina: sobre él mismo.</p>'+
+ '<div class="todo"><b class="k">Qué tienes que hacer aquí</b>Aprieta cada pregunta para abrirla. Después prueba la negación y compara los dos números: deberían ser distintos y no lo son.</div>'+
+ '<div class="card">'+META.map((m,i)=>'<button class="qbtn" data-meta="'+i+'" aria-expanded="'+S.meta.includes(i)+'">'+esc(m.q)+'</button>'+(S.meta.includes(i)?'<p class="ans">'+m.a+'</p>':"")).join("")+'</div>'+
+ '<div class="card"><h3>La prueba de la negación</h3><p class="sub">Dos frases que dicen lo contrario. Compara las sumas.</p>'+
+ '<div class="btnrow"><button class="btn" id="neg">Clasificar las dos frases</button></div>'+
+ (S.neg?'<div style="display:grid;gap:10px;margin-top:10px"><div><p class="mono" style="font-size:13px">"El pan se quema en el horno"</p>'+fichaHTML(predict("El pan se quema en el horno"))+'</div>'+
+ '<div><p class="mono" style="font-size:13px">"El pan NO se quema en el horno"</p>'+fichaHTML(predict("El pan no se quema en el horno"))+'</div>'+
+ '<p class="note">Misma suma, misma etiqueta, misma confianza. La palabra <b>no</b> no está en la tabla.</p></div>':"")+'</div>'+
+ '<div class="card"><h3>Lo que este programa no hace</h3><ul class="limits">'+LIMITS.map(l=>'<li>'+l+'</li>').join("")+'</ul>'+
+ '<p class="note">Esta lista es parte de la actividad, no una advertencia al margen: sin ella, cualquier cosa que entregue parece conocimiento.</p></div>';
+}
+function sMide(){
+ const res=CASES.map(c=>({c,r:predict(c.t)})),tested=res.filter(x=>S.tested[x.c.id]);
+ const bin=tested.filter(x=>x.c.ref!=="M"),hit=bin.filter(x=>x.r.lab===x.c.ref).length;
+ const fq=bin.filter(x=>x.c.ref==="F"&&x.r.lab==="Q").length,ff=bin.filter(x=>x.c.ref==="Q"&&x.r.lab==="F").length;
+ const mix=tested.filter(x=>x.c.ref==="M").length,m=metrics();
  const conf=bin.filter(x=>x.r.lab!==x.c.ref).map(x=>(x.r.p*100).toFixed(0));
- const pct=bin.length?Math.round(hit/bin.length*100):0;
- return `<div class="eyebrow">Fase 4 · minutos 13 a 18</div>
- <h2 class="step">Mide si funciona</h2>
- <p class="lede">Pulsa <b>Clasificar</b> en cada caso. La columna <b>referencia</b> la revisó tu profesora, con justificación. La tabla de abajo se arma sola.</p>
- <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Aprieta <b>Clasificar los 8</b>. En cada caso te van a quedar tres etiquetas a la vista: la referencia revisada, la tuya y la del programa. Busca los casos donde el programa se equivocó y mira con qué porcentaje de confianza lo hizo.</div>
- <div class="card">
-  <div class="btnrow"><button class="btn" id="runall">Clasificar los 8</button>${tested.length?`<button class="btn ghost" id="clear">Borrar resultados</button>`:""}</div>
-  ${res.map(({c,r})=>{
-   const t=S.tested[c.id];
-   const ok=t&&c.ref!=="M"&&r.lab===c.ref, bad=t&&c.ref!=="M"&&r.lab!==c.ref;
-   return `<div class="case"><div class="txt">${esc(c.t)}
-    <div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-     <span class="tag ${c.ref==="M"?"na":(c.ref==="Q"?"q":"f")}">referencia: ${REFNAME[c.ref]}</span>
-     ${S.mine[c.id]?`<span class="tag na">tú: ${S.mine[c.id]==="Q"?"químico":"físico"}</span>`:""}
-     ${t?`<span class="tag ${r.lab==="Q"?"q":"f"}">programa: ${r.lab==="Q"?"químico":"físico"} ${(r.p*100).toFixed(0)}%</span>`:""}
-     ${ok?'<span class="tag ok">coincide</span>':""}
-     ${bad?'<span class="tag err">no coincide</span>':""}
-     ${t&&c.ref==="M"?'<span class="tag err">fuera de sus dos etiquetas</span>':""}
-    </div>
-    ${t?`<p class="note" style="margin-top:7px"><b>Por qué:</b> ${esc(c.why)}</p>${fichaHTML(r)}`:""}
-   </div>
-   <div class="pick">${t?"":`<button data-test="${c.id}">clasificar</button>`}</div></div>`;
-  }).join("")}
- </div>
- ${tested.length?`<div class="card">
-  <h3>Matriz de resultados</h3>
-  <div class="scroll"><table>
-   <tr><th class="lbl">referencia \\ programa</th><th>dijo físico</th><th>dijo químico</th></tr>
-   <tr><td class="lbl">era físico</td><td>${bin.filter(x=>x.c.ref==="F"&&x.r.lab==="F").length}</td><td>${fq}</td></tr>
-   <tr><td class="lbl">era químico</td><td>${ff}</td><td>${bin.filter(x=>x.c.ref==="Q"&&x.r.lab==="Q").length}</td></tr>
-   <tr><td class="lbl">era los dos</td><td colspan="2">${mix} caso${mix===1?"":"s"} que no cabe${mix===1?"":"n"} en ninguna columna</td></tr>
-  </table></div>
-  <div class="metrics">
-   <div class="metric"><div class="n">${pct}%</div><div class="k">aciertos del programa</div></div>
-   <div class="metric ${fq+ff?"bad":""}"><div class="n">${fq+ff}</div><div class="k">respuestas equivocadas</div></div>
-   <div class="metric"><div class="n">${mineBin.length?Math.round(mineHit/mineBin.length*100):"–"}${mineBin.length?"%":""}</div><div class="k">tus aciertos</div></div>
-  </div>
-  ${conf.length?`<p class="note">Las respuestas equivocadas salieron con ${conf.join("% y ")}% de confianza. El porcentaje mide la distancia al empate, no el acierto: por eso una cifra alta acompaña a un error.</p>`:""}
-  <p class="note">Un solo número esconde el tipo de error. ${fq?`Hubo ${fq} caso${fq>1?"s":""} físico${fq>1?"s":""} etiquetado${fq>1?"s":""} como químico`:""}${fq&&ff?" y ":""}${ff?`${ff} caso${ff>1?"s":""} químico${ff>1?"s":""} etiquetado${ff>1?"s":""} como físico`:""}${(fq||ff)?". Para una prueba de laboratorio los dos errores no cuestan lo mismo.":"Revisa el tipo de error, no sólo cuántos hubo."}</p>
- </div>`:""}
- ${tested.length===CASES.length?`<div class="card"><h3>Qué hacer con esto</h3>
-  <p class="sub">Vuelve a la fase 2, agrega un ejemplo a la base y vuelve aquí: la matriz cambia. Ese es el único modo de mejorarlo que tienes a mano, y sirve para ver qué tan frágil es un resultado construido con 14 frases.</p></div>`:""}`;
+ return '<div class="eyebrow">Fase 4 · minutos 13 a 18</div><h2 class="step">Mide si funciona</h2>'+
+ '<p class="lede">La columna <b>referencia</b> la revisó tu profesora, con justificación.</p>'+
+ '<div class="todo"><b class="k">Qué tienes que hacer aquí</b>Aprieta <b>Clasificar los 8</b>. En cada caso quedan tres etiquetas: la referencia, la tuya y la del programa. Busca dónde se equivocó y con qué confianza lo hizo.</div>'+
+ '<div class="card"><div class="btnrow"><button class="btn" id="runall">Clasificar los 8</button>'+(tested.length?'<button class="btn ghost" id="clear">Borrar resultados</button>':"")+'</div>'+
+ res.map(({c,r})=>{const t=S.tested[c.id],ok=t&&c.ref!=="M"&&r.lab===c.ref,bad=t&&c.ref!=="M"&&r.lab!==c.ref;
+  return '<div class="case"><div class="txt">'+esc(c.t)+
+   '<div style="margin-top:6px;display:flex;gap:6px;flex-wrap:wrap;align-items:center">'+
+   '<span class="tag '+(c.ref==="M"?"na":(c.ref==="Q"?"q":"f"))+'">referencia: '+REFNAME[c.ref]+'</span>'+
+   (S.mine[c.id]?'<span class="tag na">tú: '+(S.mine[c.id]==="Q"?"químico":"físico")+'</span>':"")+
+   (t?'<span class="tag '+(r.lab==="Q"?"q":"f")+'">programa: '+(r.lab==="Q"?"químico":"físico")+' '+(r.p*100).toFixed(0)+'%</span>':"")+
+   (ok?'<span class="tag ok">coincide</span>':"")+(bad?'<span class="tag err">no coincide</span>':"")+
+   (t&&c.ref==="M"?'<span class="tag err">fuera de sus dos etiquetas</span>':"")+'</div>'+
+   (t?'<p class="note" style="margin-top:7px"><b>Por qué:</b> '+esc(c.why)+'</p>'+fichaHTML(r):"")+'</div>'+
+   '<div class="pick">'+(t?"":'<button data-test="'+c.id+'">clasificar</button>')+'</div></div>'}).join("")+'</div>'+
+ (tested.length?'<div class="card"><h3>Matriz de resultados</h3><div class="scroll"><table>'+
+  '<tr><th class="lbl">referencia \\ programa</th><th>dijo físico</th><th>dijo químico</th></tr>'+
+  '<tr><td class="lbl">era físico</td><td>'+bin.filter(x=>x.c.ref==="F"&&x.r.lab==="F").length+'</td><td>'+fq+'</td></tr>'+
+  '<tr><td class="lbl">era químico</td><td>'+ff+'</td><td>'+bin.filter(x=>x.c.ref==="Q"&&x.r.lab==="Q").length+'</td></tr>'+
+  '<tr><td class="lbl">era los dos</td><td colspan="2">'+mix+' caso'+(mix===1?"":"s")+' que no cabe'+(mix===1?"":"n")+' en ninguna columna</td></tr></table></div>'+
+  '<div class="metrics"><div class="metric"><div class="n">'+(m.exactitud===null?"–":m.exactitud+"%")+'</div><div class="k">aciertos del programa</div></div>'+
+  '<div class="metric'+(fq+ff?" bad":"")+'"><div class="n">'+(fq+ff)+'</div><div class="k">respuestas equivocadas</div></div>'+
+  '<div class="metric"><div class="n">'+(m.misAciertos===null?"–":m.misAciertos+"%")+'</div><div class="k">tus aciertos</div></div></div>'+
+  (conf.length?'<p class="note">Las equivocadas salieron con '+conf.join("% y ")+'% de confianza. El porcentaje mide distancia al empate, no acierto.</p>':"")+
+  '<p class="note">Un solo número esconde el tipo de error. Para una prueba de laboratorio, equivocarse hacia un lado o hacia el otro no cuesta lo mismo.</p></div>':"");
 }
-function step4(){
- return `<div class="eyebrow">Fase 5 · minutos 18 a 20</div>
- <h2 class="step">Tu veredicto</h2>
- <p class="lede">Ya lo mediste. Ahora decide tú, y deja escrito con qué criterio decidiste.</p>
- <div class="todo"><b class="k">Qué tienes que hacer aquí</b>Cuatro cosas: elige una de las tres opciones, escribe el resguardo en una frase, marca los criterios que vas a exigir y escribe tu pregunta. Al final aprieta <b>Copiar ficha</b> y pégala en tu guía.</div>
- <div class="card">
-  <h3>¿Sirve este programa para estudiar cambios físicos y químicos?</h3>
-  <div class="btnrow">
-   ${["Sí, como está","Sólo con resguardos","No"].map(v=>`<button class="btn ${S.veredicto===v?"":"ghost"}" data-ver="${esc(v)}">${v}</button>`).join("")}
-  </div>
-  <p class="sub" style="margin-top:12px">¿Con qué resguardo? (una frase)</p>
-  <input type="text" id="resg" value="${esc(S.resguardo)}" placeholder="Ej.: sólo si cada respuesta se contrasta con…">
- </div>
- <div class="card">
-  <h3>Criterios de validez que vas a exigir</h3>
-  <p class="sub">A cualquier fuente: a este programa, a un chatbot, a un video, y también a lo que tú afirmas.</p>
-  ${CRIT.map((c,i)=>`<label class="check"><input type="checkbox" data-crit="${i}" ${S.crit.includes(i)?"checked":""}><span>${esc(c)}</span></label>`).join("")}
- </div>
- <div class="card">
-  <h3>La pregunta con la que cierras</h3>
-  <p class="sub">Tiene que ser una pregunta que todavía no tenga respuesta en esta actividad y que puedas investigar.</p>
-  <div class="btnrow">${STARTERS.map(s=>`<button class="btn ghost" data-start="${esc(s)}">${esc(s)}</button>`).join("")}</div>
-  <textarea id="preg" placeholder="Escribe tu pregunta">${esc(S.pregunta)}</textarea>
- </div>
- <div class="card">
-  <h3>Ficha para entregar</h3>
-  <p class="sub">Copia el texto y pégalo en la guía del curso.</p>
-  <div class="btnrow"><button class="btn" id="copy">Copiar ficha</button><span id="copied"></span></div>
-  <textarea id="report" readonly style="margin-top:10px;min-height:150px;font-family:var(--mono);font-size:12.5px">${esc(buildReport())}</textarea>
- </div>
- <details><summary>Panel del/la docente · guion de los 20 minutos</summary>
-  <p><b>Antes de partir.</b> Proyectar la pantalla "Cómo se usa" y leerla en voz alta: propósito, las tres frases de cómo funciona el programa y los cinco pasos. Toma dos minutos y evita las preguntas de operación durante la actividad.</p>
-  <p><b>0–4.</b> Cada estudiante clasifica los 8 casos sin ver el programa. Registra en la pizarra cuántos marcaron el caso de la clara de huevo como físico: es la concepción alternativa que después va a reaparecer en la máquina.</p>
-  <p><b>4–9.</b> Fase 2 en proyector. El momento clave es el peso de <b>pan</b> y de <b>sartén</b>: palabras sin contenido químico que deciden la etiqueta. Pide que alguien escriba una frase que haga fallar al programa a propósito.</p>
-  <p><b>9–13.</b> Interrogación. La prueba de la negación se proyecta y se comenta: dos frases opuestas, salida idéntica.</p>
-  <p><b>13–18.</b> Medición. Deja que primero vean el porcentaje y recién después el tipo de error. La pregunta que abre la discusión: ¿preferirías un programa que se equivoca mucho avisando, o uno que se equivoca poco con 95% de confianza?</p>
-  <p><b>18–20.</b> Veredicto, criterios y pregunta investigable. Se recogen las fichas.</p>
-  <p><b>Si se cae internet:</b> no pasa nada, la actividad no la usa. El archivo funciona abierto desde el computador.</p>
-  <p><b>Qué puede ir mal:</b> que el curso concluya "la IA es mala". Granularidad: este programa tiene 14 ejemplos y dos etiquetas; falla por razones que se pueden señalar con el dedo en la tabla. La conclusión que se busca no es sobre la bondad de la herramienta sino sobre qué le exigimos a una fuente.</p>
- </details>`;
+function sDialoga(){
+ const d=S.dlg;
+ return '<div class="eyebrow">Fase 5 · minutos 18 a 25</div><h2 class="step">Defiende tu respuesta</h2>'+
+ '<p class="lede">Ahora el tutor no clasifica: te pregunta. Te va a pedir tres cosas en orden y no te va a dar la respuesta antes, aunque se la pidas.</p>'+
+ '<div class="todo"><b class="k">Qué tienes que hacer aquí</b>Elige un caso, escribe tu posición y defiéndela. <b>Afirmación</b>: qué crees. <b>Evidencia</b>: qué se observa. <b>Razonamiento</b>: por qué esa observación indica lo que dices.</div>'+
+ '<div class="card"><h3>Elige el caso</h3><div class="btnrow">'+CASES.map(c=>'<button class="btn'+(d&&d.caseId===c.id?"":" ghost")+'" data-dcase="'+c.id+'">'+esc(c.t.split(" ").slice(0,4).join(" "))+'…</button>').join("")+'</div></div>'+
+ (d?'<div class="card"><div class="cer">'+
+  ['afirmación','evidencia','razonamiento'].map((x,i)=>'<span class="'+(d.stage>i?"on":d.stage===i?"now":"")+'">'+(d.stage>i?"✓ ":"")+x+'</span>').join("")+
+  '</div><div class="lvl" title="Nivel de andamiaje">'+[1,2,3,4,5].map(i=>'<i class="'+(i<=d.level?"on":"")+'"></i>').join("")+
+  '<span class="note" style="margin:0 0 0 7px">andamiaje nivel '+d.level+' de 5</span></div>'+
+  '<div class="chat" id="chat">'+d.turns.map(t=>'<div class="msg '+(t.r==="t"?"t":"u")+'"><span class="who">'+(t.r==="t"?"tutor":"tú")+'</span>'+(t.r==="t"?t.m:esc(t.m))+'</div>').join("")+'</div>'+
+  (d.stage<3?'<div style="margin-top:11px"><textarea id="dmsg" placeholder="Escribe tu respuesta y presiona Enviar"></textarea><div class="btnrow"><button class="btn" id="dsend">Enviar</button><button class="btn ghost" id="dreset">Reiniciar este caso</button></div></div>'
+   :'<div class="btnrow"><button class="btn ghost" id="dreset">Trabajar otro caso</button></div>')+
+  (d.flags.length?'<p class="note">Concepciones alternativas detectadas en tus respuestas: '+d.flags.map(f=>esc(CONCEP.find(c=>c.id===f).name)).join(", ")+'. No son errores personales: son las más frecuentes en el curso.</p>':"")+
+  '</div>':'<div class="card"><p class="sub">Elige un caso arriba para empezar la conversación.</p></div>');
 }
-function buildReport(){
- const res=CASES.map(c=>({c,r:predict(c.t)}));
- const bin=res.filter(x=>x.c.ref!=="M"&&S.tested[x.c.id]);
- const hit=bin.filter(x=>x.r.lab===x.c.ref).length;
- const L=[];
- L.push("FICHA · Cocina CC-1 (clasificador de texto, 14 ejemplos)");
+function sVeredicto(){
+ return '<div class="eyebrow">Cierre</div><h2 class="step">Tu veredicto</h2>'+
+ '<p class="lede">Ya lo mediste. Ahora decide tú, y deja escrito con qué criterio decidiste.</p>'+
+ '<div class="todo"><b class="k">Qué tienes que hacer aquí</b>Cuatro cosas: elige una opción, escribe el resguardo, marca los criterios y escribe tu pregunta. Al final copia la ficha.</div>'+
+ '<div class="card"><h3>¿Sirve este programa para estudiar cambios físicos y químicos?</h3><div class="btnrow">'+
+ ["Sí, como está","Sólo con resguardos","No"].map(v=>'<button class="btn'+(S.veredicto===v?"":" ghost")+'" data-ver="'+esc(v)+'">'+v+'</button>').join("")+'</div>'+
+ '<p class="sub" style="margin-top:12px">¿Con qué resguardo? (una frase)</p><input type="text" id="resg" value="'+esc(S.resguardo)+'" placeholder="Ej.: sólo si cada respuesta se contrasta con…"></div>'+
+ '<div class="card"><h3>Criterios de validez que vas a exigir</h3><p class="sub">A cualquier fuente: a este programa, a un chatbot, a un video, y a lo que tú afirmas.</p>'+
+ CRIT.map((c,i)=>'<label class="check"><input type="checkbox" data-crit="'+i+'"'+(S.crit.includes(i)?" checked":"")+'><span>'+esc(c)+'</span></label>').join("")+'</div>'+
+ (()=>{const hechos=Object.keys(S.post).length,cambios=CASES.filter(c=>S.post[c.id]&&S.mine[c.id]&&S.post[c.id]!==S.mine[c.id]).length;
+  return '<div class="card"><h3>Revisión final</h3><p class="sub">Vuelve a marcar los ocho casos, ahora con todo lo que viste. No es una prueba: lo que importa es dónde te moviste y dónde te mantuviste, y por qué.</p>'+
+  CASES.map(c=>{const a=S.mine[c.id]||"",b=S.post[c.id]||"",cam=a&&b&&a!==b;
+   return '<div class="case"><div class="txt">'+esc(c.t)+
+    (a?'<div style="margin-top:5px"><span class="tag na">al principio dijiste: '+(a==="Q"?"químico":"físico")+'</span> '+(cam?'<span class="tag ok">cambiaste</span>':(b?'<span class="tag na">te mantuviste</span>':""))+'</div>':"")+
+    '</div><div class="pick" role="group">'+
+    '<button class="f" data-post="'+c.id+'" data-v="F" aria-pressed="'+(b==="F")+'">físico</button>'+
+    '<button class="q" data-post="'+c.id+'" data-v="Q" aria-pressed="'+(b==="Q")+'">químico</button></div></div>'}).join("")+
+  '<p class="note">'+hechos+' de 8 revisados'+(hechos?' · cambiaste de posición en '+cambios:"")+'. Si no cambiaste nada, también es un dato: significa que la evidencia nueva no movió tu criterio.</p></div>'})()+
+ '<div class="card"><h3>La pregunta con la que cierras</h3><p class="sub">Que todavía no tenga respuesta aquí y que puedas investigar.</p>'+
+ '<div class="btnrow">'+STARTERS.map(s=>'<button class="btn ghost" data-start="'+esc(s)+'">'+esc(s)+'</button>').join("")+'</div>'+
+ '<textarea id="preg" placeholder="Escribe tu pregunta">'+esc(S.pregunta)+'</textarea></div>'+
+ '<div class="card"><h3>Ficha para entregar</h3><div class="btnrow"><button class="btn" id="copy">Copiar ficha</button><span id="copied" class="note" style="margin:0"></span></div>'+
+ '<textarea id="report" readonly style="margin-top:10px;min-height:150px;font-family:var(--mono);font-size:12.5px">'+esc(report())+'</textarea>'+
+ '<p class="note">Si tu curso está participando del pilotaje, puedes enviar esta ficha anónima desde la bitácora de la derecha.</p></div>';
+}
+function report(){
+ const m=metrics(),L=[];
+ L.push("FICHA · Cocina CC-1 · código "+S.code);
+ L.push("Ruta: "+S.route+" minutos");
  L.push("");
- L.push("Medición del programa: "+(bin.length?`${hit} de ${bin.length} casos coinciden con la referencia (${Math.round(hit/bin.length*100)}%)`:"sin medir"));
- const fq=bin.filter(x=>x.c.ref==="F"&&x.r.lab==="Q").length, ff=bin.filter(x=>x.c.ref==="Q"&&x.r.lab==="F").length;
- L.push(`Tipos de error: ${fq} físico(s) etiquetado(s) como químico; ${ff} químico(s) etiquetado(s) como físico; 1 caso mixto sin categoría disponible.`);
- const mineBin=CASES.filter(c=>c.ref!=="M"&&S.mine[c.id]);
- if(mineBin.length) L.push(`Mi propia clasificación: ${mineBin.filter(c=>S.mine[c.id]===c.ref).length} de ${mineBin.length} coinciden con la referencia.`);
+ L.push("Medición del programa: "+(m.probados?m.aciertos+" de "+m.probados+" coinciden con la referencia ("+m.exactitud+"%)":"sin medir"));
+ if(m.misAciertos!==null)L.push("Mi propia clasificación: "+m.misAciertos+"% de coincidencia con la referencia.");
+ const rev=Object.keys(S.post).length;
+ if(rev)L.push("Revisión final: "+rev+" de 8 casos revisados; cambié de posición en "+CASES.filter(c=>S.post[c.id]&&S.mine[c.id]&&S.post[c.id]!==S.mine[c.id]).length+".");
+ if(S.dlg)L.push("Diálogo CER: etapa "+S.dlg.stage+"/3, andamiaje nivel "+S.dlg.level+"/5"+(S.dlg.flags.length?", concepciones detectadas: "+S.dlg.flags.join(", "):""));
  L.push("");
  L.push("Veredicto: "+(S.veredicto||"(sin marcar)"));
  L.push("Resguardo: "+(S.resguardo||"(sin escribir)"));
@@ -521,53 +1087,411 @@ function buildReport(){
  return L.join("\n");
 }
 
-/* ───────── render y eventos ───────── */
-const main=document.getElementById("main"), nav=document.getElementById("nav");
+/* ---- docente ---- */
+function dPrompt(){
+ return '<div class="eyebrow">Documentación técnica · criterio 2</div><h2 class="step">Prompt del sistema</h2>'+
+ '<p class="lede">Estructura en seis secciones: rol, objetivo didáctico, reglas de interacción, ejemplos few-shot, restricciones y validación. Las reglas 1 a 8 están implementadas en el motor del tutor, no sólo declaradas.</p>'+
+ '<div class="card"><div class="btnrow"><button class="btn" id="copyprompt">Copiar prompt completo</button><span id="pcopied" class="note" style="margin:0"></span></div>'+
+ '<pre class="code">'+esc(SYSTEM_PROMPT)+'</pre></div>'+
+ '<div class="card"><h3>Dónde se aplica cada regla</h3><div class="scroll"><table>'+
+ '<tr><th class="lbl">Regla</th><th>Implementación verificable</th></tr>'+
+ [["1","El motor exige stage 0→1→2 antes de revelar la referencia"],["2","Contador asked; a la tercera entrega con declaración explícita"],
+  ["3","Una respuesta por turno; los textos del motor no superan 80 palabras"],["4","Seis patrones con contraejemplo en lugar de corrección"],
+  ["5","d.level sube en cada fallo; HINTS tiene tres grados por etapa"],["6","Las etiquetas CER se muestran en pantalla, no sólo en el texto"],
+  ["7","Sin llamadas a fuentes; la pregunta meta 5 declara que puede entregar falsos"],["8","Los errores del clasificador se tratan como hallazgo en la fase 4"]]
+ .map(([a,b])=>'<tr><td class="lbl">Regla '+a+'</td><td style="text-align:left">'+esc(b)+'</td></tr>').join("")+'</table></div></div>';
+}
+function dValid(){
+ const R=tests;
+ return '<div class="eyebrow">Funcionalidad y validación · criterio 3</div><h2 class="step">Banco de pruebas</h2>'+
+ '<p class="lede">Once casos ejecutables sobre el motor real: seis sobre el comportamiento del tutor, tres sobre el clasificador, uno sobre reentrenamiento y uno sobre privacidad del envío.</p>'+
+ '<div class="card"><div class="btnrow"><button class="btn" id="runtests">Ejecutar las 11 pruebas</button>'+
+ (R?'<button class="btn ghost" id="copytests">Copiar resultados</button><span class="tag '+(R.every(x=>x.ok)?"ok":"err")+'">'+R.filter(x=>x.ok).length+' de '+R.length+' aprobadas</span>':"")+'</div>'+
+ (R?R.map(t=>'<div class="test"><span class="id">'+t.id+'</span><div><b>'+esc(t.n)+'</b><div class="note" style="margin-top:3px"><b>Esperado:</b> '+esc(t.esp)+'</div>'+
+  '<div class="note" style="margin-top:3px"><b>Obtenido:</b> '+esc(String(t.got).replace(/<[^>]+>/g," ").slice(0,220))+'</div></div>'+
+  '<span class="tag '+(t.ok?"ok":"err")+'">'+(t.ok?"aprueba":"falla")+'</span></div>').join(""):'<p class="sub" style="margin-top:12px">Sin ejecutar todavía.</p>')+'</div>'+
+ '<div class="card"><h3>Resultados conceptuales del clasificador</h3><p class="sub">Medición sobre los 8 casos del banco, con la base de '+M.n+' ejemplos cargada ahora.</p>'+
+ '<div class="scroll"><table><tr><th class="lbl">Caso</th><th>Referencia</th><th>Modelo</th><th>Confianza</th><th>Resultado</th></tr>'+
+ CASES.map(c=>{const r=predict(c.t),ok=c.ref!=="M"&&r.lab===c.ref;
+  return '<tr><td class="lbl" style="font-size:11.5px">'+esc(c.t.slice(0,46))+'…</td><td>'+REFNAME[c.ref]+'</td><td>'+REFNAME[r.lab]+'</td><td>'+(r.p*100).toFixed(0)+'%</td><td><span class="tag '+(c.ref==="M"?"na":ok?"ok":"err")+'">'+(c.ref==="M"?"sin categoría":ok?"coincide":"error")+'</span></td></tr>'}).join("")+'</table></div>'+
+ '<p class="note">Los errores son deliberados y diagnosticables: provienen de palabras sin contenido químico (<b>pan</b>, <b>sartén</b>) que cargan peso por aparecer en un ejemplo de ese lado.</p></div>';
+}
+function dCoev(){
+ const r=S.peer.r,n=Object.keys(r).length;
+ return '<div class="eyebrow">Validación por usuarios</div><h2 class="step">Coevaluación entre pares</h2>'+
+ '<p class="lede">Quince criterios en cinco dimensiones. Puntúa sólo lo que verificaste; usa <b>NO</b> cuando no lo probaste. Al terminar, envía desde la bitácora: las respuestas se suman al pilotaje.</p>'+
+ '<div class="card"><p class="sub">Escala: 1 muy insuficiente · 2 insuficiente · 3 aceptable · 4 bueno · 5 excelente. <b>NO</b> no promedia.</p>'+
+ '<p class="note">Un error deliberado del clasificador no es por sí mismo una falla pedagógica: se evalúa si puede analizarse. Una justificación científica errónea sí requiere atención.</p></div>'+
+ PEER.map(d=>'<div class="card"><h3>'+esc(d.t)+'</h3>'+d.items.map(([id,lab,tst])=>
+  '<div class="pitem"><div class="lab"><span class="tag na">'+id+'</span> '+esc(lab)+'</div><div class="tst"><b>Qué comprobar:</b> '+esc(tst)+'</div>'+
+  '<div class="likert">'+[1,2,3,4,5].map(v=>'<button data-peer="'+id+'" data-v="'+v+'" aria-pressed="'+(r[id]===v)+'">'+v+'</button>').join("")+
+  '<button class="no" data-peer="'+id+'" data-v="NO" aria-pressed="'+(r[id]==="NO")+'">NO</button></div></div>').join("")+'</div>').join("")+
+ '<div class="card"><h3>Una sugerencia fundamentada</h3><div class="grid2">'+
+ '<div><label class="fld">Dimensión</label><select id="sdim"><option value="">—</option>'+PEER.map(d=>'<option value="'+d.id+'"'+(S.peer.sug.dim===d.id?" selected":"")+'>'+esc(d.t)+'</option>').join("")+'</select></div>'+
+ '<div><label class="fld">Gravedad</label><select id="ssev"><option value="">—</option>'+Object.entries(SEV).map(([k,v])=>'<option value="'+k+'"'+(S.peer.sug.sev===k?" selected":"")+'>'+k+' · '+v+'</option>').join("")+'</select></div></div>'+
+ '<div style="margin-top:10px"><label class="fld">Qué cambiarías</label><textarea id="stext" placeholder="Un ajuste específico, no «mejorar la interfaz».">'+esc(S.peer.sug.text)+'</textarea></div>'+
+ '<div style="margin-top:10px"><label class="fld">Evidencia concreta</label><textarea id="sev" placeholder="Al comparar predicción y referencia en la fase 4 observé…">'+esc(S.peer.sug.ev)+'</textarea></div>'+
+ '<p class="note">'+n+' de 15 criterios respondidos.</p></div>';
+}
+function dEtica(){
+ return '<div class="eyebrow">Ética, sesgos y límites · criterio 4</div><h2 class="step">Qué puede ir mal</h2>'+
+ '<div class="card"><h3>1. Errores y alucinaciones</h3>'+
+ '<p class="sub">El clasificador <b>siempre</b> entrega una etiqueta, incluso con suma cero. No tiene estado «no sé». Dos de los ocho casos del banco salen equivocados con confianza sobre 65%, y uno no cabe en ninguna de sus dos categorías.</p>'+
+ '<p class="sub" style="margin-top:8px">El tutor conversacional, en modo local, no puede alucinar contenido: sus respuestas son plantillas fijas y los contraejemplos están escritos y revisados. En modo con modelo de lenguaje conectado sí puede, y por eso el prompt incluye la regla 7 y el banco de pruebas se vuelve obligatorio antes de cada aplicación.</p>'+
+ '<p class="note"><b>Qué hace el/la docente:</b> la fase 4 ya obliga a contrastar con la referencia revisada. Si aparece una afirmación química incorrecta, se detiene la actividad, se escribe en la pizarra y se usa como caso de análisis.</p></div>'+
+ '<div class="card"><h3>2. Sesgo del conjunto de entrenamiento</h3>'+
+ '<p class="sub">Catorce frases escritas por una sola persona, en un solo registro, sobre una sola cocina. Palabras como <b>pan</b> o <b>sartén</b> quedan asociadas a una clase sin tener ninguna relación con ella. Es el mecanismo de sesgo por muestra pequeña y no balanceada, visible aquí a escala de una tabla.</p>'+
+ '<p class="note"><b>Qué hace el/la docente:</b> pedir que el curso agregue ejemplos y vuelva a medir. El sesgo deja de ser una palabra y pasa a ser un número que cambia.</p></div>'+
+ '<div class="card"><h3>3. Límites de dominio</h3>'+
+ '<p class="sub">Fuera de cambio físico y químico en cocina, el tutor declina. No responde tareas, no opina y no entrega fuentes bibliográficas porque no las tiene. Declararlo evita el uso más probable en un curso: pedirle que haga la tarea.</p></div>'+
+ '<div class="card"><h3>4. Privacidad</h3>'+
+ '<p class="sub">No se pide nombre, curso, correo ni edad en ninguna pantalla. El identificador es un código aleatorio de cuatro caracteres generado en el navegador (<b class="mono">'+esc(S.code)+'</b>) que no permite volver a la persona. El envío al piloto es voluntario y se dispara con un botón, nunca en segundo plano.</p>'+
+ '<p class="sub" style="margin-top:8px">Qué viaja: marcas de clasificación, métricas, etapa del diálogo, concepciones detectadas, puntajes de coevaluación y, si el docente lo habilita, los textos abiertos. La prueba T11 del banco verifica que el envío no contenga campos identificatorios.</p>'+
+ '<p class="note"><b>Qué hace el/la docente:</b> si el pilotaje es con menores, informar al establecimiento, usar la opción de desactivar textos abiertos y fijar una fecha de borrado de la colección.</p></div>'+
+ '<div class="card"><h3>5. Consecuencias educativas</h3>'+
+ '<p class="sub">El riesgo central no es técnico: es que el curso concluya «la IA es mala». Este recurso falla por razones que se señalan con el dedo sobre una tabla y mejora cuando el estudiante le agrega ejemplos. La conclusión buscada no es sobre la bondad de la herramienta sino sobre qué le exigimos a una fuente.</p>'+
+ '<p class="sub" style="margin-top:8px">Riesgo secundario: leer el porcentaje de confianza como porcentaje de acierto. Los dos errores del banco salen con confianza alta justamente para que esa lectura se rompa en clase.</p>'+
+ '<p class="note"><b>Qué hace el/la docente:</b> cerrar con la pregunta del guion: ¿preferirías un programa que se equivoca mucho avisando, o uno que se equivoca poco con 95% de confianza?</p></div>'+
+ '<details><summary>Guion de la sesión, minuto a minuto</summary>'+
+ '<p><b>Antes.</b> Proyectar «Cómo se usa» y leerla en voz alta. Elegir la ruta de 20 o 30 minutos.</p>'+
+ '<p><b>0–4.</b> Clasificación individual sin ver el programa. Registrar en la pizarra cuántos marcaron la clara de huevo como físico: esa concepción reaparece después en la máquina.</p>'+
+ '<p><b>4–9.</b> Fase 2 en proyector. El momento clave es el peso de <b>pan</b> y <b>sartén</b>. Pedir que alguien escriba una frase que lo haga fallar a propósito.</p>'+
+ '<p><b>9–13.</b> Interrogación y prueba de la negación.</p>'+
+ '<p><b>13–18.</b> Medición. Mostrar primero el porcentaje y después el tipo de error.</p>'+
+ '<p><b>18–25.</b> Diálogo CER en parejas, un caso por pareja. Recoger qué concepciones aparecieron.</p>'+
+ '<p><b>Cierre.</b> Veredicto, criterios y pregunta investigable. Se recogen las fichas.</p>'+
+ '<p><b>Si se cae internet:</b> la actividad completa sigue funcionando. Sólo el envío al piloto y el análisis con modelo quedan fuera.</p></details>';
+}
+function dDatos(){
+ const rules='rules_version = "2";\nservice cloud.firestore {\n  match /databases/{database}/documents {\n    match /'+CFG.coll+'/{doc} {\n      allow create: if request.resource.data.version == "cc1-v3";\n      allow read:   if true;\n      allow update, delete: if false;\n    }\n  }\n}';
+ return '<div class="eyebrow">Pilotaje</div><h2 class="step">Datos y Firebase</h2>'+
+ '<p class="lede">La recolección usa Firestore por API REST: sin SDK, sin cuentas y sin dependencias. Pega aquí los datos de tu proyecto y el aplicativo queda listo para recibir respuestas de quienes lo pilotean.</p>'+
+ '<div class="warnbox">Las llamadas externas están bloqueadas dentro de las vistas previas incrustadas. Para que el envío funcione, publica este archivo en tu propio sitio, por ejemplo en GitHub Pages.</div>'+
+ '<div class="card"><h3>Configuración</h3><div class="grid2">'+
+ '<div><label class="fld">Project ID</label><input type="text" id="cfg-pid" value="'+esc(EFF().pid)+'" placeholder="mi-proyecto-cc1"></div>'+
+ '<div><label class="fld">Web API key</label><input type="password" id="cfg-key" value="'+esc(EFF().key)+'" placeholder="AIza…"></div>'+
+ '<div><label class="fld">Colección</label><input type="text" id="cfg-coll" value="'+esc(EFF().coll)+'"></div>'+
+ '<div><label class="fld">Textos abiertos</label><div class="btnrow" style="margin:0"><button class="btn'+(CFG.texts?"":" ghost")+'" data-texts="1">incluir</button><button class="btn'+(CFG.texts?" ghost":"")+'" data-texts="0">omitir</button></div></div>'+
+ '</div><div class="btnrow"><button class="btn" id="savecfg">Guardar configuración</button><span class="sync '+(cfgOk()?"on":"off")+'">'+(cfgOk()?"configurado":"sin configurar")+'</span></div>'+
+ '<p class="note">La clave queda sólo en este navegador. La clave web de Firebase no es un secreto: lo que protege los datos son las reglas de abajo.</p></div>'+
+ '<div class="card"><h3>Reglas de Firestore</h3><p class="sub">Pégalas en la consola de Firebase. Permiten crear y leer, nunca modificar ni borrar desde el cliente.</p>'+
+ '<pre class="code">'+esc(rules)+'</pre>'+
+ '<div class="btnrow"><button class="btn ghost" id="copyrules">Copiar reglas</button></div>'+
+ '<p class="note">Para un pilotaje cerrado, cambia <b>allow read</b> a false y lee los datos desde la consola. Fija una fecha de borrado de la colección al terminar.</p></div>'+
+ '<div class="card"><h3>Generar una clave nueva</h3><p class="sub">Escribe la clave que quieras y copia el número al archivo, en la constante <b class="mono">ROLES</b>. Las claves no se guardan en texto plano en ninguna parte.</p>'+
+ '<input type="text" id="hashin" placeholder="escribe una clave para ver su hash"><p class="note mono" id="hashout">—</p></div>'+
+ '<div class="card"><h3>Dejar el pilotaje incrustado en el archivo</h3><p class="sub">Para que docentes validadores usen el aplicativo sin configurar nada, pega esto en el archivo reemplazando la constante <b class="mono">FIRE</b> y vuelve a publicarlo.</p>'+
+ '<pre class="code">const FIRE={pid:"'+esc(EFF().pid)+'", key:"'+esc(EFF().key)+'", coll:"'+esc(EFF().coll)+'"};</pre>'+
+ '<div class="btnrow"><button class="btn ghost" id="copyfire">Copiar constante</button></div></div>'+
+ poolResults();
+}
+function poolResults(){
+ return '<div class="card"><h3>Respuestas recibidas</h3><div class="btnrow"><button class="btn" id="loadpool">Cargar respuestas</button>'+
+ (POOL.length?'<button class="btn ghost" id="copycsv">Copiar como CSV</button>':"")+'<span class="note" style="margin:0">'+esc(poolMsg)+'</span></div>'+
+ (POOL.length?(()=>{const a=aggregate();
+  return '<div class="metrics"><div class="metric"><div class="n">'+a.n+'</div><div class="k">sesiones</div></div>'+
+  '<div class="metric"><div class="n">'+(a.exactitud===null?"–":a.exactitud.toFixed(0)+"%")+'</div><div class="k">exactitud media medida</div></div>'+
+  '<div class="metric"><div class="n">'+a.etapa3+'</div><div class="k">ciclos CER completos</div></div>'+
+  '<div class="metric"><div class="n">'+(a.nivel===null?"–":a.nivel.toFixed(1))+'</div><div class="k">andamiaje medio /5</div></div></div>'+
+  '<h3 style="margin-top:16px">Dónde difieren de la referencia</h3><div class="scroll"><table><tr><th class="lbl">Caso</th><th>Ref.</th><th>físico</th><th>químico</th><th>difieren</th></tr>'+
+  a.porCaso.map(c=>'<tr><td class="lbl" style="font-size:11.5px">'+esc(c.caso.slice(0,40))+'…</td><td>'+c.ref+'</td><td>'+c.f+'</td><td>'+c.q+'</td><td><b>'+c.difiere+'</b></td></tr>').join("")+'</table></div>'+
+  '<h3 style="margin-top:16px">Coevaluación: medias por criterio</h3><div class="scroll"><table><tr><th class="lbl">Criterio</th><th>Media /5</th><th>n</th></tr>'+
+  PEER.flatMap(d=>d.items.map(([id,lab])=>{const p=a.peer[id];const low=p.avg!==null&&p.avg<3.5;
+   return '<tr><td class="lbl" style="font-size:11.5px">'+id+' · '+esc(lab.slice(0,52))+'…</td><td'+(low?' style="color:var(--err);font-weight:600"':"")+'>'+(p.avg===null?"–":p.avg.toFixed(2))+'</td><td>'+p.n+'</td></tr>'})).join("")+'</table></div>'+
+  (a.sug.length?'<h3 style="margin-top:16px">Sugerencias recibidas</h3>'+a.sug.map(s=>'<div class="pitem"><span class="tag '+(s.sev==="P1"?"err":s.sev==="P2"?"na":"hl")+'">'+esc(s.sev)+'</span> '+esc(s.t)+(s.ev?'<div class="note">Evidencia: '+esc(s.ev)+'</div>':"")+'</div>').join(""):"")})():"")+'</div>';
+}
+function dPiloto(){
+ return '<div class="eyebrow">Perfil docente validador</div><h2 class="step">Resultados del piloto</h2>'+
+ '<p class="lede">Respuestas anónimas de quienes han aplicado el recurso. Sirven para decidir qué ajustar antes de la próxima aplicación; no miden aprendizaje.</p>'+
+ (cfgOk()?'':'<div class="warnbox">Este archivo todavía no tiene el pilotaje configurado. Quien administra debe incrustar el proyecto antes de que se puedan recoger o leer respuestas.</div>')+
+ '<div class="todo"><b class="k">Qué puedes hacer aquí</b>Cargar las respuestas acumuladas, revisar en qué casos los participantes difieren de la referencia y qué criterios de la coevaluación quedan bajo 3,5. La configuración y las claves no son visibles en este perfil.</div>'+
+ poolResults()+
+ (INFORME?'<div class="card"><h3>Informe de cierre del panel</h3>'+
+  '<p class="sub">Redactado por la IA como validadora independiente: puntúa los 15 criterios por su cuenta, los contrasta con las medias del panel humano y declara los límites de la conclusión. Publicado el '+esc(INFORME.fecha)+' con '+INFORME.validadores+' validadores y '+INFORME.sesiones+' sesiones.</p>'+
+  '<div class="btnrow"><button class="btn ghost" id="copyinforme">Copiar informe</button><span id="icopied" class="note" style="margin:0"></span></div>'+
+  '<textarea readonly style="min-height:340px;font-size:13.5px;margin-top:10px">'+esc(INFORME.texto||"")+'</textarea>'+
+  '<p class="note">Si no estás de acuerdo con una de sus puntuaciones, esa discrepancia es material de la reunión de cierre: el informe la declara como hipótesis, no como veredicto.</p></div>'
+  :'<div class="locked">El informe de validación aparece aquí cuando quien administra lo publique, una vez que el panel haya terminado. Carga las respuestas para comprobar si ya está.</div>')+
+ (APREND?'<div class="card"><h3>Análisis del proceso de aprendizaje</h3>'+
+  '<p class="sub">Compilado por la IA a partir de las trazas del curso: ideas previas, qué se movió entre la clasificación inicial y la revisión final, calidad del razonamiento y preguntas de cierre. Publicado el '+esc(APREND.fecha)+' sobre '+APREND.sesiones+' sesiones.</p>'+
+  '<div class="btnrow"><button class="btn ghost" id="copyaprend">Copiar análisis</button><span id="acopied" class="note" style="margin:0"></span></div>'+
+  '<textarea readonly style="min-height:340px;font-size:13.5px;margin-top:10px">'+esc(APREND.texto||"")+'</textarea>'+
+  '<p class="note">Son trazas de una sesión, no una medida de aprendizaje: la revisión final es posterior a ver las referencias y no hay grupo de comparación.</p></div>'
+  :'<div class="locked">El análisis del proceso de aprendizaje aparece aquí cuando se publique.</div>');
+}
+function dAnalisis(){
+ const a=aggregate();
+ return '<div class="eyebrow">Validación con los datos del piloto</div><h2 class="step">Análisis</h2>'+
+ '<p class="lede">El análisis se arma con los datos agregados que están cargados. Puede ejecutarse con un modelo conectado o copiarse como prompt para pegarlo donde prefieras.</p>'+
+ (a?'':'<div class="warnbox">No hay datos cargados. Ve a <b>Datos y piloto</b> y pulsa «Cargar respuestas».</div>')+
+ '<div class="card"><h3>Modelo de análisis (opcional)</h3><div class="grid2">'+
+ '<div><label class="fld">Clave de API</label><input type="password" id="cfg-aikey" value="'+esc(CFG.aiKey)+'" placeholder="déjala vacía para no usar modelo"></div>'+
+ '<div><label class="fld">Modelo</label><input type="text" id="cfg-aimodel" value="'+esc(CFG.aiModel)+'"></div></div>'+
+ '<div class="btnrow"><button class="btn" id="saveai">Guardar</button><button class="btn hl" id="runai"'+(a?"":" disabled")+'>Analizar con IA</button><button class="btn ghost" id="copyprompt2"'+(a?"":" disabled")+'>Copiar prompt de análisis</button></div>'+
+ '<p class="note">La clave queda en este navegador y viaja sólo al proveedor que elijas. Para un pilotaje institucional conviene no usar clave aquí y copiar el prompt.</p></div>'+
+ (a?'<div class="card"><h3>Lectura automática, sin modelo</h3><ul class="limits">'+
+  ['Sesiones: <b>'+a.n+'</b>. Con menos de 15 el resultado es exploratorio y no admite comparación entre grupos.',
+   'Exactitud media del clasificador medida por los participantes: <b>'+(a.exactitud===null?"s/d":a.exactitud.toFixed(1)+"%")+'</b>; aciertos propios: <b>'+(a.misAciertos===null?"s/d":a.misAciertos.toFixed(1)+"%")+'</b>.',
+   'Ciclos CER completos: <b>'+a.etapa3+' de '+a.n+'</b>. Si la cifra es baja, revisa si el andamiaje se vuelve pesado o si falta tiempo en la fase 5.',
+   'Nivel medio de andamiaje: <b>'+(a.nivel===null?"s/d":a.nivel.toFixed(1))+' de 5</b>. Sobre 3 indica que el tutor tuvo que bajar mucho la exigencia.',
+   'Concepciones alternativas: <b>'+(Object.keys(a.conc).length?Object.entries(a.conc).sort((x,y)=>y[1]-x[1]).map(([k,v])=>k+" ("+v+")").join(", "):"ninguna registrada")+'</b>.',
+   'Caso con más divergencia respecto de la referencia: <b>'+esc(a.porCaso.slice().sort((x,y)=>y.difiere-x.difiere)[0].caso)+'</b>.',
+   'Criterios de coevaluación bajo 3,5: <b>'+(PEER.flatMap(d=>d.items).filter(([id])=>a.peer[id].avg!==null&&a.peer[id].avg<3.5).map(([id])=>id).join(", ")||"ninguno")+'</b>.']
+  .map(x=>'<li>'+x+'</li>').join("")+'</ul>'+
+  '<p class="note">Estas cifras describen juicios y conductas de uso. No miden aprendizaje: para eso haría falta una medida pre-post con estudiantes, que este instrumento no recoge.</p></div>':"")+
+ (analysis?'<div class="card"><h3>Resultado del análisis</h3><textarea readonly style="min-height:260px;font-size:13.5px">'+esc(analysis)+'</textarea></div>':"")+
+ (()=>{const v=validadores(),n=Number(CFG.nval)||0,listo=n>0&&v>=n;
+  return '<div class="card"><h3>Cierre del pilotaje</h3>'+
+  '<p class="sub">Cuando todos los validadores han enviado, la IA emite su <b>propio juicio sobre los 15 criterios</b>, lo contrasta con el del panel humano y redacta el informe de cierre. Publicado, queda visible para los validadores en su perfil.</p>'+
+  '<div class="grid2" style="margin-top:12px"><div><label class="fld">Validadores esperados</label><input type="text" id="cfg-nval" value="'+esc(CFG.nval)+'"></div>'+
+  '<div><label class="fld">Han enviado coevaluación</label><input type="text" value="'+v+'" readonly></div></div>'+
+  '<div class="metrics"><div class="metric '+(listo?"good":"")+'"><div class="n">'+v+'/'+(n||"?")+'</div><div class="k">validadores</div></div>'+
+  '<div class="metric"><div class="n">'+POOL.length+'</div><div class="k">sesiones recogidas</div></div>'+
+  '<div class="metric"><div class="n">'+(INFORME?"sí":"no")+'</div><div class="k">informe publicado</div></div></div>'+
+  (listo?'<div class="todo"><b class="k">Proceso completo</b>Los '+n+' validadores esperados ya enviaron. Puedes cerrar el pilotaje con el informe.</div>'
+        :'<div class="warnbox">Faltan '+Math.max(0,n-v)+' validador(es). Puedes generar el informe igual, pero quedará dicho en él que el panel está incompleto.</div>')+
+  '<div class="btnrow"><button class="btn hl" id="runinf">Generar informe con IA</button><button class="btn ghost" id="copyinf">Copiar prompt del informe</button>'+
+  '<button class="btn" id="pubinf"'+(cfgOk()&&informe.length>80?"":" disabled")+'>Publicar a los validadores</button></div>'+
+  '<p class="note">Sin clave de modelo puedes copiar el prompt, pegarlo en el asistente que uses y traer el resultado al recuadro de abajo. El informe publicado es el texto de ese recuadro.</p>'+
+  '<label class="fld" style="margin-top:12px">Informe de cierre</label><textarea id="infotext" style="min-height:300px;font-size:13.5px" placeholder="Aquí aparece el informe generado, o pega el que obtuviste en otro asistente.">'+esc(informe)+'</textarea>'+
+  (INFORME?'<p class="note">Último publicado: '+esc(INFORME.fecha)+' · '+INFORME.validadores+' validadores · '+INFORME.sesiones+' sesiones.</p>':"")+
+  '</div>'+
+  '<div class="card"><h3>Análisis del proceso de aprendizaje</h3>'+
+  '<p class="sub">La IA compila lo que hizo el curso: ideas previas caso por caso, qué se movió entre la clasificación inicial y la revisión final, calidad del razonamiento en el diálogo CER y tipo de preguntas formuladas al cierre. Termina con tres focos para la clase siguiente.</p>'+
+  '<div class="metrics"><div class="metric"><div class="n">'+(a?a.revN:0)+'</div><div class="k">revisiones finales</div></div>'+
+  '<div class="metric"><div class="n">'+(a&&a.cambiosAvg!==null?a.cambiosAvg.toFixed(1):"–")+'</div><div class="k">cambios de posición por sesión</div></div>'+
+  '<div class="metric"><div class="n">'+(a?a.preguntas.length:0)+'</div><div class="k">preguntas de cierre</div></div>'+
+  '<div class="metric"><div class="n">'+(APREND?"sí":"no")+'</div><div class="k">análisis publicado</div></div></div>'+
+  '<div class="btnrow"><button class="btn hl" id="runapr"'+(a?"":" disabled")+'>Compilar con IA</button>'+
+  '<button class="btn ghost" id="copyapr"'+(a?"":" disabled")+'>Copiar prompt del proceso</button>'+
+  '<button class="btn" id="pubapr"'+(cfgOk()&&aprend.length>80?"":" disabled")+'>Publicar a los validadores</button></div>'+
+  '<label class="fld" style="margin-top:12px">Análisis del proceso</label><textarea id="aprtext" style="min-height:300px;font-size:13.5px" placeholder="Aquí aparece el análisis compilado, o pega el que obtuviste en otro asistente.">'+esc(aprend)+'</textarea>'+
+  '<p class="note">Son trazas de una sesión, no una medida de aprendizaje: la revisión final ocurre después de haber visto las referencias y no hay grupo de comparación. El prompt obliga a declararlo.</p>'+
+  (APREND?'<p class="note">Último publicado: '+esc(APREND.fecha)+' · '+APREND.sesiones+' sesiones.</p>':"")+'</div>'+
+  '<details><summary>Ver el prompt del informe de validación</summary><pre class="code">'+esc(informePrompt())+'</pre></details>'+
+  (a?'<details><summary>Ver el prompt del análisis del proceso</summary><pre class="code">'+esc(aprendizajePrompt())+'</pre></details>':"")})()+
+ (a?'<details><summary>Ver el prompt del análisis de datos</summary><pre class="code">'+esc(analysisPrompt())+'</pre></details>':"");
+}
+
+/* ---- bitácora ---- */
+function rail(){
+ const m=metrics(),d=S.dlg,steps=EST();
+ const avance=S.area==="pro"?"—":(S.step+"/"+(steps.length-1));
+ const kv=(a,b)=>'<div class="kv"><span>'+a+'</span><span>'+b+'</span></div>';
+ return '<div class="box"><h3>Bitácora viva</h3>'+
+  kv("código",'<span class="mono">'+esc(S.code)+'</span>')+
+  kv("ruta",S.route+" min")+
+  kv("avance",avance)+
+  kv("marcaste",Object.keys(S.mine).length+" de 8")+
+  kv("mis aciertos",m.misAciertos===null?"—":m.misAciertos+"%")+
+  kv("modelo",m.exactitud===null?"sin medir":m.exactitud+"%")+
+  kv("base",M.n+" ejemplos")+
+  kv("preguntas abiertas",S.meta.length+" de 7")+
+  (d?kv("diálogo CER",["afirmación","evidencia","razonamiento","cerrado"][d.stage]):"")+
+  (d?kv("andamiaje","nivel "+d.level+"/5"):"")+
+  kv("criterios",S.crit.length+" de 6")+
+  kv("veredicto",S.veredicto?esc(S.veredicto):"—")+
+  kv("coevaluación",Object.keys(S.peer.r).length+" de 15")+
+  '</div>'+
+  '<div class="box"><h3>Piloto</h3>'+
+  '<div class="btnrow" style="margin:0"><span class="sync '+(cfgOk()?(S.sent?"on":"off"):"off")+'">'+(cfgOk()?(S.sent?"enviado "+S.sent:"listo para enviar"):"no configurado")+'</span></div>'+
+  '<div class="btnrow"><button class="btn hl" id="send"'+(cfgOk()?"":" disabled")+'>Enviar mi sesión</button></div>'+
+  (S.msg?'<p class="note">'+esc(S.msg)+'</p>':'<p class="note">Envío anónimo y voluntario. No se pide nombre en ninguna parte.</p>')+
+  '</div>';
+}
+
+/* ---- pantalla de entrada ---- */
+let entrada=true,wrole=ROLE,werr="",wpass="";
+const DIAGRAMA='<svg class="dia" viewBox="0 0 280 212" width="100%" role="img" aria-label="Diagrama: tú, el clasificador y la referencia revisada miran la misma frase">'+
+ '<path d="M140 52 L62 168 M140 52 L218 168 M62 168 L218 168" fill="none" stroke="rgba(255,255,255,.26)" stroke-width="2" stroke-dasharray="5 7"/>'+
+ '<rect x="98" y="88" width="84" height="46" rx="9" fill="rgba(255,255,255,.07)" stroke="rgba(255,255,255,.22)" stroke-width="2"/>'+
+ '<path d="M112 103h56M112 111h56M112 119h36" stroke="rgba(255,255,255,.5)" stroke-width="3" stroke-linecap="round"/>'+
+ '<text x="140" y="152" text-anchor="middle" fill="rgba(255,255,255,.62)" font-family="system-ui" font-size="11">la misma frase</text>'+
+ '<circle cx="140" cy="52" r="25" fill="#2F9A66"/><text x="140" y="59" text-anchor="middle" fill="#fff" font-family="system-ui" font-weight="700" font-size="16">R</text>'+
+ '<text x="178" y="48" fill="rgba(255,255,255,.8)" font-family="system-ui" font-size="12">Referencia</text>'+
+ '<text x="178" y="63" fill="rgba(255,255,255,.5)" font-family="system-ui" font-size="11">revisada</text>'+
+ '<circle cx="62" cy="168" r="25" fill="#4A74E8"/><text x="62" y="175" text-anchor="middle" fill="#fff" font-family="system-ui" font-weight="700" font-size="16">T</text>'+
+ '<text x="62" y="206" text-anchor="middle" fill="rgba(255,255,255,.8)" font-family="system-ui" font-size="12">Tú</text>'+
+ '<circle cx="218" cy="168" r="25" fill="#E0703D"/><text x="218" y="175" text-anchor="middle" fill="#fff" font-family="system-ui" font-weight="700" font-size="16">IA</text>'+
+ '<text x="218" y="206" text-anchor="middle" fill="rgba(255,255,255,.8)" font-family="system-ui" font-size="12">El clasificador</text>'+
+ '</svg>';
+function vistaEntrada(){
+ const avanza=Object.keys(S.mine).length||S.veredicto||S.dlg;
+ const rol=(k,av,nm,de)=>'<button class="rolerow" data-wrole="'+k+'" aria-pressed="'+(wrole===k)+'">'+
+  '<span class="av '+av+'">'+av.toUpperCase()+'</span><span><span class="nm">'+nm+'</span><br><span class="de">'+de+'</span></span><span class="radio"></span></button>';
+ const derecha=wrole==="est"
+  ?'<h2>Entrar a la actividad</h2><p class="sub">Elige cuánto tiempo tienes. La ruta larga agrega una conversación donde defiendes tu respuesta.</p>'+
+   '<div class="btnrow"><button class="btn'+(S.route===20?"":" ghost")+'" data-wroute="20">20 minutos</button><button class="btn'+(S.route===30?"":" ghost")+'" data-wroute="30">30 minutos · con diálogo</button></div>'+
+   '<div class="btnrow"><button class="btn big hl" data-wgo="1">'+(avanza?"Continuar donde ibas":"Empezar")+' →</button></div>'+
+   (avanza?'<p class="note">Tu avance quedó guardado en este navegador. Si quieres partir de cero, hay un botón para reiniciar al final de la actividad.</p>':"")+
+   '<div class="wsep"></div><p class="note" style="margin:0">Tu código anónimo para esta sesión es <b class="mono">'+esc(S.code)+'</b>. No se pide tu nombre en ninguna parte.</p>'
+  :'<h2>Entrar con clave</h2>'+
+   (ROLE===wrole
+    ?'<p class="sub">Ya entraste con este perfil en esta pestaña. No hace falta la clave de nuevo.</p>'
+    :'<p class="sub">La clave de '+(wrole==="doc"?"docente validador":"administración")+' la entrega quien coordina el pilotaje.</p>'+
+     '<label class="fld" for="wpass">Clave</label><input type="password" id="wpass" value="'+esc(wpass)+'" placeholder="escribe la clave" autocomplete="off">'+
+     (werr?'<p class="note" style="color:var(--err)">'+esc(werr)+'</p>':""))+
+   '<div class="btnrow"><button class="btn big hl" data-wgo="1">'+(ROLE===wrole?"Continuar":"Entrar")+' →</button></div>'+
+   '<div class="wsep"></div><p class="note" style="margin:0">'+(wrole==="doc"
+     ?"Con este perfil validas el recurso: coevaluación de 15 criterios, banco de pruebas y resultados del piloto."
+     :"Con este perfil configuras el pilotaje, generas los informes y administras las claves.")+'</p>';
+ return '<div class="hero"><div class="heroin"><div>'+
+  '<div class="kick">PUCV · Instituto de Química · DDC-1037</div>'+
+  '<h1>Cocina CC-1</h1>'+
+  '<p>Un programa clasifica frases de cocina en cambio <span class="pop">físico</span> o <span class="pop">químico</span>. No vienes a preguntarle: vienes a abrirlo por dentro, buscarle los errores y decidir si sirve.</p>'+
+  '</div>'+DIAGRAMA+'</div></div>'+
+  '<div class="wcards">'+
+  '<div class="wcard"><h2>¿Con qué perfil entras?</h2><p class="sub">Define qué ves y qué puedes hacer.</p>'+
+   rol("est","e","Estudiante","8.º básico · no necesita clave")+
+   rol("doc","d","Docente validador","Evalúa el recurso y revisa el piloto")+
+   rol("admin","a","Administración","Configura, analiza y publica los informes")+
+  '</div><div class="wcard">'+derecha+'</div></div>'+
+  '<p class="wfoot">Funciona sin internet: la actividad completa corre en este archivo. Sólo el envío al piloto y los informes necesitan conexión.</p>';
+}
+/* ---- motor de render ---- */
+const EL=id=>document.getElementById(id);
 function render(){
- nav.innerHTML=STEPS.map((s,i)=>`<button data-step="${i}" aria-current="${i===S.step}"><span class="mn">${s.n}</span>${s.k}</button>`).join("");
- main.innerHTML=[stepGuia,step0,step1,step2,step3,step4][S.step]()+
-  `<div class="foot">
-    <button class="btn ghost" data-go="-1" ${S.step===0?"disabled":""}>← anterior</button>
-    <button class="btn" data-go="1" ${S.step===5?"disabled":""}>${S.step===0?"empezar →":"siguiente →"}</button>
-   </div>`;
+ if(ROLE==="est")S.area="est";
+ const pro=PRO(),steps=S.area==="pro"?pro:EST();
+ if(S.area!=="pro"&&S.step>steps.length-1)S.step=steps.length-1;
+ if(S.area==="pro"&&S.dstep>pro.length-1)S.dstep=0;
+ const cur=S.area==="pro"?S.dstep:S.step;
+ EL("welcome").hidden=!entrada;
+ if(entrada){EL("welcome").innerHTML=vistaEntrada();EL("sheet").hidden=true;save();return}
+ EL("sheet").hidden=false;
+ EL("roles").innerHTML=rolesBar();
+ EL("gate").hidden=!gate;
+ EL("nav").innerHTML=steps.map((s,i)=>'<button data-step="'+i+'" aria-current="'+(i===cur)+'"><span class="mn">'+s.n+'</span>'+s.k+'</button>').join("");
+ const m=metrics();
+ EL("strip").innerHTML=['base <b>'+M.n+'</b> ejemplos','vocabulario <b>'+M.vs+'</b> palabras',
+  'exactitud <b>'+(m.exactitud===null?"sin medir":m.exactitud+"%")+'</b>',
+  'tus marcas <b>'+Object.keys(S.mine).length+'/8</b>',
+  'diálogo <b>'+(S.dlg?["afirmación","evidencia","razonamiento","cerrado"][S.dlg.stage]:"sin iniciar")+'</b>',
+  'piloto <b>'+(cfgOk()?(S.sent?"enviado":"activo"):"local")+'</b>',
+  'perfil <b>'+ROLENAME[ROLE]+'</b>'].map(x=>'<span>'+x+'</span>').join("");
+ let body;
+ if(S.area==="pro"){
+  body=pro[S.dstep].f();
+ }else{
+  const seq=S.route===30?[sGuia,sClasifica,sMecanismo,sInterroga,sMide,sDialoga,sVeredicto]:[sGuia,sClasifica,sMecanismo,sInterroga,sMide,sVeredicto];
+  body=seq[S.step]()+foot(seq.length-1);
+ }
+ EL("main").innerHTML=body;
+ EL("railin").innerHTML=rail();
+ EL("sheetn").textContent=Object.keys(S.mine).length+"/8";
+ const ch=EL("chat");if(ch)ch.scrollTop=ch.scrollHeight;
  save();
 }
+
+/* ---- eventos ---- */
+function copyTo(txt,tagId){
+ const tag=tagId?EL(tagId):null;
+ const done=t=>{if(tag)tag.textContent=t};
+ try{navigator.clipboard.writeText(txt).then(()=>done("copiado"),()=>done("usa Ctrl+C sobre el texto"))}
+ catch(e){done("usa Ctrl+C sobre el texto")}
+}
+function enterGate(){
+ const i=EL("gpass");if(!i)return;
+ const h=dj(i.value);
+ if(h===ROLES.admin)ROLE="admin";
+ else if(h===ROLES.doc)ROLE="doc";
+ else{gateErr="Esa clave no corresponde a ningún perfil.";const g=EL("gerr");if(g)g.textContent=gateErr;return}
+ try{sessionStorage.setItem("cc1rol",ROLE)}catch(e){}
+ gate=false;gateErr="";S.area="pro";S.dstep=0;window.scrollTo(0,0);render();
+}
 document.addEventListener("click",e=>{
- const b=e.target.closest("button"); if(!b) return;
- const d=b.dataset;
- if(d.step!==undefined){S.step=+d.step;window.scrollTo(0,0);return render()}
- if(d.go){S.step=Math.max(0,Math.min(5,S.step+ +d.go));window.scrollTo(0,0);return render()}
- if(d.mine){S.mine[d.mine]=d.v;return render()}
- if(d.probe!==undefined){S.probe=d.probe;return render()}
- if(b.id==="run"){S.probe=document.getElementById("probe").value;return render()}
- if(d.add){
-  const v=document.getElementById("newex").value.trim();
-  if(v.length>5){extra.push({t:v,y:d.add});train();document.getElementById("newex").value=""}
-  return render();
+ const b=e.target.closest("button");if(!b)return;const d=b.dataset;
+ if(d.wrole){wrole=d.wrole;werr="";return render()}
+ if(d.wroute){S.route=+d.wroute;return render()}
+ if(d.wgo){
+  if(wrole==="est"){ROLE="est";S.area="est";entrada=false;window.scrollTo(0,0);return render()}
+  if(ROLE!==wrole){
+   const esperado=wrole==="admin"?ROLES.admin:ROLES.doc;
+   if(dj(wpass)!==esperado){werr=wpass.trim()?"Esa clave no corresponde a este perfil.":"Escribe la clave para continuar.";return render()}
+  }
+  ROLE=wrole;wpass="";try{sessionStorage.setItem("cc1rol",ROLE)}catch(e){}
+  S.area="pro";S.dstep=0;entrada=false;werr="";window.scrollTo(0,0);return render();
  }
+ if(d.gate){gate=true;gateErr="";render();const i=EL("gpass");if(i)i.focus();return}
+ if(d.out){ROLE="est";S.area="est";S.step=0;wrole="est";entrada=true;try{sessionStorage.removeItem("cc1rol")}catch(e){}window.scrollTo(0,0);return render()}
+ if(d.area){S.area=d.area;window.scrollTo(0,0);return render()}
+ if(b.id==="gok"){return enterGate()}
+ if(b.id==="gno"){gate=false;gateErr="";return render()}
+ if(b.id==="copyfire"){copyTo('const FIRE={pid:"'+EFF().pid+'", key:"'+EFF().key+'", coll:"'+EFF().coll+'"};');return}
+ if(d.step!==undefined){S.area==="pro"?S.dstep=+d.step:S.step=+d.step;window.scrollTo(0,0);return render()}
+ if(d.go){const last=(S.route===30?6:5);S.step=Math.max(0,Math.min(last,S.step+ +d.go));window.scrollTo(0,0);return render()}
+ if(d.route){S.route=+d.route;return render()}
+ if(d.mine){S.mine[d.mine]=d.v;return render()}
+ if(d.post){S.post[d.post]=d.v;const r=EL("report");if(r)r.value=report();return render()}
+ if(d.probe!==undefined){S.probe=d.probe;S.mstep=null;return render()}
+ if(b.id==="run"){S.probe=EL("probe").value;S.mstep=null;return render()}
+ if(d.m==="start"){S.mstep=1;return render()}
+ if(d.m==="next"){S.mstep=(S.mstep||0)+1;return render()}
+ if(d.m==="all"){S.mstep=null;return render()}
+ if(d.add){const v=EL("newex").value.trim();if(v.length>5){extra.push({t:v,y:d.add});train();EL("newex").value=""}return render()}
  if(b.id==="reset-train"){extra=[];train();return render()}
  if(d.meta!==undefined){const i=+d.meta;S.meta=S.meta.includes(i)?S.meta.filter(x=>x!==i):S.meta.concat(i);return render()}
  if(b.id==="neg"){S.neg=1;return render()}
  if(d.test){S.tested[d.test]=1;return render()}
  if(b.id==="runall"){CASES.forEach(c=>S.tested[c.id]=1);return render()}
  if(b.id==="clear"){S.tested={};return render()}
+ if(d.dcase){S.dlg=newDlg(d.dcase);return render()}
+ if(b.id==="dsend"){const t=EL("dmsg").value.trim();if(!t)return;const out=tutorTurn(S.dlg,t);S.dlg.turns.push({r:"u",m:t});out.forEach(x=>S.dlg.turns.push({r:"t",m:x}));return render()}
+ if(b.id==="dreset"){S.dlg=null;return render()}
  if(d.ver){S.veredicto=d.ver;return render()}
- if(d.start){const t=document.getElementById("preg");t.value=d.start+" ";t.focus();S.pregunta=t.value;return save()}
- if(b.id==="copy"){
-  const txt=document.getElementById("report").value, tag=document.getElementById("copied");
-  const fb=()=>{const t=document.getElementById("report");t.select();tag.innerHTML='<span class="flash">selecciona y copia</span>'};
-  try{navigator.clipboard.writeText(txt).then(()=>{tag.innerHTML='<span class="flash">copiada</span>'},fb)}catch(err){fb()}
-  return;
- }
+ if(d.start){const t=EL("preg");t.value=d.start+" ";t.focus();S.pregunta=t.value;return save()}
+ if(b.id==="copy"){copyTo(EL("report").value,"copied");return}
+ if(b.id==="copyprompt"){copyTo(SYSTEM_PROMPT,"pcopied");return}
+ if(b.id==="runtests"){tests=runTests();return render()}
+ if(b.id==="copytests"){copyTo(tests.map(t=>t.id+" ["+(t.ok?"APRUEBA":"FALLA")+"] "+t.n+"\n  esperado: "+t.esp+"\n  obtenido: "+String(t.got).replace(/<[^>]+>/g," ").slice(0,300)).join("\n\n"));return}
+ if(d.peer){S.peer.r[d.peer]=d.v==="NO"?"NO":+d.v;return render()}
+ if(d.texts){CFG.texts=d.texts==="1";saveCfg();return render()}
+ if(b.id==="savecfg"){CFG.pid=EL("cfg-pid").value.trim();CFG.key=EL("cfg-key").value.trim();CFG.coll=EL("cfg-coll").value.trim()||"cc1_pilotos";saveCfg();return render()}
+ if(b.id==="saveai"){CFG.aiKey=EL("cfg-aikey").value.trim();CFG.aiModel=EL("cfg-aimodel").value.trim()||"gemini-2.0-flash";saveCfg();return render()}
+ if(b.id==="copyrules"){copyTo(document.querySelector("pre.code").textContent);return}
+ if(b.id==="loadpool"){loadPool();return}
+ if(b.id==="send"){sendPilot();return}
+ if(b.id==="runai"){runAI();return}
+ if(b.id==="copyprompt2"){copyTo(analysisPrompt());return}
+ if(b.id==="runinf"){runInforme();return}
+ if(b.id==="copyinf"){copyTo(informePrompt());return}
+ if(b.id==="pubinf"){publicar("cc1-informe",informe);return}
+ if(b.id==="copyinforme"){copyTo(INFORME&&INFORME.texto||"","icopied");return}
+ if(b.id==="runapr"){runAprendizaje();return}
+ if(b.id==="copyapr"){copyTo(aprendizajePrompt());return}
+ if(b.id==="pubapr"){publicar("cc1-aprendizaje",aprend);return}
+ if(b.id==="copyaprend"){copyTo(APREND&&APREND.texto||"","acopied");return}
+ if(b.id==="copycsv"){
+  const cols=["codigo","fecha","ruta","exactitud_modelo","mis_aciertos","dialogo_etapa","dialogo_nivel","dialogo_turnos","veredicto"];
+  const q=x=>'"'+String(x??"").replace(/"/g,'""')+'"';
+  copyTo([cols.join(";")].concat(POOL.map(p=>cols.map(c=>q(p[c])).join(";"))).join("\n"));return}
+ if(b.id==="sheet"){const a=EL("rail");a.classList.toggle("open");b.setAttribute("aria-expanded",a.classList.contains("open"));return}
 });
 document.addEventListener("input",e=>{
  const t=e.target;
  if(t.id==="resg"){S.resguardo=t.value;save()}
- if(t.id==="preg"){S.pregunta=t.value;save();const r=document.getElementById("report");if(r)r.value=buildReport()}
- if(t.dataset.crit!==undefined){const i=+t.dataset.crit;S.crit=t.checked?S.crit.concat(i):S.crit.filter(x=>x!==i);save();const r=document.getElementById("report");if(r)r.value=buildReport()}
+ if(t.id==="preg"){S.pregunta=t.value;save();const r=EL("report");if(r)r.value=report()}
+ if(t.id==="wpass"){wpass=t.value;return}
+ if(t.id==="hashin"){const o=EL("hashout");if(o)o.textContent=t.value.trim()?dj(t.value)+"  ← pega este número en ROLES":"—"}
+ if(t.id==="infotext"){informe=t.value;const b=EL("pubinf");if(b)b.disabled=!(cfgOk()&&informe.length>80)}
+ if(t.id==="aprtext"){aprend=t.value;const b=EL("pubapr");if(b)b.disabled=!(cfgOk()&&aprend.length>80)}
+ if(t.id==="cfg-nval"){CFG.nval=t.value.replace(/\D/g,"")||0;saveCfg()}
+ if(t.id==="stext"){S.peer.sug.text=t.value;save()}
+ if(t.id==="sev"){S.peer.sug.ev=t.value;save()}
+ if(t.dataset.crit!==undefined){const i=+t.dataset.crit;S.crit=t.checked?S.crit.concat(i):S.crit.filter(x=>x!==i);save();const r=EL("report");if(r)r.value=report()}
 });
-document.addEventListener("keydown",e=>{if(e.key==="Enter"&&e.target.id==="probe"){S.probe=e.target.value;render()}});
+document.addEventListener("change",e=>{
+ const t=e.target;
+ if(t.id==="sdim"){S.peer.sug.dim=t.value;save()}
+ if(t.id==="ssev"){S.peer.sug.sev=t.value;save()}
+});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Enter"&&e.target.id==="wpass"){e.preventDefault();const b=document.querySelector("[data-wgo]");if(b)b.click();return}
+ if(e.key==="Enter"&&e.target.id==="gpass"){e.preventDefault();enterGate();return}
+ if(e.key==="Escape"&&gate){gate=false;render();return}
+ if(e.key==="Enter"&&e.target.id==="probe"){S.probe=e.target.value;S.mstep=null;render()}
+ if(e.key==="Enter"&&!e.shiftKey&&e.target.id==="dmsg"){e.preventDefault();const t=e.target.value.trim();if(!t)return;
+  const out=tutorTurn(S.dlg,t);S.dlg.turns.push({r:"u",m:t});out.forEach(x=>S.dlg.turns.push({r:"t",m:x}));render()}
+});
 render();
 </script>
-
-</body></html>
