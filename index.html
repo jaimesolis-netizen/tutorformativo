@@ -1180,22 +1180,34 @@ function dDatos(){
  return '<div class="eyebrow">Pilotaje</div><h2 class="step">Datos y Firebase</h2>'+
  '<p class="lede">La recolección usa Firestore por API REST: sin SDK, sin cuentas y sin dependencias. Pega aquí los datos de tu proyecto y el aplicativo queda listo para recibir respuestas de quienes lo pilotean.</p>'+
  '<div class="warnbox">Las llamadas externas están bloqueadas dentro de las vistas previas incrustadas. Para que el envío funcione, publica este archivo en tu propio sitio, por ejemplo en GitHub Pages.</div>'+
- '<div class="card"><h3>Configuración</h3><div class="grid2">'+
- '<div><label class="fld">Project ID</label><input type="text" id="cfg-pid" value="'+esc(EFF().pid)+'" placeholder="mi-proyecto-cc1"></div>'+
- '<div><label class="fld">Web API key</label><input type="password" id="cfg-key" value="'+esc(EFF().key)+'" placeholder="AIza…"></div>'+
- '<div><label class="fld">Colección</label><input type="text" id="cfg-coll" value="'+esc(EFF().coll)+'"></div>'+
- '<div><label class="fld">Textos abiertos</label><div class="btnrow" style="margin:0"><button class="btn'+(CFG.texts?"":" ghost")+'" data-texts="1">incluir</button><button class="btn'+(CFG.texts?" ghost":"")+'" data-texts="0">omitir</button></div></div>'+
- '</div><div class="btnrow"><button class="btn" id="savecfg">Guardar configuración</button><span class="sync '+(cfgOk()?"on":"off")+'">'+(cfgOk()?"configurado":"sin configurar")+'</span></div>'+
- '<p class="note">La clave queda sólo en este navegador. La clave web de Firebase no es un secreto: lo que protege los datos son las reglas de abajo.</p></div>'+
+ '<div class="card"><h3>Proyecto conectado</h3>'+
+ '<p class="sub">Viene fijado en el archivo, igual que el Worker. Quien use el aplicativo envía y lee sin configurar nada y sin ver credenciales.</p>'+
+ '<div class="ficha">'+
+ '<div class="row" style="grid-template-columns:78px 1fr"><span>proyecto</span><span style="text-align:left">'+(EFF().pid?esc(EFF().pid):"no definido")+'</span></div>'+
+ '<div class="row" style="grid-template-columns:78px 1fr"><span>colección</span><span style="text-align:left">'+esc(EFF().coll)+'</span></div>'+
+ '<div class="row" style="grid-template-columns:78px 1fr"><span>clave web</span><span style="text-align:left">'+(EFF().key?esc(EFF().key.slice(0,10))+"…":"no definida")+'</span></div>'+
+ (CFG.pid||CFG.key||CFG.coll?'<div class="row" style="grid-template-columns:78px 1fr"><span>aviso</span><span style="text-align:left;color:var(--warn)">hay un ajuste temporal activo en este navegador</span></div>':"")+
+ '</div>'+
+ '<div class="btnrow"><span class="sync '+(cfgOk()?"on":"off")+'">'+(cfgOk()?"fijado en el archivo":"sin configurar")+'</span></div>'+
+ '<p class="note">Para cambiar de proyecto se edita la constante <b class="mono">FIRE</b> al inicio del archivo. La clave web de Firebase no es un secreto: identifica el proyecto, y lo que protege los datos son las reglas de más abajo.</p>'+
+ '<div style="margin-top:14px"><label class="fld">Textos abiertos de los participantes</label>'+
+ '<div class="btnrow" style="margin-top:4px"><button class="btn'+(CFG.texts?"":" ghost")+'" data-texts="1">incluir</button><button class="btn'+(CFG.texts?" ghost":"")+'" data-texts="0">omitir</button></div>'+
+ '<p class="note">Resguardos, preguntas de cierre y sugerencias. Omítelos si el pilotaje es con menores y el establecimiento lo pide.</p></div>'+
+ '<details><summary>Apuntar a otro proyecto sólo en este navegador</summary>'+
+ '<p class="note">Para probar contra una colección de pruebas sin tocar el archivo.</p>'+
+ '<div class="grid2" style="margin-top:10px">'+
+ '<div><label class="fld">Project ID</label><input type="text" id="cfg-pid" value="'+esc(CFG.pid)+'" placeholder="'+esc(FIRE.pid||"mi-proyecto")+'"></div>'+
+ '<div><label class="fld">Web API key</label><input type="password" id="cfg-key" value="'+esc(CFG.key)+'" placeholder="AIza…"></div>'+
+ '<div><label class="fld">Colección</label><input type="text" id="cfg-coll" value="'+esc(CFG.coll)+'" placeholder="'+esc(FIRE.coll)+'"></div></div>'+
+ '<div class="btnrow"><button class="btn ghost" id="savecfg">Aplicar aquí</button>'+(CFG.pid||CFG.key||CFG.coll?'<button class="btn ghost" id="clearcfg">Volver a lo del archivo</button>':"")+'</div>'+
+ '<pre class="code">const FIRE={pid:"'+esc(EFF().pid)+'", key:"'+esc(EFF().key)+'", coll:"'+esc(EFF().coll)+'"};</pre>'+
+ '<div class="btnrow"><button class="btn ghost" id="copyfire">Copiar esta línea para el archivo</button></div></details></div>'+
  '<div class="card"><h3>Reglas de Firestore</h3><p class="sub">Pégalas en la consola de Firebase. Permiten crear y leer, nunca modificar ni borrar desde el cliente.</p>'+
  '<pre class="code">'+esc(rules)+'</pre>'+
  '<div class="btnrow"><button class="btn ghost" id="copyrules">Copiar reglas</button></div>'+
  '<p class="note">Para un pilotaje cerrado, cambia <b>allow read</b> a false y lee los datos desde la consola. Fija una fecha de borrado de la colección al terminar.</p></div>'+
  '<div class="card"><h3>Generar una clave nueva</h3><p class="sub">Escribe la clave que quieras y copia el número al archivo, en la constante <b class="mono">ROLES</b>. Las claves no se guardan en texto plano en ninguna parte.</p>'+
  '<input type="text" id="hashin" placeholder="escribe una clave para ver su hash"><p class="note mono" id="hashout">—</p></div>'+
- '<div class="card"><h3>Dejar el pilotaje incrustado en el archivo</h3><p class="sub">Para que docentes validadores usen el aplicativo sin configurar nada, pega esto en el archivo reemplazando la constante <b class="mono">FIRE</b> y vuelve a publicarlo.</p>'+
- '<pre class="code">const FIRE={pid:"'+esc(EFF().pid)+'", key:"'+esc(EFF().key)+'", coll:"'+esc(EFF().coll)+'"};</pre>'+
- '<div class="btnrow"><button class="btn ghost" id="copyfire">Copiar constante</button></div></div>'+
  poolResults();
 }
 function poolResults(){
@@ -1238,16 +1250,25 @@ function dAnalisis(){
  '<p class="lede">El análisis se arma con los datos agregados que están cargados. Puede ejecutarse con un modelo conectado o copiarse como prompt para pegarlo donde prefieras.</p>'+
  (a?'':'<div class="warnbox">No hay datos cargados. Ve a <b>Datos y piloto</b> y pulsa «Cargar respuestas».</div>')+
  '<div class="card"><h3>Conexión con el modelo</h3>'+
- '<p class="sub">Las peticiones pasan por un Worker de Cloudflare que guarda la clave de OpenRouter como secreto. El navegador nunca la ve, así que el archivo se puede publicar sin exponer nada.</p>'+
- '<div class="grid2" style="margin-top:12px">'+
- '<div><label class="fld">URL del Worker</label><input type="text" id="cfg-aiurl" value="'+esc(EFFAI().url)+'" placeholder="https://cocina-ia.tu-cuenta.workers.dev"></div>'+
- '<div><label class="fld">Modelo en OpenRouter</label><input type="text" id="cfg-aimodel" value="'+esc(EFFAI().model)+'"></div></div>'+
- '<div class="btnrow"><button class="btn" id="saveai">Guardar</button><button class="btn ghost" id="probeai"'+(aiOk()?"":" disabled")+'>Probar conexión</button>'+
- '<span class="sync '+(aiOk()?"on":"off")+'">'+(aiOk()?"worker configurado":"sin worker")+'</span></div>'+
+ '<p class="sub">Viene fijada en el archivo. Las peticiones pasan por un Worker de Cloudflare que guarda la clave de OpenRouter como secreto, así que el navegador nunca la ve.</p>'+
+ '<div class="ficha">'+
+ '<div class="row" style="grid-template-columns:78px 1fr"><span>worker</span><span style="text-align:left;word-break:break-all">'+(EFFAI().url?esc(EFFAI().url):"no definido en el archivo")+'</span></div>'+
+ '<div class="row" style="grid-template-columns:78px 1fr"><span>modelo</span><span style="text-align:left">'+esc(EFFAI().model)+'</span></div>'+
+ (CFG.aiUrl||CFG.aiModel?'<div class="row" style="grid-template-columns:78px 1fr"><span>aviso</span><span style="text-align:left;color:var(--warn)">hay un ajuste temporal activo en este navegador</span></div>':"")+
+ '</div>'+
+ '<div class="btnrow"><button class="btn" id="probeai"'+(aiOk()?"":" disabled")+'>Probar conexión</button>'+
+ '<span class="sync '+(aiOk()?"on":"off")+'">'+(aiOk()?"fijado en el archivo":"sin worker")+'</span></div>'+
  (aiMsg?'<p class="note">'+esc(aiMsg)+'</p>':"")+
+ '<p class="note">Para cambiar de Worker o de modelo se edita la constante <b class="mono">AI</b> al inicio del archivo. No se configura por navegador, así que no se pierde al cambiar de computador ni hay que repetirlo en cada sesión.</p>'+
+ '<details><summary>Probar otro modelo sólo en este navegador</summary>'+
+ '<p class="note">Sirve para comparar modelos antes de fijar uno en el archivo. Lo que escribas acá no afecta a nadie más.</p>'+
+ '<div class="grid2" style="margin-top:10px">'+
+ '<div><label class="fld">URL del Worker</label><input type="text" id="cfg-aiurl" value="'+esc(CFG.aiUrl)+'" placeholder="'+esc(AI.url||"https://cocina-ia.tu-cuenta.workers.dev")+'"></div>'+
+ '<div><label class="fld">Modelo</label><input type="text" id="cfg-aimodel" value="'+esc(CFG.aiModel)+'" placeholder="'+esc(AI.model)+'"></div></div>'+
+ '<div class="btnrow"><button class="btn ghost" id="saveai">Aplicar aquí</button>'+(CFG.aiUrl||CFG.aiModel?'<button class="btn ghost" id="clearai">Volver a lo del archivo</button>':"")+'</div>'+
  '<pre class="code">const AI={url:"'+esc(EFFAI().url)+'", model:"'+esc(EFFAI().model)+'"};</pre>'+
- '<div class="btnrow"><button class="btn ghost" id="copyai">Copiar constante para el archivo</button></div>'+
- '<p class="note">Sin Worker todo sigue funcionando: los prompts se copian y se pegan en cualquier asistente.</p></div>'+
+ '<div class="btnrow"><button class="btn ghost" id="copyai">Copiar esta línea para el archivo</button></div>'+
+ '</details></div>'+
  '<div class="card"><h3>Análisis de los datos</h3><p class="sub">Lectura de las respuestas recogidas: exactitud medida, ciclos CER, concepciones y criterios bajo 3,5.</p>'+
  '<div class="btnrow"><button class="btn hl" id="runai"'+(a?"":" disabled")+'>Analizar con IA</button><button class="btn ghost" id="copyprompt2"'+(a?"":" disabled")+'>Copiar prompt de análisis</button></div></div>'+
  (a?'<div class="card"><h3>Lectura automática, sin modelo</h3><ul class="limits">'+
@@ -1469,9 +1490,11 @@ document.addEventListener("click",e=>{
  if(b.id==="copytests"){copyTo(tests.map(t=>t.id+" ["+(t.ok?"APRUEBA":"FALLA")+"] "+t.n+"\n  esperado: "+t.esp+"\n  obtenido: "+String(t.got).replace(/<[^>]+>/g," ").slice(0,300)).join("\n\n"));return}
  if(d.peer){S.peer.r[d.peer]=d.v==="NO"?"NO":+d.v;return render()}
  if(d.texts){CFG.texts=d.texts==="1";saveCfg();return render()}
- if(b.id==="savecfg"){CFG.pid=EL("cfg-pid").value.trim();CFG.key=EL("cfg-key").value.trim();CFG.coll=EL("cfg-coll").value.trim()||"cc1_pilotos";saveCfg();return render()}
+ if(b.id==="savecfg"){CFG.pid=EL("cfg-pid").value.trim();CFG.key=EL("cfg-key").value.trim();CFG.coll=EL("cfg-coll").value.trim();saveCfg();return render()}
+ if(b.id==="clearcfg"){CFG.pid="";CFG.key="";CFG.coll="";poolMsg="";saveCfg();return render()}
  if(b.id==="saveai"){CFG.aiUrl=EL("cfg-aiurl").value.trim().replace(/\/+$/,"");CFG.aiModel=EL("cfg-aimodel").value.trim();aiMsg="";saveCfg();return render()}
  if(b.id==="copyai"){copyTo('const AI={url:"'+EFFAI().url+'", model:"'+EFFAI().model+'"};');return}
+ if(b.id==="clearai"){CFG.aiUrl="";CFG.aiModel="";aiMsg="";saveCfg();return render()}
  if(b.id==="probeai"){probarIA();return}
  if(b.id==="copyrules"){copyTo(document.querySelector("pre.code").textContent);return}
  if(b.id==="loadpool"){loadPool();return}
