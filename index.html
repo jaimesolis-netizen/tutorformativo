@@ -583,7 +583,7 @@ const S={step:0,dstep:0,area:"est",route:30,mstep:null,code:CODE(),mine:{},teste
  dlg:null,post:{},peer:{r:{},sug:{text:"",dim:"",sev:"",ev:""}},sent:null,msg:""};
 /* Worker de Cloudflare que hace de intermediario con OpenRouter. La clave de OpenRouter
    vive como secreto dentro del Worker y nunca llega al navegador. */
-const AI={url:"https://tutorformativo.jaime-solis.workers.dev",model:"recursive/flint-v1.0:free"};
+const AI={url:"/api/ia",model:"recursive/flint-v1.0:free"};
 const CFG={pid:"",key:"",coll:"",aiUrl:"",aiModel:"",texts:true,nval:5};
 const EFF=()=>({pid:CFG.pid||FIRE.pid,key:CFG.key||FIRE.key,coll:CFG.coll||FIRE.coll||"cc1_pilotos"});
 const EFFAI=()=>({url:CFG.aiUrl||AI.url,model:CFG.aiModel||AI.model||"recursive/flint-v1.0:free"});
@@ -813,7 +813,9 @@ function aprendizajePrompt(){
 }
 async function pedirIA(prompt){
  const a=EFFAI();
- const r=await fetch(a.url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,model:a.model})});
+ let r;
+ try{r=await fetch(a.url,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt,model:a.model})})}
+ catch(e){throw new Error("el navegador bloqueó la llamada antes de llegar al Worker. Abre "+a.url+" en una pestaña: si no responde un JSON con ok:true, el código del Worker no está desplegado; si responde, el problema es ALLOWED_ORIGINS")}
  const j=await r.json().catch(()=>null);
  if(!r.ok)throw new Error((j&&j.error)||(r.status+" del Worker"));
  return (j&&j.text)||"Respuesta vacía.";
