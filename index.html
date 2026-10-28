@@ -583,7 +583,7 @@ const S={step:0,dstep:0,area:"est",route:30,mstep:null,code:CODE(),mine:{},teste
  dlg:null,post:{},peer:{r:{},sug:{text:"",dim:"",sev:"",ev:""}},sent:null,msg:""};
 /* Worker de Cloudflare que hace de intermediario con OpenRouter. La clave de OpenRouter
    vive como secreto dentro del Worker y nunca llega al navegador. */
-const AI={url:"",model:"recursive/flint-v1.0:free"};
+const AI={url:"https://tutorformativo.jaime-solis.workers.dev",model:"recursive/flint-v1.0:free"};
 const CFG={pid:"",key:"",coll:"",aiUrl:"",aiModel:"",texts:true,nval:5};
 const EFF=()=>({pid:CFG.pid||FIRE.pid,key:CFG.key||FIRE.key,coll:CFG.coll||FIRE.coll||"cc1_pilotos"});
 const EFFAI=()=>({url:CFG.aiUrl||AI.url,model:CFG.aiModel||AI.model||"recursive/flint-v1.0:free"});
